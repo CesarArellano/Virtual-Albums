@@ -2,6 +2,8 @@
   include 'config.php';
   error_reporting(E_ALL);
   ini_set('display_errors', 1);
+  header('Content-type: application/json; charset=utf-8'); // Se especifica el tipo de contenido a regresar, codificado en utf-8
+  $formatos  = array('.jpg', '.png', '.jpeg', '.gif', '.bmp', '.tiff', '.raw');
   $conexion = Conectar();
   $nombreRegistro = $_POST['nombreRegistro'];
   $apPaternoRegistro = $_POST['apPaternoRegistro'];
@@ -19,14 +21,21 @@
     $directorio = 'usuario/images/';
     $nombreArchivo = $_FILES['rutaFotoPerfilRegistro']['name'];
     $directoriocompleto = $directorio.$nombreArchivo;
-    if (move_uploaded_file($_FILES['rutaFotoPerfilRegistro']["tmp_name"], $directoriocompleto))
+    $ext = substr($nombreArchivo, strrpos($nombreArchivo, '.'));
+    if (in_array($ext, $formatos))
     {
-      $query = mysqli_query($conexion,"INSERT INTO Usuarios (nombreUsuario, apPaternoUsuario, apMaternoUsuario, escolaridad, direccion, nacimiento, foto, correo, password, tipoUsuario) VALUES('$nombreRegistro', '$apPaternoRegistro', '$apMaternoRegistro', '$escolaridadRegistro', '$direccionRegistro', '$fechaNacimientoRegistro','$rutaFotoPerfilRegistro', '$correoRegistro', '$passwordRegistro', $tipoUsuarioRegistro)");
+      if (move_uploaded_file($_FILES['rutaFotoPerfilRegistro']["tmp_name"], $directoriocompleto))
+      {
+        $query = mysqli_query($conexion,"INSERT INTO Usuarios (nombreUsuario, apPaternoUsuario, apMaternoUsuario, escolaridad, direccion, nacimiento, foto, correo, password, tipoUsuario) VALUES('$nombreRegistro', '$apPaternoRegistro', '$apMaternoRegistro', '$escolaridadRegistro', '$direccionRegistro', '$fechaNacimientoRegistro','$rutaFotoPerfilRegistro', '$correoRegistro', '$passwordRegistro', $tipoUsuarioRegistro)");
+      }
+      else
+      {
+        echo json_encode(array('mensaje' => "Error, no se pudo procesar imagen, intenta de nuevo", 'pagina' => "registro",'alerta' => "error"));
+      }
     }
     else
     {
-      printf("Errormessage: %s\n", mysqli_error($conexion));
-      echo "Ha ocurrido un error): subir imagen";
+      echo json_encode(array('mensaje' => "Error, foto no admitida. Archivos permitidos (.jpg .jpeg .png .gif .bmp .tiff .raw), intenta de nuevo", 'pagina' => "registro",'alerta' => "error"));
     }
   }
   else
@@ -35,12 +44,11 @@
   }
   if ($query)
   {
-    echo "<br><h2 class='center-align'>¡Te has registrado con éxito! <br> Ahora puedes iniciar sesión</h2>";
+    echo json_encode(array('mensaje' => "¡Te has registrado con éxito!", 'pagina' => "index",'alerta' => "success"));
   }
   else
   {
-    printf("Errormessage: %s\n", mysqli_error($conexion));
-    echo "Ha ocurrido un error): query";
+    echo json_encode(array('mensaje' => "Error, no se pudo procesar su información, intente de nuevo", 'pagina' => "registro",'alerta' => "error"));
   }
   Desconectar($conexion);
 ?>

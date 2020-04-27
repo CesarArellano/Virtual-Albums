@@ -29,27 +29,27 @@
           <center>
             <div id="respuesta" class="flow-text white-text valign center-block"></div>
           </center>
-          <div class="card hoverable col s12 opacidad">
+          <div class="card hoverable col s12 opacidad" id="formulario">
             <form method="POST" enctype="multipart/form-data" id="form-users">
               <div class="card-content">
                 <span class="card-title center-align">Registro</span>
                 <div class="row">
                   <div class="input-field col l4 s12">
                     <i class="material-icons prefix">account_circle</i>
-                    <input id="nombreRegistro" name="nombreRegistro" type="text" class="validate" pattern="[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,80}"  maxlength="80" required>
+                    <input name="nombreRegistro" type="text" class="validate" pattern="[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,80}"  maxlength="80" required>
                     <label for="nombreRegistro">Ingresa tu(s) nombre(s)</label>
                   </div>
                   <div class="input-field col l4 s12">
-                    <input id="apPaternoRegistro" name="apPaternoRegistro" type="text" class="validate" pattern="[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,80}" maxlength="80" required>
+                    <input name="apPaternoRegistro" type="text" class="validate" pattern="[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,80}" maxlength="80" required>
                     <label for="apPaternoRegistro">Ingresa tu apellido paterno</label>
                   </div>
                   <div class="input-field col l4 s12">
-                    <input id="apMaternoRegistro" name="apMaternoRegistro" type="text" class="validate" pattern="[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,80}" maxlength="80" required>
+                    <input name="apMaternoRegistro" type="text" class="validate" pattern="[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,80}" maxlength="80" required>
                     <label for="apMaternoRegistro">Ingresa tu apellido materno</label>
                   </div>
                   <div class="input-field col l4 s12">
                     <i class="material-icons prefix">school</i>
-                    <select id="escolaridadRegistro" name="escolaridadRegistro" required>
+                    <select name="escolaridadRegistro" required>
                       <option value="" disabled selected>Selecciona la sección</option>
                       <option value="Sin estudios">Sin estudios</option>
                       <option value="Básica">Básica</option>
@@ -61,12 +61,12 @@
                   </div>
                   <div class="input-field col l8 s12">
                     <i class="material-icons prefix">home</i>
-                    <input id="direccionRegistro" name="direccionRegistro" type="text" class="validate" pattern="[a-zA-Z0-9áéíóúÁÉÍÓÚ., ]{2,300}" maxlength="300" required>
+                    <input name="direccionRegistro" type="text" class="validate" pattern="[a-zA-Z0-9áéíóúÁÉÍÓÚ., ]{2,300}" maxlength="300" required>
                     <label for="direccionRegistro">Ingresa tu dirección</label>
                   </div>
                   <div class="input-field col l6 s12">
                     <i class="material-icons prefix">insert_invitation</i>
-                    <input id=fechaNacimientoRegistro name="fechaNacimientoRegistro" type="text" class="datepicker" data-date-format="yyyy-mm-dd" required>
+                    <input name="fechaNacimientoRegistro" type="text" class="datepicker" data-date-format="yyyy-mm-dd" required>
                     <label for="fechaNacimientoRegistro">Ingresa tu fecha de nacimiento</label>
                   </div>
                   <div class="file-field input-field col l6 s12">
@@ -81,16 +81,16 @@
                   </div>
                   <div class="input-field col s12">
                     <i class="material-icons prefix">email</i>
-                    <input id="correoRegistro" name="correoRegistro" type="text" class="validate" pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{1,5}" maxlength="150" required>
+                    <input name="correoRegistro" type="text" class="validate" pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{1,5}" maxlength="150" required>
                     <label for="correoRegistro" data-error="Incorrecto" data-success="Correcto">Ingresa tu correo electrónico</label>
                   </div>
 
                   <div class="input-field col s12">
                     <i class="material-icons prefix">lock</i>
-                    <input id="passwordRegistro" name="passwordRegistro" type="password" class="validate" minlength="8" maxlength="32" required>
+                    <input name="passwordRegistro" type="password" class="validate" minlength="8" maxlength="32" required>
                     <label for="passwordRegistro">Ingrese su contraseña</label>
                   </div>
-                  <input type="hidden" id="tipoUsuarioRegistro" name="tipoUsuarioRegistro" value="2">
+                  <input type="hidden" name="tipoUsuarioRegistro" value="2">
                 </div>
               </div>
               <div class="card-action center-align">
@@ -98,9 +98,6 @@
                 <button class="btn waves-effect waves-light light-blue accent-4" type="submit" name="action" id="action">Registrar
                   <i class="material-icons right">send</i>
                 </button>
-              </div>
-              <div class="center">
-                <b><p id="validacion" class="center"></p></b>
               </div>
             </form>
           </div>

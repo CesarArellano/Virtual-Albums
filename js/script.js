@@ -36,23 +36,62 @@ $(document).ready(function(e)
       type: 'POST',
       url: 'registrar.php',
       data: new FormData(this), // Inicializa el objeto con la información de la forma.
+      dataType : 'json', // Indicamos formato de respuesta
       contentType: false, // desactivamos esta opción, ya que la  codificación se específico en la forma.
       cache: false, // No almacena caché.
       processData:false, // No procesa nada con un determinado tipo de codificación, ya que contentType es false.
-      beforeSend: function() // Antes de enviar los datos se muestra contenido.
+      success: function(data) // Después de enviar los datos se muestra la respuesta del servidor.
       {
-        $("#formulario").slideUp(); // animación para desaparecer la forma.
-        $("#respuesta").html("<div class='card hoverable black-text'><div class='card-content'><div class='progress'><div class = 'indeterminate'></div></div><br>Espere un momento mientras sus datos son enviados...</div></div>"); // Añade contenido html a la etiqueta con el id respuesta.
-      },
-      success: function(respond) // Después de enviar los datos se muestra la respuesta del servidor.
-      {
-        $("#formulario").slideUp(); // animación para desaparecer la forma.
-        $("#respuesta").html(respond); // Añade contenido html a la etiqueta con el id respuesta.
-        setTimeout("location.href='inicio.php'", 10000); // Después de 10 segundos, redirige a inicio.php.
+        switch (data.pagina) //Evaluamos qué tipo de usuario es para saber a donde redirigirlo
+        {
+          case 'index':
+            pagina = 'inicio.php';
+            break;
+          case 'registro':
+            pagina = 0;
+            break;
+        }
+
+        if (data.alerta == "error") // título de acuerdo al tipo de alerta
+            titulo = "Ups...";
+        else
+            titulo = "Bien hecho!";
+        swal( // Se inicializa sweetalert2
+        {
+          title: titulo,
+          type: data.alerta,
+          html: data.mensaje,
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok!'
+        }).then(function ()
+        {
+          if(pagina != 0)
+            location.href = pagina;
+        });
+        $(document).click(function()
+        {
+          if(pagina != 0)
+            location.href = pagina;
+        });
+        $(document).keyup(function(e)
+        {
+          if (e.which == 27)
+          {
+            if(pagina != 0)
+              location.href = pagina;
+          }
+        });
       },
       error : function(xhr, status) // Si hubo error, despliega mensaje.
       {
-        $("#respuesta").html("Lo sentimos, hemos tenido un problema <br> Intentelo más tarde"); // Añade contenido html a la etiqueta con el id respuesta.
+        swal( // Se inicializa sweetalert2
+        {
+          title: "Ups...",
+          type: "error",
+          html: "Error en el servidor",
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok!'
+        });
       }
     });
   });
