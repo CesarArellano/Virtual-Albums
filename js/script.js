@@ -42,6 +42,7 @@ $(document).ready(function(e)
       processData:false, // No procesa nada con un determinado tipo de codificación, ya que contentType es false.
       success: function(data) // Después de enviar los datos se muestra la respuesta del servidor.
       {
+        console.log(data);
         switch (data.pagina) //Evaluamos qué tipo de usuario es para saber a donde redirigirlo
         {
           case 'index':
@@ -88,7 +89,7 @@ $(document).ready(function(e)
         {
           title: "Ups...",
           type: "error",
-          html: "Error en el servidor",
+          html: "Error en el servidor: "+status+xhr,
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Ok!'
         });
