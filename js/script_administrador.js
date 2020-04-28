@@ -1,0 +1,71 @@
+$(document).ready(function(e)
+{
+  $(".button-collapse").sideNav();
+  $("#admin").hide();
+  $("#registro").hide();
+  $("#busqueda").hide();
+  $("#visualizacion").hide();
+  $("#analisis").hide();
+
+  $("#select_inicio").click(function()
+  {
+    $("#inicio_contenido").show();
+    $("#admin").hide();
+    $("#registro").hide();
+    $("#busqueda").hide();
+    $("#visualizacion").hide();
+    $("#analisis").hide();
+  });
+  $("#select_admin").click(function()
+  {
+    $("#inicio_contenido").hide();
+    $("#admin").show();
+    $("#registro").hide();
+    $("#busqueda").hide();
+    $("#visualizacion").hide();
+    $("#analisis").hide();
+  });
+  $("#select_registro").click(function()
+  {
+    $("#inicio_contenido").hide();
+    $("#admin").hide();
+    $("#registro").show();
+    $("#busqueda").hide();
+    $("#visualizacion").hide();
+    $("#analisis").hide();
+  });
+
+  $("#select_busqueda").click(function()
+  {
+    $("#inicio_contenido").hide();
+    $("#admin").hide();
+    $("#registro").hide();
+    $("#busqueda").show();
+    $("#visualizacion").hide();
+    $("#analisis").hide();
+  });
+  $("#select_visualizacion").click(function()
+  {
+    $("#inicio_contenido").hide();
+    $("#admin").hide();
+    $("#registro").hide();
+    $("#busqueda").hide();
+    $("#visualizacion").show();
+    $("#analisis").hide();
+  });
+  $("#select_analisis").click(function()
+  {
+    $("#inicio_contenido").hide();
+    $("#admin").hide();
+    $("#registro").hide();
+    $("#busqueda").hide();
+    $("#visualizacion").hide();
+    $("#analisis").show();
+  });
+  
+  $("#busquedausuarios").on("keyup",function()
+  {
+
+  });
+
+});

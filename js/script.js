@@ -1,14 +1,5 @@
 $(document).ready(function(e)
 {
-  $("#buscar").change(function()
-  {
-    $("#buscar").val('');
-  });
-  $(document).on('keyup', '#buscar', function(){
-      console.log("Buscando...");
-  });
-  $(".button-collapse").sideNav();
-  $('ul.tabs').tabs();
   $("select").material_select(); // Inicializa el select
   $("select[required]").css({display: "block", height: 0, padding: 0, width: 0, position: 'absolute'}); // Muestra en pantalla un mensaje de que el campo del select está vacío.
   $('.datepicker').pickadate( // Inicializa el calendario datepicker de materialize

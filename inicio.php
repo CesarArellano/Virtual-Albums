@@ -2,6 +2,7 @@
   session_start(); // Función es para activar la sesión.
   require_once "HTML/Template/ITX.php";
   // Redirige al usuario si está logueado.
+
   if (isset($_SESSION['tipoUsuario']) AND $_SESSION['tipoUsuario'] == 1)
     header('location: administrador/inicio.php');
   if (isset($_SESSION['tipoUsuario']) AND $_SESSION['tipoUsuario'] == 2)

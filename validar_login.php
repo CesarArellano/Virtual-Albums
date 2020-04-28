@@ -16,7 +16,7 @@
 	}
 
 	$conexion = Conectar();
-	$strQuery = "SELECT idUsuario, tipoUsuario, nombreUsuario,foto FROM Usuarios WHERE correo = '$correo' AND password = '$password'";
+	$strQuery = "SELECT idUsuario, tipoUsuario FROM Usuarios WHERE correo = '$correo' AND password = '$password'";
 	$query = mysqli_query($conexion,$strQuery);
 
   // La contraseña está mal o el usuario no existe
@@ -39,10 +39,8 @@
 
 		$query = "INSERT INTO Sesiones (idUsuario,token,timestamp) VALUES ($idUsuario,'$token',now())";
 		mysqli_query($conexion,$query);
-    $_SESSION['idUsuario'] = $idUsuario;
     $_SESSION['tipoUsuario'] = $idTipoUsuario;
-    $_SESSION['token'] = $token;
-    $_SESSION['foto'] = $row['foto'];
+    $_SESSION['idUsuario'] = $idUsuario;
 		Desconectar($conexion);
 		switch($idTipoUsuario)
     {
