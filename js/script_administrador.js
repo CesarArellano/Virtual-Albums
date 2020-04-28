@@ -1,6 +1,7 @@
 $(document).ready(function(e)
 {
   $(".button-collapse").sideNav();
+
   $("#admin").hide();
   $("#registro").hide();
   $("#busqueda").hide();
@@ -62,10 +63,91 @@ $(document).ready(function(e)
     $("#visualizacion").hide();
     $("#analisis").show();
   });
-  
-  $("#busquedausuarios").on("keyup",function()
-  {
 
+  $("#form-admins").on('submit', function(e)
+  {
+    e.preventDefault();
+    let nombreFoto, flag = 0;
+    nombreFoto = $("#rutaFotoPerfilRegistro").val();
+    if(nombreFoto != '')
+    {
+      if (!(/\.(jpg|jpeg|png|gif|bmp|tiff|raw|JPG|PNG)$/i).test(nombreFoto)) // si el archivo no tiene estas extensiones
+          flag = 1;
+    }
+    if(flag == 1) // Si el archivo no es una imagen despliega error.
+    {
+      swal( // Se inicializa sweetalert2
+      {
+        title: "Upss...",
+        type: "error",
+        html: "Error, formato de imagen inválido, intente con otra imagen",
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok!'
+      });
+    }
+    else
+    {
+      $.ajax(
+      {
+        type: 'POST',
+        url: '../registrar.php',
+        data: new FormData(this), // Inicializa el objeto con la información de la forma.
+        dataType : 'json', // Indicamos formato de respuesta
+        contentType: false, // desactivamos esta opción, ya que la  codificación se específico en la forma.
+        cache: false, // No almacena caché.
+        processData:false, // No procesa nada con un determinado tipo de codificación, ya que contentType es false.
+        success: function(data) // Después de enviar los datos se muestra la respuesta del servidor.
+        {
+          if (data.alerta == "error") // título de acuerdo al tipo de alerta
+              titulo = "Ups...";
+          else
+              titulo = "Bien hecho!";
+          swal( // Se inicializa sweetalert2
+          {
+            title: titulo,
+            type: data.alerta,
+            html: data.mensaje,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok!'
+          }).then(function ()
+          {
+            if (data.pagina == "index")
+            {
+              location.reload();
+            }
+
+          });
+          $(document).click(function()
+          {
+            if (data.pagina == "index" )
+            {
+              location.reload();
+            }
+          });
+          $(document).keyup(function(e)
+          {
+            if (e.which == 27)
+            {
+              if (data.pagina == "index" )
+              {
+                location.reload();
+              }
+            }
+          });
+        },
+        error : function(xhr, status) // Si hubo error, despliega mensaje.
+        {
+          swal( // Se inicializa sweetalert2
+          {
+            title: "Ups...",
+            type: "error",
+            html: "Error del servidor, intente de nuevo",
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok!'
+          });
+        }
+      });
+    }
   });
 
 });

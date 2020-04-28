@@ -1,5 +1,62 @@
 <div class="title">
     <center>
-      <h2><b>Módulo Registro</b></h2>
+      <h2><b>Registrar administradores</b></h2>
     </center>
+</div>
+<div class="container">
+  <div class="row">
+    <center>
+      <div id="respuesta" class="flow-text white-text valign center-block"></div>
+    </center>
+    <div class="card hoverable col s12 opacidad" id="formulario">
+      <form method="POST" enctype="multipart/form-data" id="form-admins">
+        <div class="card-content">
+          <span class="card-title center-align"></span>
+          <div class="row">
+            <div class="input-field col l4 s12">
+              <i class="material-icons prefix">account_circle</i>
+              <input name="nombreRegistro" type="text" class="validate" pattern="[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,80}"  maxlength="80" required>
+              <label for="nombreRegistro">Ingresa nombre(s)</label>
+            </div>
+            <div class="input-field col l4 s12">
+              <input name="apPaternoRegistro" type="text" class="validate" pattern="[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,80}" maxlength="80" required>
+              <label for="apPaternoRegistro">Ingresa apellido paterno</label>
+            </div>
+            <div class="input-field col l4 s12">
+              <input name="apMaternoRegistro" type="text" class="validate" pattern="[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,80}" maxlength="80" required>
+              <label for="apMaternoRegistro">Ingresa apellido materno</label>
+            </div>
+            <div class="file-field input-field col l12 s12">
+              <div class="btn waves-effect waves-light light-blue accent-4">
+                <i class="material-icons prefix" id="Icono_Imagen">image</i>
+                <span id="texto-boton-imagen">Foto perfil</span>
+                <input type="file" name="rutaFotoPerfilRegistro" accept="image/*">
+              </div>
+              <div class="file-path-wrapper">
+                <input class="file-path validate" type="text" id="rutaFotoPerfilRegistro" name="rutaFotoPerfilRegistro" placeholder="Opcional">
+              </div>
+            </div>
+            <div class="input-field col s12">
+              <i class="material-icons prefix">email</i>
+              <input name="correoRegistro" type="text" class="validate" pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{1,5}" maxlength="150" required>
+              <label for="correoRegistro" data-error="Incorrecto" data-success="Correcto">Ingresa correo electrónico</label>
+            </div>
+
+            <div class="input-field col s12">
+              <i class="material-icons prefix">lock</i>
+              <input name="passwordRegistro" type="password" class="validate" minlength="8" maxlength="32" required>
+              <label for="passwordRegistro">Ingrese contraseña</label>
+            </div>
+            <input type="hidden" name="tipoUsuarioRegistro" value="1">
+          </div>
+        </div>
+        <div class="card-action center-align">
+          <button class="btn-flat grey-text waves-effect" type="reset" id="reset" style="margin: 10px"> Limpiar Campos </button>
+          <button class="btn waves-effect waves-light light-blue accent-4" type="submit" name="action" id="action" style="margin: 10px">Registrar
+            <i class="material-icons right">send</i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
