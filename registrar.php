@@ -3,7 +3,6 @@
   error_reporting(E_ALL);
   ini_set('display_errors', 1);
   header('Content-type: application/json; charset=utf-8'); // Se especifica el tipo de contenido a regresar, codificado en utf-8
-  $formatos  = array('.jpg', '.png', '.jpeg', '.gif', '.bmp', '.tiff', '.raw');
   $conexion = Conectar();
   $nombreRegistro = $_POST['nombreRegistro'];
   $apPaternoRegistro = $_POST['apPaternoRegistro'];
@@ -27,24 +26,20 @@
   {
     if ($rutaFotoPerfilRegistro != '')
     {
+      $segundos = time(); // Devuelve el momento actual medido como el número de segundos desde la época unix (1 de Enero de 1970 00:00:00 GMT).
       $directorio = 'usuario/images/';
       $nombreArchivo = $_FILES['rutaFotoPerfilRegistro']['name'];
+      $extension = ".".pathinfo($nombreArchivo, PATHINFO_EXTENSION);
+      $nombreArchivo = pathinfo($nombreArchivo, PATHINFO_FILENAME);
+      $nombreArchivo = $nombreArchivo.$segundos.$extension;
       $directoriocompleto = $directorio.$nombreArchivo;
-      $ext = substr($nombreArchivo, strrpos($nombreArchivo, '.'));
-      if (in_array($ext, $formatos))
+      if (move_uploaded_file($_FILES['rutaFotoPerfilRegistro']["tmp_name"], $directoriocompleto)) //Sube la imágen, si se sube correctamente se inserta la información en la base de datos.
       {
-        if (move_uploaded_file($_FILES['rutaFotoPerfilRegistro']["tmp_name"], $directoriocompleto))
-        {
-          $query = mysqli_query($conexion,"INSERT INTO Usuarios (nombreUsuario, apPaternoUsuario, apMaternoUsuario, escolaridad, direccion, nacimiento, foto, correo, password, tipoUsuario) VALUES('$nombreRegistro', '$apPaternoRegistro', '$apMaternoRegistro', '$escolaridadRegistro', '$direccionRegistro', '$fechaNacimientoRegistro','$rutaFotoPerfilRegistro', '$correoRegistro', '$passwordRegistro', $tipoUsuarioRegistro)");
-        }
-        else
-        {
-          echo json_encode(array('mensaje' => "Error, no se pudo procesar imagen, intente de nuevo", 'pagina' => "registro",'alerta' => "error"));
-        }
+        $query = mysqli_query($conexion,"INSERT INTO Usuarios (nombreUsuario, apPaternoUsuario, apMaternoUsuario, escolaridad, direccion, nacimiento, foto, correo, password, tipoUsuario) VALUES('$nombreRegistro', '$apPaternoRegistro', '$apMaternoRegistro', '$escolaridadRegistro', '$direccionRegistro', '$fechaNacimientoRegistro','$nombreArchivo', '$correoRegistro', '$passwordRegistro', $tipoUsuarioRegistro)");
       }
       else
       {
-        echo json_encode(array('mensaje' => "Error, foto no admitida. Archivos permitidos (.jpg .jpeg .png .gif .bmp .tiff .raw), intente de nuevo", 'pagina' => "registro",'alerta' => "error"));
+        echo json_encode(array('mensaje' => "Error, no se pudo subir imagen, intente de nuevo", 'pagina' => "registro",'alerta' => "error"));
       }
     }
     else

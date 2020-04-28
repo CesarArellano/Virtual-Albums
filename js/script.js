@@ -1,6 +1,7 @@
 $(document).ready(function(e)
 {
   $(".button-collapse").sideNav();
+  $('ul.tabs').tabs();
   $("select").material_select(); // Inicializa el select
   $("select[required]").css({display: "block", height: 0, padding: 0, width: 0, position: 'absolute'}); // Muestra en pantalla un mensaje de que el campo del select está vacío.
   $('.datepicker').pickadate( // Inicializa el calendario datepicker de materialize
@@ -31,70 +32,90 @@ $(document).ready(function(e)
   $("#form-users").on('submit', function(e)
   {
     e.preventDefault();
-    $.ajax(
+    let nombreFoto, flag = 0;
+    nombreFoto = $("#rutaFotoPerfilRegistro").val();
+    if(nombreFoto != '')
     {
-      type: 'POST',
-      url: 'registrar.php',
-      data: new FormData(this), // Inicializa el objeto con la información de la forma.
-      dataType : 'json', // Indicamos formato de respuesta
-      contentType: false, // desactivamos esta opción, ya que la  codificación se específico en la forma.
-      cache: false, // No almacena caché.
-      processData:false, // No procesa nada con un determinado tipo de codificación, ya que contentType es false.
-      success: function(data) // Después de enviar los datos se muestra la respuesta del servidor.
+      if (!(/\.(jpg|jpeg|png|gif|bmp|tiff|raw|JPG|PNG)$/i).test(nombreFoto)) // si el archivo no tiene estas extensiones
+          flag = 1;
+    }
+    if(flag == 1) // Si el archivo no es una imagen despliega error.
+    {
+      swal( // Se inicializa sweetalert2
       {
-        console.log(data);
-        switch (data.pagina) //Evaluamos qué tipo de usuario es para saber a donde redirigirlo
+        title: "Upss...",
+        type: "error",
+        html: "Error, formato de imagen inválido, intente con otra imagen",
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Ok!'
+      });
+    }
+    else
+    {
+      $.ajax(
+      {
+        type: 'POST',
+        url: 'registrar.php',
+        data: new FormData(this), // Inicializa el objeto con la información de la forma.
+        dataType : 'json', // Indicamos formato de respuesta
+        contentType: false, // desactivamos esta opción, ya que la  codificación se específico en la forma.
+        cache: false, // No almacena caché.
+        processData:false, // No procesa nada con un determinado tipo de codificación, ya que contentType es false.
+        success: function(data) // Después de enviar los datos se muestra la respuesta del servidor.
         {
-          case 'index':
-            pagina = 'inicio.php';
-            break;
-          case 'registro':
-            pagina = 0;
-            break;
-        }
+          switch (data.pagina) //Evaluamos a qué página se redirigirá.
+          {
+            case 'index':
+              pagina = 'inicio.php';
+              break;
+            case 'registro':
+              pagina = 0;
+              break;
+          }
 
-        if (data.alerta == "error") // título de acuerdo al tipo de alerta
-            titulo = "Ups...";
-        else
-            titulo = "Bien hecho!";
-        swal( // Se inicializa sweetalert2
-        {
-          title: titulo,
-          type: data.alerta,
-          html: data.mensaje,
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Ok!'
-        }).then(function ()
-        {
-          if(pagina != 0)
-            location.href = pagina;
-        });
-        $(document).click(function()
-        {
-          if(pagina != 0)
-            location.href = pagina;
-        });
-        $(document).keyup(function(e)
-        {
-          if (e.which == 27)
+          if (data.alerta == "error") // título de acuerdo al tipo de alerta
+              titulo = "Ups...";
+          else
+              titulo = "Bien hecho!";
+          swal( // Se inicializa sweetalert2
+          {
+            title: titulo,
+            type: data.alerta,
+            html: data.mensaje,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok!'
+          }).then(function ()
           {
             if(pagina != 0)
               location.href = pagina;
-          }
-        });
-      },
-      error : function(xhr, status) // Si hubo error, despliega mensaje.
-      {
-        swal( // Se inicializa sweetalert2
+          });
+          $(document).click(function()
+          {
+            if(pagina != 0)
+              location.href = pagina;
+          });
+          $(document).keyup(function(e)
+          {
+            if (e.which == 27)
+            {
+              if(pagina != 0)
+                location.href = pagina;
+            }
+          });
+        },
+        error : function(xhr, status) // Si hubo error, despliega mensaje.
         {
-          title: "Ups...",
-          type: "error",
-          html: "Error en el servidor: "+status+xhr,
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Ok!'
-        });
-      }
-    });
+          swal( // Se inicializa sweetalert2
+          {
+            title: "Ups...",
+            type: "error",
+            html: "Error del servidor, intente de nuevo",
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok!'
+          });
+        }
+      });
+    }
   });
   $("#form-login").on('submit', function(e)
   {
@@ -138,19 +159,26 @@ $(document).ready(function(e)
         }).then(function ()
         {
           if(pagina != 0)
+          {
             location.href = pagina;
+          }
         });
         $(document).click(function()
         {
           if(pagina != 0)
+          {
             location.href = pagina;
+          }
+
         });
         $(document).keyup(function(e)
         {
           if (e.which == 27)
           {
             if(pagina != 0)
+            {
               location.href = pagina;
+            }
           }
         });
       },
