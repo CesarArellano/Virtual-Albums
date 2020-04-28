@@ -1,5 +1,12 @@
 $(document).ready(function(e)
 {
+  $("#buscar").change(function()
+  {
+    $("#buscar").val('');
+  });
+  $(document).on('keyup', '#buscar', function(){
+      console.log("Buscando...");
+  });
   $(".button-collapse").sideNav();
   $('ul.tabs').tabs();
   $("select").material_select(); // Inicializa el select

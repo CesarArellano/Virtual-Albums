@@ -13,7 +13,7 @@
             <div class="row">
               <div class="input-field col s12">
                 <i class="material-icons prefix">email</i>
-                <input name="correo" type="email" class="validate" pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{1,5}">
+                <input name="correo" type="email" class="validate" pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{1,5}" required>
                 <label for="email" data-error="Incorrecto" data-success="Correcto">Ingresa tu correo electrónico</label>
               </div>
 
@@ -25,10 +25,13 @@
             </div>
           </div>
           <div class="card-action center-align">
-            <button class="btn-flat grey-text waves-effect" type="reset" id="reset"> Limpiar Campos </button>
-            <button class="btn waves-effect waves-light light-blue accent-4" type="submit" name="action" id="action">Entrar
-              <i class="material-icons right">send</i>
-            </button>
+              <button class="btn-flat grey-text waves-effect" type="reset" id="reset" style="margin: 10px"> Limpiar Campos </button>
+              <button class="btn waves-effect waves-light light-blue accent-4" type="submit" style="margin: 10px">Iniciar Sesión
+                <i class="material-icons right">send</i>
+              </button>
+              <button class="btn waves-effect waves-light red" onclick="location.href='usuario/inicio.php'" style="margin: 10px">Entrar como visitante
+                <i class="material-icons right">visibility</i>
+              </button>
           </div>
         </form>
       </div>
