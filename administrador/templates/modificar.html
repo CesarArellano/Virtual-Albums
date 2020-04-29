@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<title>{TITULO}</title>
+	<meta charset="utf-8">
+  <link rel="shortcut icon" href="../images/icon.png">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.3.2/sweetalert2.css">
+  <link type="text/css" rel="stylesheet" href="../css/materialize.min.css"  media="screen,projection"/>
+  <link type="text/css" rel="stylesheet" href="../css/styles_albums.css"  media="screen,projection"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.3.2/sweetalert2.js" charset="utf-8"></script>
+  <script type="text/javascript" src="../js/materialize.min.js"></script>
+  <script type="text/javascript" src="../js/script_administrador.js"></script>
+</head>
+<body>
+<main>
+	<nav class="blue darken-3 ">
+		<div class="nav-wrapper">
+			<a class="brand-logo center">Virtual Albums | Modificar Usuario</a>
+			<img src="../images/icon.png" class="brand-logo right" height="50px" id="nav-logo">
+			<a href="#" id="activar" data-activates="Panel" class="button-collapse"><i class="material-icons">menu</i></a>
+		</div>
+	</nav>
+  <div class="container">
+    <br>
+    <div class="row">
+      <center>
+        <div id="respuesta" class="flow-text white-text valign center-block"></div>
+      </center>
+      <div class="card hoverable col s12 opacidad" id="formulario">
+        <form method="POST" enctype="multipart/form-data" id="form-update">
+          <div class="card-content">
+            <span class="card-title center-align">Modificar información personal</span>
+            <div class="row">
+              <div class="input-field col l4 s12">
+                <i class="material-icons prefix">account_circle</i>
+                <input name="nombreRegistro" type="text" class="validate" pattern="[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,80}"  maxlength="80" required>
+                <label for="nombreRegistro">Ingresa tu(s) nombre(s)</label>
+              </div>
+              <div class="input-field col l4 s12">
+                <input name="apPaternoRegistro" type="text" class="validate" pattern="[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,80}" maxlength="80" required>
+                <label for="apPaternoRegistro">Ingresa tu apellido paterno</label>
+              </div>
+              <div class="input-field col l4 s12">
+                <input name="apMaternoRegistro" type="text" class="validate" pattern="[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,80}" maxlength="80" required>
+                <label for="apMaternoRegistro">Ingresa tu apellido materno</label>
+              </div>
+              <div class="input-field col l4 s12">
+                <i class="material-icons prefix">school</i>
+                <select name="escolaridadRegistro" required>
+                  <option value="" disabled selected>Selecciona la sección</option>
+                  <option value="Sin estudios">Sin estudios</option>
+                  <option value="Básica">Básica</option>
+                  <option value="Media">Media</option>
+                  <option value="Media Superior">Media Superior</option>
+                  <option value="Superior">Superior</option>
+                </select>
+                <label for="escolaridadRegistro">Escolaridad</label>
+              </div>
+              <div class="input-field col l8 s12">
+                <i class="material-icons prefix">home</i>
+                <input name="direccionRegistro" type="text" class="validate" pattern="[a-zA-Z0-9áéíóúÁÉÍÓÚ., ]{2,300}" maxlength="300" required>
+                <label for="direccionRegistro">Ingresa tu dirección</label>
+              </div>
+              <div class="input-field col l6 s12">
+                <i class="material-icons prefix">insert_invitation</i>
+                <input name="fechaNacimientoRegistro" type="text" class="datepicker" data-date-format="yyyy-mm-dd" required>
+                <label for="fechaNacimientoRegistro">Ingresa tu fecha de nacimiento</label>
+              </div>
+              <div class="file-field input-field col l6 s12">
+                <div class="btn waves-effect waves-light light-blue accent-4">
+                  <i class="material-icons prefix" id="Icono_Imagen">image</i>
+                  <span id="texto-boton-imagen">Foto perfil</span>
+                  <input type="file" name="rutaFotoPerfilRegistro" accept="image/*">
+                </div>
+                <div class="file-path-wrapper">
+                  <input class="file-path validate" type="text" id="rutaFotoPerfilRegistro" name="rutaFotoPerfilRegistro" placeholder="Opcional">
+                </div>
+              </div>
+              <div class="input-field col s12">
+                <i class="material-icons prefix">lock</i>
+                <input name="passwordRegistro" type="password" class="validate" minlength="8" maxlength="32" required>
+                <label for="passwordRegistro">Ingrese su contraseña</label>
+              </div>
+              <input type="hidden" name="idUsuario" value="{IDUSUARIO}">
+							<input type="hidden" name="tipoUsuario" value="{TIPOUSUARIO}">
+            </div>
+          </div>
+          <div class="card-action center-align">
+            <button class="btn-flat grey-text waves-effect" type="reset" id="reset" style="margin: 10px"> Limpiar Campos </button>
+            <button class="btn waves-effect waves-light light-blue accent-4" type="submit" name="action" id="action" style="margin: 10px">Modificar información
+              <i class="material-icons right">send</i>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <center>
+      <button class="btn waves-effect waves-light orange" style="margin: 10px" onclick="window.location.href='inicio.php'">Regresar al menu principal
+        <i class="material-icons right">arrow_back</i>
+      </button>
+    </center>
+  </div>
+</main>
+</body>
+</html>

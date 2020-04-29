@@ -23,7 +23,8 @@
                      <th>Correo</th>
                      <th>Tipo de usuario</th>
                      <th>No. Albumes</th>
-                     <th>Información</th>
+                     <th>Álbumes</th>
+                     <th>Modificar</th>
                     </thead>
                     <tbody>";
                     while ($row = mysqli_fetch_assoc($consulta))
@@ -62,7 +63,8 @@
                           <td>".$row['correo']."</td>
                           <td>".$row['tipoUsuario']."</td>
                           <td>".$CuantoAlbumes."</td>
-                          <td><a href='index.php?id=".$row['idUsuario']."'target='_blank'>Ver más</a></td>
+                          <td><a href='albumes.php?id=".$row['idUsuario']."'target='_blank'>Ver más</a></td>
+                          <td><a href='modificar.php?id=".$row['idUsuario']."'target='_blank'>Modificar información</a></td>
                         </tr>";
                     }
                     $Salida.= "</tbody></table>";

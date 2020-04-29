@@ -20,8 +20,7 @@
                      <th>Apellido Materno</th>
                      <th>Título Album</th>
                      <th>ID Foto</th>
-                     <th>NombreFoto</th>
-                     <th>Estado</th>
+                     <th>Vista previa</th>
                      <th>Autorizar</th>
                     </thead>
                     <tbody>";
@@ -39,7 +38,6 @@
                           <td>".$row['titulo']."</td>
                           <td>".$row['idFoto']."</td>
                           <td><img width='100' src='../usuario/images/albumes/".$row['rutaFoto']."'/></td>
-                          <td>".$autoriza."</td>
                           <td><a href='autorizar.php?foto=".$row['idFoto']."'>Autorizar</a></td>
                         </tr>";
                     }
