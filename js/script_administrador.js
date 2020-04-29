@@ -1,6 +1,11 @@
 $(document).ready(function(e)
 {
   $(".button-collapse").sideNav();
+  $('ul.tabs').tabs(
+  {
+    swipeable : true,
+    responsiveThreshold : 1920
+  });
 
   $("#admin").hide();
   $("#registro").hide();
@@ -63,6 +68,39 @@ $(document).ready(function(e)
     $("#visualizacion").hide();
     $("#analisis").show();
   });
+  $(Buscar_Datos());
+  function Buscar_Datos(Consulta){
+      $.ajax(
+      {
+          url: 'busquedaresultados.php',
+          type: 'POST',
+          dataType: 'html',
+          data: {Consulta: Consulta},
+          success: function(data) // Después de enviar los datos se muestra la respuesta del servidor.
+          {
+            $("#datos").html(data);
+          },
+          error : function(xhr, status) // Si hubo error, despliega mensaje.
+          {
+            swal( // Se inicializa sweetalert2
+            {
+              title: "Ups...",
+              type: "error",
+              html: "Error del servidor, intente de nuevo",
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Ok!'
+            });
+          }
+      });
+  }
+  $("#buscar").on('keyup', function(){
+      var Valor = $(this).val();
+      if (Valor != "")
+          Buscar_Datos(Valor);
+      else
+          Buscar_Datos();
+  });
+  $(".tabs-content").css('height','1000px'); // Ajusta los divs de los tabs del módulo administración
 
   $("#form-admins").on('submit', function(e)
   {
@@ -149,5 +187,4 @@ $(document).ready(function(e)
       });
     }
   });
-
 });

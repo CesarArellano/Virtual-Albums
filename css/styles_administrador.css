@@ -12,11 +12,6 @@ header, main, footer
     {
     	padding-left: 0;
     }
-    th, td
-    {
-        font-size: 12px;
-        text-align: center;
-    }
     .button-collapse
     {
       	display: inherit;
@@ -42,16 +37,28 @@ header, main, footer
   {
     font-size: 11px;
   }
-  /* CSS Ajuste de tabla*/
-  table
-  {
-  	table-layout: fixed;
-  }
+}
 
-  th, td
-  {
-  	word-wrap: break-word;
-  }
+.tabs .tab a
+{
+  color:#000;
+}
+.tabs .tab a:hover
+{
+  background-color:#eee;
+  color:#000;
+}
+
+.tabs .tab a.active
+{
+  background-color:#1976d2;
+  color:#000;
+  color: white;
+}
+
+.tabs .indicator
+{
+  background-color: #388e3c;
 }
 
 .input-field .prefix.active
