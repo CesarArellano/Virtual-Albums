@@ -14,14 +14,14 @@
 
   if($tipoUsuarioRegistro == 1)
   {
-    $directorio = "administrador/images/"; //Definimos el directorio para el administrador donde se van a guardar las imágenes
+    $directorio = "administrador/images/perfil/"; //Definimos el directorio para el administrador donde se van a guardar las imágenes
   }
   if($tipoUsuarioRegistro == 2) // Datos a extraer solo usuario.
   {
     $escolaridadRegistro = $_POST['escolaridadRegistro'];
     $direccionRegistro = $_POST['direccionRegistro'];
     $fechaNacimientoRegistro = $_POST['fechaNacimientoRegistro'];
-    $directorio = "usuario/images/"; //Definimos el directorio para el usuario donde se van a guardar las imágenes
+    $directorio = "usuario/images/perfil/"; //Definimos el directorio para el usuario donde se van a guardar las imágenes
   }
 
   $query = mysqli_query($conexion,"SELECT * FROM Usuarios WHERE correo = '$correoRegistro'"); //Revisamos si el correo ya existe en la base de datos

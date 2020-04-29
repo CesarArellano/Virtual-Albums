@@ -13,7 +13,7 @@
   if($row['foto'] == NULL)
     $rutaImagen = "../images/avatar.png";
   else
-    $rutaImagen = "images/".$row['foto'];
+    $rutaImagen = "images/perfil/".$row['foto'];
   $template = new HTML_Template_ITX('./templates');
   $template->loadTemplatefile("principal.html", true, true);
   $template->setVariable("TITULO", "Virtual Albums | Administración");

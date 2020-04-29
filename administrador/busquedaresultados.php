@@ -70,6 +70,6 @@
  else
    $Salida.= "No se encontraron resultados ):";
  echo $Salida;
- mysqli_free_result($resultado);
+ mysqli_free_result($row);
  Desconectar($conexion);
 ?>

@@ -1,6 +1,7 @@
 $(document).ready(function(e)
 {
   $(".button-collapse").sideNav();
+  $('.materialboxed').materialbox();
   $('ul.tabs').tabs(
   {
     swipeable : true,
@@ -69,7 +70,10 @@ $(document).ready(function(e)
     $("#analisis").show();
   });
   $(Buscar_Datos());
-  function Buscar_Datos(Consulta){
+  $(Buscar_Fotos());
+  $(Buscar_Albumes());
+  function Buscar_Datos(Consulta)
+  {
       $.ajax(
       {
           url: 'busquedaresultados.php',
@@ -93,12 +97,76 @@ $(document).ready(function(e)
           }
       });
   }
+  function Buscar_Fotos(Consulta)
+  {
+      $.ajax(
+      {
+          url: 'busquedafotos.php',
+          type: 'POST',
+          dataType: 'html',
+          data: {Consulta: Consulta},
+          success: function(data) // Después de enviar los datos se muestra la respuesta del servidor.
+          {
+            $("#datosfotos").html(data);
+          },
+          error : function(xhr, status) // Si hubo error, despliega mensaje.
+          {
+            swal( // Se inicializa sweetalert2
+            {
+              title: "Ups...",
+              type: "error",
+              html: "Error del servidor, intente de nuevo",
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Ok!'
+            });
+          }
+      });
+  }
+  function Buscar_Albumes(Consulta)
+  {
+      $.ajax(
+      {
+          url: 'busquedaalbumes.php',
+          type: 'POST',
+          dataType: 'html',
+          data: {Consulta: Consulta},
+          success: function(data) // Después de enviar los datos se muestra la respuesta del servidor.
+          {
+            $("#datosalbumes").html(data);
+          },
+          error : function(xhr, status) // Si hubo error, despliega mensaje.
+          {
+            swal( // Se inicializa sweetalert2
+            {
+              title: "Ups...",
+              type: "error",
+              html: "Error del servidor, intente de nuevo",
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Ok!'
+            });
+          }
+      });
+  }
   $("#buscar").on('keyup', function(){
       var Valor = $(this).val();
       if (Valor != "")
           Buscar_Datos(Valor);
       else
           Buscar_Datos();
+  });
+  $("#buscarfotos").on('keyup', function(){
+      var Valor = $(this).val();
+      if (Valor != "")
+          Buscar_Fotos(Valor);
+      else
+          Buscar_Fotos();
+  });
+  $("#buscaralbumes").on('keyup', function(){
+      var Valor = $(this).val();
+      if (Valor != "")
+          Buscar_Albumes(Valor);
+      else
+          Buscar_Albumes();
   });
   $(".tabs-content").css('height','1000px'); // Ajusta los divs de los tabs del módulo administración
 
