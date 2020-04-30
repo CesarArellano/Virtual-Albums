@@ -63,7 +63,17 @@
                           <td>".$row['correo']."</td>
                           <td>".$row['tipoUsuario']."</td>
                           <td>".$CuantoAlbumes."</td>
-                          <td><a href='albumes.php?id=".$row['idUsuario']."'target='_blank'>Ver más</a></td>
+                          <td>";
+                          if($row['tipoUsuario'] == 1)
+                          {
+                            $Salida .= "---";
+                          }
+                          else
+                          {
+                            $Salida .= "<a href='albumes.php?id=".$row['idUsuario']."'target='_blank'>Ver más</a>";
+                          }
+
+                          $Salida .="</td>
                           <td><a href='modificar.php?id=".$row['idUsuario']."'target='_blank'>Modificar información</a></td>
                         </tr>";
                     }
