@@ -46,6 +46,6 @@
  else
    $Salida.= "No se encontraron resultados ):";
  echo $Salida;
- mysqli_free_result($row);
+ mysqli_free_result($consulta);
  Desconectar($conexion);
 ?>

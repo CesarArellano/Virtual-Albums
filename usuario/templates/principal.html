@@ -27,11 +27,8 @@
     </div>
     <div class="nav-content">
       <ul class="tabs tabs-transparent">
-        <li class="tab"><a class="active" href="#test1">Inicio</a></li>
-        <li class="tab"><a href="#test2">Álbumes</a></li>
-        <li class="tab"><a href="#test3">Fotos</a></li>
-        <li class="tab"><a href="#test4">Perfil</a></li>
-				<li class="tab"><a href="#test5">Notificaciones</a></li>
+				<li class="tab"><a class="active" href="#test1">Inicio</a></li>
+				{TABS_DE_SELECCION}
       </ul>
     </div>
   </nav>
@@ -39,21 +36,21 @@
   <br>
 	<br>
   <div id="test1" class="col s12">
-    <h2 class="center">Feed</h2>
-  </div>
-  <div id="test2" class="col s12">
-		<h2 class="center">Álbumes</h2>
-	</div>
-  <div id="test3" class="col s12">
-		<h2 class="center">Fotos</h2>
-	</div>
-  <div id="test4" class="col s12">
-		<h2 class="center">Perfil</h2>
-	</div>
-	<div id="test5" class="col s12">
-		<h2 class="center">Notificaciones</h2>
-	</div>
 
+		{CONTENIDO_INICIO}
+  </div>
+  <div id="test2" class="col s12" >
+		{CONTENIDO_ALBUMES}
+	</div>
+	<div id="test3" class="col s12">
+		{CONTENIDO_NOTIFICACIONES}
+	</div>
+	<div id="test4" class="col s12">
+		<div class="container">
+		{CONTENIDO_PERFIL}
+	</div>
+	</div>
+	<br>
   <center>
     <button class="btn waves-effect waves-light light-blue accent-4 center" onclick=" location.href='../logout.php'">Cerrar Sesión
       <i class="material-icons right">send</i><p>
