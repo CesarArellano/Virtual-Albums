@@ -174,6 +174,7 @@ $(document).ready(function(e)
           }
       });
   }
+
   $("#buscar").on('keyup', function(){
       var Valor = $(this).val();
       if (Valor != "")
@@ -195,7 +196,6 @@ $(document).ready(function(e)
       else
           Buscar_Albumes();
   });
-  $(".tabs-content").css('height','1000px'); // Ajusta los divs de los tabs del módulo administración
 
   $("#form-admins").on('submit', function(e)
   {

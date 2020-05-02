@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<title>{TITULO}</title>
+	<meta charset="utf-8">
+  <link rel="shortcut icon" href="../images/icon.png">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.3.2/sweetalert2.css">
+  <link type="text/css" rel="stylesheet" href="../css/materialize.min.css"  media="screen,projection"/>
+  <link type="text/css" rel="stylesheet" href="../css/styles_usuario.css"  media="screen,projection"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.3.2/sweetalert2.js" charset="utf-8"></script>
+  <script type="text/javascript" src="../js/materialize.min.js"></script>
+	<script type="text/javascript" src="../js/script_usuario.js"></script>
+</head>
+<script>
+function eliminarFoto(idFoto)
+{
+	let foto = "idFoto="+idFoto;
+	e.preventDefault();
+	$.ajax(
+	{
+		type: 'POST',
+		url: 'eliminarFoto.php',
+		data: foto, // Inicializa el objeto con la información de la forma.
+		dataType : 'json', // Indicamos formato de respuesta
+		contentType: false, // desactivamos esta opción, ya que la  codificación se específico en la forma.
+		cache: false, // No almacena caché.
+		processData: false, // No procesa nada con un determinado tipo de codificación, ya que contentType es false.
+		success: function(data) // Después de enviar los datos se muestra la respuesta del servidor.
+		{
+			swal( // Se inicializa sweetalert2
+			{
+				title: "Bien hecho!",
+				type: data.alerta,
+				html: data.mensaje,
+				confirmButtonColor: '#3085d6',
+				confirmButtonText: 'Ok!'
+			}).then(function ()
+			{
+				location.reload();
+			});
+			$(document).click(function()
+			{
+				location.reload();
+			});
+			$(document).keyup(function(e)
+			{
+				if (e.which == 27)
+				{
+					location.reload();
+				}
+			});
+		},
+		error : function(xhr, status) // Si hubo error, despliega mensaje.
+		{
+			swal( // Se inicializa sweetalert2
+			{
+				title: "Ups...",
+				type: "error",
+				html: "Error del servidor, intente de nuevo",
+				confirmButtonColor: '#3085d6',
+				confirmButtonText: 'Ok!'
+			});
+		}
+	});
+}
+</script>
+<body>
+<main>
+	<nav class="light-blue accent-4 ">
+		<div class="nav-wrapper">
+			<a class="brand-logo center" id="titulo">Ver Fotos</a>
+		</div>
+	</nav>
+  <div class="container">
+    <div id="mostrarFotos">
+      <button class="btn waves-effect waves-light right" style="margin: 10px" id="mostrarSubirFotos">Subir fotos
+        <i class="material-icons right">file_upload</i>
+      </button>
+      <h2>{TITULO_ALBUM}</h2>
+      {FOTOS}
+			<center>
+				<button class="btn waves-effect waves-light" style="margin: 10px" onclick="location.href='inicio.php#tabAlbumes'">Regresar a álbumes
+          <i class="material-icons right">arrow_back</i>
+        </button>
+      </center>
+    </div>
+    <div id="formSubirFoto">
+			<br>
+			<button class="btn waves-effect waves-light right" style="margin: 10px" id="botonMostrarFotos">Volver al álbum
+        <i class="material-icons right">arrow_back</i>
+      </button>
+			<h2>Subir foto</h2>
+			<div class="row">
+		    <div class="card hoverable col s12 opacidad">
+		      <form method="POST" enctype="multipart/form-data" id="formularioSubirFotos">
+		        <div class="card-content">
+		          <div class="row">
+		            <div class="file-field input-field col l12 s12">
+		              <div class="btn waves-effect waves-light">
+		                <i class="material-icons prefix" id="Icono_Imagen">image</i>
+		                <span id="texto-boton-imagen">Buscar foto</span>
+		                <input type="file" name="rutaSubirFoto" accept="image/*" required>
+		              </div>
+		              <div class="file-path-wrapper">
+		                <input class="file-path validate" type="text" id="rutaSubirFoto" name="rutaSubirFoto" placeholder="Foto" required>
+		              </div>
+		            </div>
+								<input type="hidden" name="idAlbum" value="{IDALBUM}">
+		          </div>
+		        </div>
+		        <center>
+		        <div class="card-action center-align">
+		          <button class="btn waves-effect waves-light" type="submit" name="action" style="margin: 10px">Subir
+		            <i class="material-icons right">send</i>
+		          </button>
+		        </div>
+		      </form>
+		    </div>
+		  </div>
+    </div>
+  </div>
+</main>
+</body>
+</html>

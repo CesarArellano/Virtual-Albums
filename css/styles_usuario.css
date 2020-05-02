@@ -50,20 +50,67 @@ nav .right
 {
     height: 45px;
 }
-
-img.zoom {
-    width: 350px;
-    height: 200px;
-    -webkit-transition: all .2s ease-in-out;
-    -moz-transition: all .2s ease-in-out;
-    -o-transition: all .2s ease-in-out;
-    -ms-transition: all .2s ease-in-out;
+.input-field .prefix.active
+{
+  color: #8e24aa;
 }
 
+.input-field input:focus + label
+{
+  color: #8e24aa  !important;
+}
 
-.transition {
-    -webkit-transform: scale(1.8);
-    -moz-transform: scale(1.8);
-    -o-transform: scale(1.8);
-    transform: scale(1.8);
+.row .input-field input:focus
+{
+   border-bottom: 1px solid #8e24aa !important;
+   box-shadow: 0 1px 0 0 #8e24aa !important
+}
+
+.input-field textarea:focus + label
+{
+  color: #8e24aa !important;
+}
+
+.row .input-field textarea:focus
+{
+  border-bottom: 1px solid #8e24aa ;
+  box-shadow: 0 1px 0 0 #8e24aa;
+}
+
+.dropdown-content li > a, .dropdown-content li > span
+{
+  color: #0091ea !important;
+}
+.opacidad
+{
+  background: #fff;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+  opacity: 0.96;
+}
+
+#texto-boton-imagen
+{
+  position:relative;
+  left:16px;
+}
+#Icono_Imagen
+{
+   position:absolute;
+   left: 2px;
+}
+
+.picker__wrap
+{
+  position: relative;
+  margin-top: 20%;
+}
+
+.crop
+{
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+.materialboxed.active{
+   object-fit:contain;
 }

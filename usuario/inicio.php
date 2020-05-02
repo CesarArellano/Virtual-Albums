@@ -18,15 +18,45 @@
     {
       $foto = "images/perfil/".$datosPerfil['foto'];
     }
+    $consultaAlbumes = mysqli_query($conexion,"SELECT idAlbum, titulo, visitas, fechaAlbum, tipoAlbum, nombreTema FROM Albumes LEFT JOIN Temas USING(idTema) WHERE idUsuario = $idUsuario");
+    $numerofilas = mysqli_num_rows($consultaAlbumes);
+    if ($numerofilas > 0)
+    {
+      $tablaAlbumesUsuario = "<table class='responsive-table highlight centered'>
+        <thead>
+          <th>Título</th>
+          <th>Visitas</th>
+          <th>Fecha álbum</th>
+          <th>Privacidad del álbum</th>
+          <th>Tema del álbum</th>
+          <th><th>
+        </thead>
+        <tbody>";
+        while ($row = mysqli_fetch_assoc($consultaAlbumes))
+        {
+          $tablaAlbumesUsuario.= "<tr>
+            <td>".$row['titulo']."</td>
+            <td>".$row['visitas']."</td>
+            <td>".$row['fechaAlbum']."</td>
+            <td>".$row['tipoAlbum']."</td>
+            <td>".$row['nombreTema']."</td>
+            <td><a href='verFotos.php?id=".$row['idAlbum']."'>Ver el álbum</a></td>
+          </tr>";
+      }
+      $tablaAlbumesUsuario.= "</tbody></table>";
+    }
+    else
+      $tablaAlbumesUsuario.= "<p>Aún no ha creado ningún álbum.</p>";
 
     $template->addBlockfile("TABS_DE_SELECCION", "TABS", "tabs.html");
     $template->touchBlock('TABS');
     //$template->setCurrentBlock('TABS');
     //$template->parseCurrentBlock("TABS");
     $template->addBlockfile("CONTENIDO_ALBUMES", "ALBUMES", "albumes.html");
-    $template->touchBlock('ALBUMES');
-    //$template->setCurrentBlock('ALBUMES');
-    //$template->parseCurrentBlock("ALBUMES");
+    $template->setCurrentBlock('ALBUMES');
+    $template->setVariable("IDUSUARIO",$idUsuario);
+    $template->setVariable("CONTENIDO_ALBUM",$tablaAlbumesUsuario);
+    $template->parseCurrentBlock("ALBUMES");
     $template->addBlockfile("CONTENIDO_NOTIFICACIONES", "NOTIFICACIONES", "notificaciones.html");
     $template->touchBlock('NOTIFICACIONES');
     //$template->setCurrentBlock('NOTIFICACIONES');
@@ -39,6 +69,7 @@
     $template->setVariable("DIRECCION", $datosPerfil['direccion']);
     $template->setVariable("NACIMIENTO", $datosPerfil['nacimiento']);
     $template->setVariable("CORREO", $datosPerfil['correo']);
+    $template->setVariable("IDUSUARIO",$idUsuario);
 
     $template->parseCurrentBlock("PERFIL");
 

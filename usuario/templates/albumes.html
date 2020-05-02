@@ -1,1 +1,52 @@
-<h2>Álbumes</h2>
+<br>
+<div id="albumesUsuario">
+  <button class="btn waves-effect waves-light indigo darken-1 right" id="mostrarCrearAlbum" ">Crear álbum
+    <i class="material-icons left">add</i><p>
+  </button>
+  <h2>Álbumes</h2>
+  {CONTENIDO_ALBUM}
+</div>
+<div id="crearAlbum">
+  <button class="btn waves-effect waves-light indigo darken-1 right" id="mostrarAlbumesUsuario" ">Cancelar
+    <i class="material-icons left">arrow_back</i><p>
+  </button>
+  <h2>Crear álbum</h2>
+  <div class="row">
+    <div class="card hoverable col s12 opacidad" id="contenedorFormularioCrearAlbum">
+      <form method="POST" enctype="multipart/form-data" id="formularioCrearAlbum">
+        <div class="card-content">
+          <div class="row">
+            <div class="input-field col l4 s12">
+              <i class="material-icons prefix">account_circle</i>
+              <input name="nombreCrearAlbum" type="text" class="validate" pattern="[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,80}"  maxlength="80" required>
+              <label for="nombreCrearAlbum">Nombre del álbum</label>
+            </div>
+            <div class="input-field col l4 s12">
+              <i class="material-icons prefix">security</i>
+              <select name="tipoCrearAlbum" required>
+                <option value="" disabled selected>Tipo</option>
+                <option value="Publico">Público</option>
+                <option value="Privado">Privado</option>
+              </select>
+              <label for="tipoCrearAlbum">Privacidad del álbum</label>
+            </div>
+            <div class="input-field col l4 s12">
+              <i class="material-icons prefix">image</i>
+              <select id="temaCrearAlbum" name="temaCrearAlbum" required>
+ 									<option value="" disabled selected>Tema</option>
+ 							</select>
+              <label for="temaCrearAlbum">Tema</label>
+            </div>
+          </div>
+        </div>
+        <input type="hidden" name="idUsuario" value="{IDUSUARIO}">
+        <div class="card-action center-align">
+          <button class="btn-flat grey-text waves-effect" type="reset" id="reset" style="margin: 10px"> Limpiar Campos </button>
+          <button class="btn waves-effect waves-light light-blue accent-4" type="submit" name="action" id="action" style="margin: 10px">Crear Álbum
+            <i class="material-icons right">send</i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

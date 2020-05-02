@@ -1,10 +1,98 @@
-<br><br>
-<img width="300px" src="{FOTO}" class="right"/>
-<h2>{NOMBRECOMPLETO}</h2>
-<p>Escolaridad: {ESCOLARIDAD}</p>
-<p>Dirección: {DIRECCION}</p>
-<p>Fecha de nacimiento: {NACIMIENTO}</p>
-<p>Correo electrónico: {CORREO}</p>
-<center>
+<br>
+<div id="perfil">
+  <center>
+    <img width="300px" src="{FOTO}" class="right"/>
+  </center>
+  <h2>{NOMBRECOMPLETO}</h2>
+  <p>Escolaridad: {ESCOLARIDAD}</p>
+  <p>Dirección: {DIRECCION}</p>
+  <p>Fecha de nacimiento: {NACIMIENTO}</p>
+  <p>Correo electrónico: {CORREO}</p>
+  <br>
+  <center>
+  <button class="btn waves-effect waves-light purple darken-1" id="mostrar_modificar" style="margin: 10px">Modificar información
+    <i class="material-icons right">edit</i><p>
+  </button>
+  <button class="btn waves-effect waves-light light-blue accent-4 center" onclick=" location.href='../logout.php'" style="margin: 10px">Cerrar Sesión
+    <i class="material-icons right">exit_to_app</i><p>
+  </button>
+  </center>
+</div>
+<div id="modificarperfil">
+  <h2>Modificar información personal</h2>
+  <div class="row">
+    <div class="card hoverable col s12 opacidad" id="formularioSubirFotos">
+      <form method="POST" enctype="multipart/form-data" id="form-update">
+        <div class="card-content">
+          <div class="row">
+            <div class="input-field col l4 s12">
+              <i class="material-icons prefix">account_circle</i>
+              <input name="nombreRegistro" type="text" class="validate" pattern="[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,80}"  maxlength="80" required>
+              <label for="nombreRegistro">Ingresa tu(s) nombre(s)</label>
+            </div>
+            <div class="input-field col l4 s12">
+              <input name="apPaternoRegistro" type="text" class="validate" pattern="[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,80}" maxlength="80" required>
+              <label for="apPaternoRegistro">Ingresa tu apellido paterno</label>
+            </div>
+            <div class="input-field col l4 s12">
+              <input name="apMaternoRegistro" type="text" class="validate" pattern="[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,80}" maxlength="80" required>
+              <label for="apMaternoRegistro">Ingresa tu apellido materno</label>
+            </div>
+            <div class="input-field col l4 s12">
+              <i class="material-icons prefix">school</i>
+              <select name="escolaridadRegistro" required>
+                <option value="" disabled selected>Selecciona la sección</option>
+                <option value="Sin estudios">Sin estudios</option>
+                <option value="Básica">Básica</option>
+                <option value="Media">Media</option>
+                <option value="Media Superior">Media Superior</option>
+                <option value="Superior">Superior</option>
+              </select>
+              <label for="escolaridadRegistro">Escolaridad</label>
+            </div>
+            <div class="input-field col l8 s12">
+              <i class="material-icons prefix">home</i>
+              <input name="direccionRegistro" type="text" class="validate" pattern="[a-zA-Z0-9áéíóúÁÉÍÓÚ.,# ]{2,300}" maxlength="300" required>
+              <label for="direccionRegistro">Ingresa tu dirección</label>
+            </div>
+            <div class="input-field col l6 s12">
+              <i class="material-icons prefix">insert_invitation</i>
+              <input name="fechaNacimientoRegistro" type="text" class="datepicker" data-date-format="yyyy-mm-dd" id="calendario" required>
+              <label for="fechaNacimientoRegistro">Ingresa tu fecha de nacimiento</label>
+            </div>
+            <div class="file-field input-field col l6 s12">
+              <div class="btn waves-effect waves-light light-blue accent-4">
+                <i class="material-icons prefix" id="Icono_Imagen">image</i>
+                <span id="texto-boton-imagen">Foto perfil</span>
+                <input type="file" name="rutaFotoPerfilRegistro" accept="image/*">
+              </div>
+              <div class="file-path-wrapper">
+                <input class="file-path validate" type="text" id="rutaFotoPerfilRegistro" name="rutaFotoPerfilRegistro" placeholder="Opcional">
+              </div>
+            </div>
+            <div class="input-field col s12">
+              <i class="material-icons prefix">lock</i>
+              <input name="passwordRegistro" type="password" class="validate" minlength="8" maxlength="32" required>
+              <label for="passwordRegistro">Ingrese su contraseña</label>
+            </div>
+            <input type="hidden" name="idUsuario" value="{IDUSUARIO}">
+          </div>
+        </div>
+        <center>
+        <div class="card-action center-align">
+          <button class="btn-flat grey-text waves-effect" type="reset" style="margin: 10px"> Limpiar Campos </button>
+          <button class="btn waves-effect waves-light light-blue accent-4" type="submit" name="action" style="margin: 10px">Modificar información
+            <i class="material-icons right">send</i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <center>
+  <button class="btn waves-effect waves-light purple darken-1 center-align" id="mostrar_informacion" style="z-index: 0;">Perfil
+    <i class="material-icons right">arrow_back</i>
+  </button>
+  </center>
 
-</center>
+</div>
+<br><br>

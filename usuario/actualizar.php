@@ -10,19 +10,10 @@
   $apMaternoRegistro = $_POST['apMaternoRegistro'];
   $passwordRegistro = $_POST['passwordRegistro'];
   $rutaFotoPerfilRegistro = $_POST['rutaFotoPerfilRegistro'];
-  $tipoUsuarioRegistro = $_POST['tipoUsuario'];
-
-  if($tipoUsuarioRegistro == '1')
-  {
-    $directorio = "images/perfil/"; //Definimos el directorio para el usuario donde se van a guardar las imágenes
-  }
-  else
-  {
-    $escolaridadRegistro = $_POST['escolaridadRegistro'];
-    $direccionRegistro = $_POST['direccionRegistro'];
-    $fechaNacimientoRegistro = $_POST['fechaNacimientoRegistro'];
-    $directorio = "../usuario/images/perfil/"; //Definimos el directorio para el usuario donde se van a guardar las imágenes
-  }
+  $escolaridadRegistro = $_POST['escolaridadRegistro'];
+  $direccionRegistro = $_POST['direccionRegistro'];
+  $fechaNacimientoRegistro = $_POST['fechaNacimientoRegistro'];
+  $directorio = "images/perfil/"; //Definimos el directorio para el usuario donde se van a guardar las imágenes
 
   if ($rutaFotoPerfilRegistro != '')
   {
@@ -35,9 +26,6 @@
     $directoriocompleto = $directorio.$nombreArchivo;
     if (move_uploaded_file($_FILES['rutaFotoPerfilRegistro']["tmp_name"], $directoriocompleto)) //Sube la imágen, si se sube correctamente ejecuta el query con foto de perfil, si no, lo ejecuta sin foto de perfil
     {
-      if($tipoUsuarioRegistro == '1')
-        $query = mysqli_query($conexion,"UPDATE Usuarios SET nombreUsuario = '$nombreRegistro', apPaternoUsuario = '$apPaternoRegistro', apMaternoUsuario = '$apMaternoRegistro', foto = '$nombreArchivo', password = '$passwordRegistro' WHERE idUsuario = $idUsuario");
-      else
         $query = mysqli_query($conexion,"UPDATE Usuarios SET nombreUsuario = '$nombreRegistro', apPaternoUsuario = '$apPaternoRegistro', apMaternoUsuario = '$apMaternoRegistro', escolaridad = '$escolaridadRegistro', direccion = '$direccionRegistro', nacimiento = '$fechaNacimientoRegistro',foto = '$nombreArchivo', password = '$passwordRegistro' WHERE idUsuario = $idUsuario");
     }
     else
@@ -47,9 +35,6 @@
   }
   else
   {
-    if ($tipoUsuarioRegistro == '1')
-      $query = mysqli_query($conexion,"UPDATE Usuarios SET nombreUsuario = '$nombreRegistro', apPaternoUsuario = '$apPaternoRegistro', apMaternoUsuario = '$apMaternoRegistro', password = '$passwordRegistro' WHERE idUsuario = $idUsuario");
-    else
       $query = mysqli_query($conexion,"UPDATE Usuarios SET nombreUsuario = '$nombreRegistro', apPaternoUsuario = '$apPaternoRegistro', apMaternoUsuario = '$apMaternoRegistro', escolaridad = '$escolaridadRegistro', direccion = '$direccionRegistro', nacimiento = '$fechaNacimientoRegistro', password = '$passwordRegistro' WHERE idUsuario = $idUsuario");
   }
   if ($query)
