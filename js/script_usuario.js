@@ -144,10 +144,14 @@ $(document).ready(function(e)
     if(nombreFoto != '')
     {
       if (!(/\.(jpg|jpeg|png|gif|bmp|tiff|raw|JPG|PNG)$/i).test(nombreFoto)) // si el archivo no tiene estas extensiones
-          flag = 1;
+      {
+        flag = 1;
+      }
+
     }
     if(flag == 1) // Si el archivo no es una imagen despliega error.
     {
+      console.log("Entró");
       swal( // Se inicializa sweetalert2
       {
         title: "Upss...",
@@ -185,7 +189,7 @@ $(document).ready(function(e)
           {
             if (data.pagina == "index")
             {
-              location.href = "inicio.php#tabPerfil";
+              location.href = "inicio.php";
             }
 
           });
@@ -193,7 +197,7 @@ $(document).ready(function(e)
           {
             if (data.pagina == "index" )
             {
-              location.href = "inicio.php#tabPerfil";
+              location.href = "inicio.php";
             }
           });
           $(document).keyup(function(e)
@@ -202,7 +206,7 @@ $(document).ready(function(e)
             {
               if (data.pagina == "index" )
               {
-                location.href = "inicio.php#tabPerfil";
+                location.href = "inicio.php";
               }
             }
           });
@@ -229,7 +233,9 @@ $(document).ready(function(e)
     if(nombreFoto != '')
     {
       if (!(/\.(jpg|jpeg|png|gif|bmp|tiff|raw|JPG|PNG)$/i).test(nombreFoto)) // si el archivo no tiene estas extensiones
-          flag = 1;
+      {
+        flag = 1;
+      }
     }
     if(flag == 1) // Si el archivo no es una imagen despliega error.
     {
