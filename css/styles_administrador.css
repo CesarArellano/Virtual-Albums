@@ -39,26 +39,30 @@ header, main, footer
   }
 }
 
+.tabs
+{
+  width: 90%;
+  color:#0091ea;
+}
 .tabs .tab a
 {
-  color:#000;
+  color:#0091ea;
 }
 .tabs .tab a:hover
 {
   background-color:#eee;
-  color:#000;
+  color:#0091ea;
 }
 
 .tabs .tab a.active
 {
-  background-color:#1976d2;
-  color:#000;
+  background-color: #0091ea;
   color: white;
 }
 
 .tabs .indicator
 {
-  background-color: #388e3c;
+  background-color: #81c784;
 }
 
 .input-field .prefix.active
@@ -117,4 +121,11 @@ header, main, footer
 {
   left: 100px;
   text-align: center;
+}
+
+.fotos {
+  padding: 50px;
+  width: 425px;
+  margin: 0 auto;
+  object-fit:contain;
 }

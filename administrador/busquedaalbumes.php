@@ -2,11 +2,11 @@
   include_once '../config.php';
   $conexion = Conectar();
   $Salida = "";
-  $query = "SELECT idAlbum,titulo,nombretema, u.idUsuario AS 'idPropietario', nombreUsuario, fechaAlbum, puntuacion FROM Usuarios u INNER JOIN Albumes a USING(idUsuario) INNER JOIN Fotos USING(idAlbum) INNER JOIN Temas t ON a.idTema = t.idTema  INNER JOIN PuntuacionesComentarios USING(idFoto)";
+  $query = "SELECT idAlbum,titulo,nombretema, u.idUsuario AS 'idPropietario', nombreUsuario, fechaAlbum, AVG(puntuacion) as 'promedioPuntuacion' FROM Usuarios u INNER JOIN Albumes a USING(idUsuario) INNER JOIN Fotos USING(idAlbum) INNER JOIN Temas t ON a.idTema = t.idTema  LEFT JOIN PuntuacionesComentarios USING(idFoto) GROUP BY idAlbum";
   if (isset($_POST['Consulta']))
   {
     $texto = mysqli_real_escape_string($conexion, $_POST['Consulta']);
-    $query = "SELECT idAlbum,titulo,nombretema, u.idUsuario AS 'idPropietario', nombreUsuario, fechaAlbum, puntuacion FROM Usuarios u INNER JOIN Albumes a USING(idUsuario) INNER JOIN Fotos USING(idAlbum) INNER JOIN Temas t ON a.idTema = t.idTema  INNER JOIN PuntuacionesComentarios USING(idFoto) WHERE nombreUsuario LIKE '%".$texto."%' OR titulo LIKE '%".$texto."%' OR nombreTema LIKE '%".$texto."%'";
+    $query = "SELECT idAlbum,titulo,nombretema, u.idUsuario AS 'idPropietario', nombreUsuario, fechaAlbum, AVG(puntuacion) as 'promedioPuntuacion' FROM Usuarios u INNER JOIN Albumes a USING(idUsuario) INNER JOIN Fotos USING(idAlbum) INNER JOIN Temas t ON a.idTema = t.idTema  LEFT JOIN PuntuacionesComentarios USING(idFoto) GROUP BY idAlbum WHERE nombreUsuario LIKE '%".$texto."%' ";
   }
   $consulta = mysqli_query($conexion,$query);
   $numerofilas = mysqli_num_rows($consulta);
@@ -25,13 +25,21 @@
                     <tbody>";
                     while ($row = mysqli_fetch_assoc($consulta))
                     {
+                      if($row['promedioPuntuacion'] == NULL)
+                      {
+                        $puntuacion = 0;
+                      }
+                      else
+                      {
+                        $puntuacion = $row['promedioPuntuacion'];
+                      }
                         $Salida.= "<tr>
                           <td>".$row['titulo']."</td>
                           <td>".$row['nombretema']."</td>
                           <td>".$row['idPropietario']."</td>
                           <td>".$row['nombreUsuario']."</td>
                           <td>".$row['fechaAlbum']."</td>
-                          <td>".$row['puntuacion']."</td>
+                          <td>".$puntuacion."</td>
                           <td><a href='vermas.php?foto=".$row['idAlbum']."'>Ver más</a></td>
                         </tr>";
                     }

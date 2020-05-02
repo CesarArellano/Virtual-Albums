@@ -14,64 +14,11 @@
   <script type="text/javascript" src="../js/materialize.min.js"></script>
 	<script type="text/javascript" src="../js/script_usuario.js"></script>
 </head>
-<script>
-function eliminarFoto(idFoto)
-{
-	let foto = "idFoto="+idFoto;
-	e.preventDefault();
-	$.ajax(
-	{
-		type: 'POST',
-		url: 'eliminarFoto.php',
-		data: foto, // Inicializa el objeto con la información de la forma.
-		dataType : 'json', // Indicamos formato de respuesta
-		contentType: false, // desactivamos esta opción, ya que la  codificación se específico en la forma.
-		cache: false, // No almacena caché.
-		processData: false, // No procesa nada con un determinado tipo de codificación, ya que contentType es false.
-		success: function(data) // Después de enviar los datos se muestra la respuesta del servidor.
-		{
-			swal( // Se inicializa sweetalert2
-			{
-				title: "Bien hecho!",
-				type: data.alerta,
-				html: data.mensaje,
-				confirmButtonColor: '#3085d6',
-				confirmButtonText: 'Ok!'
-			}).then(function ()
-			{
-				location.reload();
-			});
-			$(document).click(function()
-			{
-				location.reload();
-			});
-			$(document).keyup(function(e)
-			{
-				if (e.which == 27)
-				{
-					location.reload();
-				}
-			});
-		},
-		error : function(xhr, status) // Si hubo error, despliega mensaje.
-		{
-			swal( // Se inicializa sweetalert2
-			{
-				title: "Ups...",
-				type: "error",
-				html: "Error del servidor, intente de nuevo",
-				confirmButtonColor: '#3085d6',
-				confirmButtonText: 'Ok!'
-			});
-		}
-	});
-}
-</script>
 <body>
 <main>
 	<nav class="light-blue accent-4 ">
 		<div class="nav-wrapper">
-			<a class="brand-logo center" id="titulo">Ver Fotos</a>
+			<a class="brand-logo center" id="titulo">Virtual Albums</a>
 		</div>
 	</nav>
   <div class="container">

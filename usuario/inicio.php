@@ -30,6 +30,7 @@
           <th>Privacidad del álbum</th>
           <th>Tema del álbum</th>
           <th><th>
+          <th><th>
         </thead>
         <tbody>";
         while ($row = mysqli_fetch_assoc($consultaAlbumes))
@@ -41,12 +42,38 @@
             <td>".$row['tipoAlbum']."</td>
             <td>".$row['nombreTema']."</td>
             <td><a href='verFotos.php?id=".$row['idAlbum']."'>Ver el álbum</a></td>
+            <td><a href='modificarAlbumes.php?id=".$row['idAlbum']."'>Modificar información</a></td>
+            <td><center><button class='btn waves-effect waves-light red' onclick='eliminarAlbum(".$row['idAlbum'].")'>Eliminar álbum<i class='material-icons right'>clear</i></button></center></td>
           </tr>";
       }
       $tablaAlbumesUsuario.= "</tbody></table>";
     }
     else
       $tablaAlbumesUsuario.= "<p>Aún no ha creado ningún álbum.</p>";
+
+    $consultaAlbumes = mysqli_query($conexion,"SELECT idNotificacion, contenido,estado FROM Notificaciones INNER JOIN NotificacionesLeidas USING(idNotificacion) WHERE idUsuario = $idUsuario");
+    $numerofilas = mysqli_num_rows($consultaAlbumes);
+    if ($numerofilas > 0)
+    {
+      $tablaNotificacionesUsuario = "<table class='responsive-table highlight centered'>
+        <thead>
+          <th>Notificación</th>
+          <th></th>
+          <th><th>
+        </thead>
+        <tbody>";
+        while ($row = mysqli_fetch_assoc($consultaAlbumes))
+        {
+          $tablaNotificacionesUsuario.= "<tr>
+            <td>".$row['contenido']."</td>
+            <td>"."<h2 class='blue-text'>•</h2>"."</td>
+            <td><a href='notificacionleida.php?id=".$row['idNotificacion']."'>Marcar como leída</a></td>
+          </tr>";
+      }
+      $tablaNotificacionesUsuario.= "</tbody></table>";
+    }
+    else
+      $tablaNotificacionesUsuario.= "<p>No tiene notificaciones.</p>";
 
     $template->addBlockfile("TABS_DE_SELECCION", "TABS", "tabs.html");
     $template->touchBlock('TABS');
@@ -58,9 +85,9 @@
     $template->setVariable("CONTENIDO_ALBUM",$tablaAlbumesUsuario);
     $template->parseCurrentBlock("ALBUMES");
     $template->addBlockfile("CONTENIDO_NOTIFICACIONES", "NOTIFICACIONES", "notificaciones.html");
-    $template->touchBlock('NOTIFICACIONES');
-    //$template->setCurrentBlock('NOTIFICACIONES');
-    //$template->parseCurrentBlock("NOTIFICACIONES");
+    $template->setCurrentBlock('NOTIFICACIONES');
+    $template->setVariable("VER_NOTIFICACIONES", $tablaNotificacionesUsuario);
+    $template->parseCurrentBlock("NOTIFICACIONES");
     $template->addBlockfile("CONTENIDO_PERFIL", "PERFIL", "perfil.html");
     $template->setCurrentBlock('PERFIL');
     $template->setVariable("FOTO", $foto);

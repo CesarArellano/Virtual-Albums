@@ -2,11 +2,7 @@ $(document).ready(function(e)
 {
   $(".button-collapse").sideNav();
   $('.materialboxed').materialbox();
-  $('ul.tabs').tabs(
-  {
-    swipeable : true,
-    responsiveThreshold : 1920
-  });
+  $('ul.tabs').tabs();
   $("select").material_select(); // Inicializa el select
   $("select[required]").css({display: "block", height: 0, padding: 0, width: 0, position: 'absolute'}); // Muestra en pantalla un mensaje de que el campo del select está vacío.
   $('.datepicker').pickadate( // Inicializa el calendario datepicker de materialize
@@ -34,7 +30,7 @@ $(document).ready(function(e)
   {
     e.preventDefault(); // Arreglo falla datepicker materialize
   });
-
+  // $(".tabs-content").css('height','1000px'); // Ajusta los divs de los tabs del módulo administración
   $("#admin").hide();
   $("#registro").hide();
   $("#busqueda").hide();

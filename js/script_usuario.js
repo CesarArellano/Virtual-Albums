@@ -84,7 +84,7 @@ $(document).ready(function(e)
     $("#mostrarFotos").show();
     $("#formSubirFoto").hide();
   });
-  
+
   $("#formularioCrearAlbum").on('submit', function(e)
   {
     e.preventDefault();
@@ -299,4 +299,174 @@ $(document).ready(function(e)
       });
     }
   });
+  $("#formularioModificarAlbum").on('submit', function(e)
+  {
+    e.preventDefault();
+    $.ajax(
+    {
+      type: 'POST',
+      url: 'cambiarAlbumes.php',
+      data: new FormData(this), // Inicializa el objeto con la información de la forma.
+      dataType : 'json', // Indicamos formato de respuesta
+      contentType: false, // desactivamos esta opción, ya que la  codificación se específico en la forma.
+      cache: false, // No almacena caché.
+      processData: false, // No procesa nada con un determinado tipo de codificación, ya que contentType es false.
+      success: function(data) // Después de enviar los datos se muestra la respuesta del servidor.
+      {
+        swal( // Se inicializa sweetalert2
+        {
+          title: "Bien hecho!",
+          type: data.alerta,
+          html: data.mensaje,
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok!'
+        }).then(function ()
+        {
+          location.href = "inicio.php#tabAlbumes";
+        });
+        $(document).click(function()
+        {
+          location.href = "inicio.php#tabAlbumes";
+        });
+        $(document).keyup(function(e)
+        {
+          if (e.which == 27)
+          {
+            location.href = "inicio.php#tabAlbumes";
+          }
+        });
+      },
+      error : function(xhr, status) // Si hubo error, despliega mensaje.
+      {
+        swal( // Se inicializa sweetalert2
+        {
+          title: "Ups...",
+          type: "error",
+          html: "Error del servidor, intente de nuevo",
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok!'
+        });
+      }
+    });
+  });
 });
+function eliminarFoto(idFoto)
+{
+	let param = "foto="+idFoto;
+	$.ajax(
+	{
+		type: 'POST',
+		url: 'eliminarFoto.php',
+		data: param, // Inicializa el objeto con la información de la forma.
+		dataType : 'json', // Indicamos formato de respuesta
+		success: function(data) // Después de enviar los datos se muestra la respuesta del servidor.
+		{
+			if(data.alerta == "error")
+			{
+				titulo = "Ups..."
+			}
+			else
+			{
+				titulo = "Bien hecho!"
+			}
+			swal( // Se inicializa sweetalert2
+			{
+
+				title: titulo,
+				type: data.alerta,
+				html: data.mensaje,
+				confirmButtonColor: '#3085d6',
+				confirmButtonText: 'Ok!'
+			}).then(function ()
+			{
+				if(data.alerta == "success")
+					location.reload();
+			});
+			$(document).click(function()
+			{
+				if(data.alerta == "success")
+					location.reload();
+			});
+			$(document).keyup(function(e)
+			{
+				if (e.which == 27)
+				{
+					if(data.alerta == "success")
+						location.reload();
+				}
+			});
+		},
+		error : function(xhr, status,error) // Si hubo error, despliega mensaje.
+		{
+			swal( // Se inicializa sweetalert2
+			{
+				title: "Ups...",
+				type: "error",
+				html: "Error del servidor, intente de nuevo"+error,
+				confirmButtonColor: '#3085d6',
+				confirmButtonText: 'Ok!'
+			});
+		}
+	});
+}
+
+function eliminarAlbum(idAlbum)
+{
+  let param = "album="+idAlbum;
+  $.ajax(
+	{
+		type: 'POST',
+		url: 'eliminarAlbum.php',
+		data: param, // Inicializa el objeto con la información de la forma.
+		dataType : 'json', // Indicamos formato de respuesta
+		success: function(data) // Después de enviar los datos se muestra la respuesta del servidor.
+		{
+			if(data.alerta == "error")
+			{
+				titulo = "Ups..."
+			}
+			else
+			{
+				titulo = "Bien hecho!"
+			}
+			swal( // Se inicializa sweetalert2
+			{
+
+				title: titulo,
+				type: data.alerta,
+				html: data.mensaje,
+				confirmButtonColor: '#3085d6',
+				confirmButtonText: 'Ok!'
+			}).then(function ()
+			{
+				if(data.alerta == "success")
+					location.reload();
+			});
+			$(document).click(function()
+			{
+				if(data.alerta == "success")
+					location.reload();
+			});
+			$(document).keyup(function(e)
+			{
+				if (e.which == 27)
+				{
+					if(data.alerta == "success")
+						location.reload();
+				}
+			});
+		},
+		error : function(xhr, status,error) // Si hubo error, despliega mensaje.
+		{
+			swal( // Se inicializa sweetalert2
+			{
+				title: "Ups...",
+				type: "error",
+				html: "Error del servidor, intente de nuevo"+error,
+				confirmButtonColor: '#3085d6',
+				confirmButtonText: 'Ok!'
+			});
+		}
+	});
+
+}

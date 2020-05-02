@@ -37,7 +37,7 @@
                           <td>".$row['apMaternoUsuario']."</td>
                           <td>".$row['titulo']."</td>
                           <td>".$row['idFoto']."</td>
-                          <td><img width='100' src='../usuario/images/albumes/".$row['rutaFoto']."'/></td>
+                          <td><img class='fotos' width='100' src='../usuario/images/albumes/".$row['rutaFoto']."'/></td>
                           <td><a href='autorizar.php?foto=".$row['idFoto']."'>Autorizar</a></td>
                         </tr>";
                     }

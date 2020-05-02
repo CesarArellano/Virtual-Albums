@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<title>{TITULO}</title>
+	<meta charset="utf-8">
+  <link rel="shortcut icon" href="../images/icon.png">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.3.2/sweetalert2.css">
+  <link type="text/css" rel="stylesheet" href="../css/materialize.min.css"  media="screen,projection"/>
+  <link type="text/css" rel="stylesheet" href="../css/styles_usuario.css"  media="screen,projection"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.3.2/sweetalert2.js" charset="utf-8"></script>
+  <script type="text/javascript" src="../js/materialize.min.js"></script>
+	<script type="text/javascript" src="../js/script_usuario.js"></script>
+</head>
+<body>
+  <main>
+    <nav class="light-blue accent-4 ">
+  		<div class="nav-wrapper">
+  			<a class="brand-logo center" id="titulo">Virtual Albums</a>
+  		</div>
+  	</nav>
+    <div class="container">
+      <br>
+      <h2 class="center-align">{TITULO_ALBUM}</h2>
+      <br>
+      <h3>Modificar álbum</h3>
+      <div class="row">
+        <div class="card hoverable col s12 opacidad">
+          <form method="POST" enctype="multipart/form-data" id="formularioModificarAlbum">
+            <div class="card-content">
+              <div class="row">
+                <div class="input-field col l4 s12">
+                  <i class="material-icons prefix">account_circle</i>
+                  <input name="nombreAlbum" type="text" class="validate" pattern="[0-9a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ]{2,80}"  maxlength="80" required>
+                  <label for="nombreAlbum">Nombre del álbum</label>
+                </div>
+                <div class="input-field col l4 s12">
+                  <i class="material-icons prefix">security</i>
+                  <select name="tipoAlbum" required>
+                    <option value="" disabled selected>Tipo</option>
+                    <option value="Publico">Público</option>
+                    <option value="Privado">Privado</option>
+                  </select>
+                  <label for="tipoAlbum">Privacidad del álbum</label>
+                </div>
+                <div class="input-field col l4 s12">
+                  <i class="material-icons prefix">image</i>
+                  <select id="temaCrearAlbum" name="temaAlbum" required>
+                      <option value="" disabled selected>Tema</option>
+                  </select>
+                  <label for="temaAlbum">Tema</label>
+                </div>
+              </div>
+            </div>
+            <input type="hidden" name="idAlbum" value="{IDALBUM}">
+            <div class="card-action center-align">
+              <button class="btn-flat grey-text waves-effect" type="reset" id="reset" style="margin: 10px"> Limpiar Campos </button>
+              <button class="btn waves-effect waves-light light-blue accent-4" type="submit" name="action" id="action" style="margin: 10px">Modificar información
+                <i class="material-icons right">send</i>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+			<center>
+				<button class="btn waves-effect waves-light indigo darken-1 center-align" onclick="location.href='inicio.php#tabAlbumes'" >Regresar a Álbumes
+	        <i class="material-icons left">arrow_back</i><p>
+	      </button>
+			</center>
+    </div>
+</main>
+</body>
+</html>
