@@ -8,6 +8,47 @@
   if(isset($_SESSION['idUsuario']))
   {
     $idUsuario = intval($_SESSION['idUsuario']);
+    //Sección Inicio
+    $consultaFeed = mysqli_query($conexion,"SELECT idAlbum,titulo,nombreTema, rutaFoto,nombreUsuario,apPaternoUsuario,apMaternoUsuario,foto,visitas FROM Albumes INNER JOIN Temas USING(idTema) INNER JOIN Fotos USING(idAlbum) INNER JOIN Usuarios USING(idUsuario) WHERE autorizada = 1 AND tipoAlbum = 'Público' ORDER BY idFoto DESC");
+    $numerofilas = mysqli_num_rows($consultaFeed);
+    if ($numerofilas > 0)
+    {
+      $contenidoUsuario = "<div class='row'>";
+        while ($row = mysqli_fetch_assoc($consultaFeed))
+        {
+          if($row['foto'] == NULL)
+          {
+            $fotoPerfil = "../images/avatar.png";
+          }
+          else
+          {
+            $fotoPerfil = "images/perfil/".$row['foto'];
+          }
+          $nombreUsuario =  $row['nombreUsuario']." ".$row['apPaternoUsuario']." ".$row['apMaternoUsuario'];
+          $fotosAlbum = "images/albumes/".$row['rutaFoto'];
+          $contenidoUsuario.= "<div class='col l6 m6 s12'>
+          <div class='card hoverable'>
+            <br>
+            <img src='".$fotoPerfil."' height='50px' width='50px' class='left circle' style='position: relative; left: 10px; top:-10px;'>
+            <p class='tituloNombreUsuario'>".$nombreUsuario."</p>
+            <hr>
+            <div class='card-image'>
+              <img class='materialboxed ajusteImagen' src='".$fotosAlbum."'>
+              <span class='card-title'>Álbum: ".$row['titulo']."</span>
+              <a class='btn-floating halfway-fab waves-effect waves-light red' href='verAlbumes.php?id=".$row['idAlbum']."'><i class='material-icons'>remove_red_eye</i></a>
+            </div>
+            <div class='card-content'>
+              <p>Tema: ".$row['nombreTema']."</p>
+              <p>Visitas:".$row['visitas']."</p>
+            </div>
+          </div>
+          </div>";
+      }
+      $contenidoUsuario.= "</div>";
+    }
+    else
+      $contenidoUsuario.= "<h4 class='center-align'>No hay contenido para ver.</h4>";
+    //Sección Perfil
     $consultaPerfil = mysqli_query($conexion,"SELECT * FROM Usuarios  WHERE idUsuario = $idUsuario");
     $datosPerfil = mysqli_fetch_assoc($consultaPerfil);
     if($datosPerfil['foto'] == NULL)
@@ -18,6 +59,7 @@
     {
       $foto = "images/perfil/".$datosPerfil['foto'];
     }
+    //Sección Álbumes
     $consultaAlbumes = mysqli_query($conexion,"SELECT idAlbum, titulo, visitas, fechaAlbum, tipoAlbum, nombreTema FROM Albumes LEFT JOIN Temas USING(idTema) WHERE idUsuario = $idUsuario");
     $numerofilas = mysqli_num_rows($consultaAlbumes);
     if ($numerofilas > 0)
@@ -50,9 +92,9 @@
     }
     else
       $tablaAlbumesUsuario.= "<p>Aún no ha creado ningún álbum.</p>";
-
-    $consultaAlbumes = mysqli_query($conexion,"SELECT idNotificacion, contenido,estado FROM Notificaciones INNER JOIN NotificacionesLeidas USING(idNotificacion) WHERE idUsuario = $idUsuario");
-    $numerofilas = mysqli_num_rows($consultaAlbumes);
+    //Sección Notificaciones
+    $consultaNotificaciones = mysqli_query($conexion,"SELECT idNotificacion, contenido,estado FROM Notificaciones INNER JOIN NotificacionesLeidas USING(idNotificacion) WHERE idUsuario = $idUsuario");
+    $numerofilas = mysqli_num_rows($consultaNotificaciones);
     if ($numerofilas > 0)
     {
       $tablaNotificacionesUsuario = "<table class='responsive-table highlight centered'>
@@ -62,7 +104,7 @@
           <th><th>
         </thead>
         <tbody>";
-        while ($row = mysqli_fetch_assoc($consultaAlbumes))
+        while ($row = mysqli_fetch_assoc($consultaNotificaciones))
         {
           $tablaNotificacionesUsuario.= "<tr>
             <td>".$row['contenido']."</td>
@@ -77,8 +119,6 @@
 
     $template->addBlockfile("TABS_DE_SELECCION", "TABS", "tabs.html");
     $template->touchBlock('TABS');
-    //$template->setCurrentBlock('TABS');
-    //$template->parseCurrentBlock("TABS");
     $template->addBlockfile("CONTENIDO_ALBUMES", "ALBUMES", "albumes.html");
     $template->setCurrentBlock('ALBUMES');
     $template->setVariable("IDUSUARIO",$idUsuario);
@@ -101,6 +141,9 @@
     $template->parseCurrentBlock("PERFIL");
 
     mysqli_free_result($consultaPerfil);
+    mysqli_free_result($consultaAlbumes);
+    mysqli_free_result($consultaNotificaciones);
+    //mysqli_free_result($consultaFeed);
 
   }
   else
@@ -109,10 +152,55 @@
     $template->setVariable("CONTENIDO_ALBUMES", "");
     $template->setVariable("CONTENIDO_NOTIFICACIONES", "");
     $template->setVariable("CONTENIDO_PERFIL", "");
+    //Sección Inicio
+    $consultaFeed = mysqli_query($conexion,"SELECT idAlbum,titulo,nombreTema, rutaFoto,nombreUsuario,apPaternoUsuario,apMaternoUsuario,foto,visitas FROM Albumes INNER JOIN Temas USING(idTema) INNER JOIN Fotos USING(idAlbum) INNER JOIN Usuarios USING(idUsuario) WHERE autorizada = 1 AND tipoAlbum = 'Público' ORDER BY idFoto DESC");
+    $numerofilas = mysqli_num_rows($consultaFeed);
+    if ($numerofilas > 0)
+    {
+      $contenidoUsuario = "<div class='row'>";
+        while ($row = mysqli_fetch_assoc($consultaFeed))
+        {
+          if($row['foto'] == NULL)
+          {
+            $fotoPerfil = "../images/avatar.png";
+          }
+          else
+          {
+            $fotoPerfil = "images/perfil/".$row['foto'];
+          }
+          $nombreUsuario =  $row['nombreUsuario']." ".$row['apPaternoUsuario']." ".$row['apMaternoUsuario'];
+          $fotosAlbum = "images/albumes/".$row['rutaFoto'];
+          $contenidoUsuario.= "<div class='col l6 m6 s12'>
+          <div class='card hoverable'>
+          <br>
+          <img src='".$fotoPerfil."' height='50px' width='50px' class='left circle' style='position: relative; left: 10px; top:-10px;'>
+          <p class='title' style='font-size: 15px; position: relative; left: 20px; top:-10px;'>".$nombreUsuario."</p>
+          <hr>
+
+            <div class='card-image'>
+              <img class='materialboxed ajusteImagen' src='".$fotosAlbum."' style='padding: 10px 18px;'>
+              <span class='card-title'>Álbum: ".$row['titulo']."</span>
+              <a class='btn-floating halfway-fab waves-effect waves-light red' href='verAlbumes.php?id=".$row['idAlbum']."'><i class='material-icons'>remove_red_eye</i></a>
+            </div>
+            <div class='card-content'>
+              <p>Tema: ".$row['nombreTema']."</p>
+              <p>Visitas: ".$row['visitas']."</p>
+            </div>
+          </div>
+          </div>";
+      }
+      $contenidoUsuario.= "</div><center><button class='btn waves-effect waves-light indigo darken-1 right-align' style='margin: 10px' onclick='regresarLogin()'>Salir
+        <i class='material-icons right'>arrow_back</i>
+        </button></center>";
+    }
+    else
+      $contenidoUsuario.= "<h4 class='center-align'>No hay contenido para ver.</h4>";
   }
 
   $template->addBlockfile("CONTENIDO_INICIO", "INICIO", "inicio.html");
-  $template->touchBlock('INICIO');
+  $template->setCurrentBlock('INICIO');
+  $template->setVariable("CONTENIDO_FEED",$contenidoUsuario);
+  $template->parseCurrentBlock('INICIO');
   $template->show();
   Desconectar($conexion);
 ?>

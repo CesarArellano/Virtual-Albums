@@ -2,11 +2,11 @@
   include_once '../config.php';
   $conexion = Conectar();
   $Salida = "";
-  $query = "SELECT idAlbum,titulo,nombretema, u.idUsuario AS 'idPropietario', nombreUsuario, fechaAlbum, AVG(puntuacion) as 'promedioPuntuacion' FROM Usuarios u INNER JOIN Albumes a USING(idUsuario) INNER JOIN Fotos USING(idAlbum) INNER JOIN Temas t ON a.idTema = t.idTema  LEFT JOIN PuntuacionesComentarios USING(idFoto) GROUP BY idAlbum";
+  $query = "SELECT idAlbum,titulo,nombretema, u.idUsuario AS 'idPropietario', nombreUsuario, fechaAlbum, AVG(puntuacion) AS 'promedioPuntuacion' FROM Usuarios u INNER JOIN Albumes a USING(idUsuario) INNER JOIN Fotos USING(idAlbum) INNER JOIN Temas t ON a.idTema = t.idTema  LEFT JOIN PuntuacionesComentarios USING(idFoto) GROUP BY idAlbum";
   if (isset($_POST['Consulta']))
   {
     $texto = mysqli_real_escape_string($conexion, $_POST['Consulta']);
-    $query = "SELECT idAlbum,titulo,nombretema, u.idUsuario AS 'idPropietario', nombreUsuario, fechaAlbum, AVG(puntuacion) as 'promedioPuntuacion' FROM Usuarios u INNER JOIN Albumes a USING(idUsuario) INNER JOIN Fotos USING(idAlbum) INNER JOIN Temas t ON a.idTema = t.idTema  LEFT JOIN PuntuacionesComentarios USING(idFoto) GROUP BY idAlbum WHERE nombreUsuario LIKE '%".$texto."%' ";
+    $query = "SELECT idAlbum,titulo,nombretema, u.idUsuario AS 'idPropietario', nombreUsuario, fechaAlbum, AVG(puntuacion) AS 'promedioPuntuacion' FROM Usuarios u INNER JOIN Albumes a USING(idUsuario) INNER JOIN Fotos USING(idAlbum) INNER JOIN Temas t ON a.idTema = t.idTema  LEFT JOIN PuntuacionesComentarios USING(idFoto) WHERE nombreUsuario LIKE '%".$texto."%' OR titulo LIKE '%".$texto."%' OR nombreTema LIKE '%".$texto."%' GROUP BY idAlbum";
   }
   $consulta = mysqli_query($conexion,$query);
   $numerofilas = mysqli_num_rows($consulta);
@@ -46,8 +46,8 @@
                     $Salida.= "</tbody></table>";
  }
  else
-   $Salida.= "No se encontraron resultados ):";
+   $Salida.= "<h5>No se encontraron resultados</h5>";
  echo $Salida;
- mysqli_free_result($row);
+ mysqli_free_result($consulta);
  Desconectar($conexion);
 ?>

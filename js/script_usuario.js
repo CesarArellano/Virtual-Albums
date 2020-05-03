@@ -47,13 +47,6 @@ $(document).ready(function(e)
 				}
 		}, 'json');
 
-  $("#buscar").change(function()
-  {
-    $("#buscar").val('');
-  });
-  $(document).on('keyup', '#buscar', function(){
-      console.log("Buscando...");
-  });
   $("#mostrar_modificar").click(function()
   {
     $("#modificarperfil").show();
@@ -355,7 +348,57 @@ $(document).ready(function(e)
       }
     });
   });
+  function Buscar_Albumes(consulta)
+  {
+      $.ajax(
+      {
+          url: 'mostrarAlbumes.php',
+          type: 'POST',
+          dataType: 'html',
+          data: {consulta: consulta},
+          success: function(data) // Después de enviar los datos se muestra la respuesta del servidor.
+          {
+            let titulosAlbumes = JSON.parse(data);
+            $('input.autocomplete').autocomplete({
+              data: titulosAlbumes,
+              limit: 10,
+              minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
+            });
+          },
+          error : function(xhr, status) // Si hubo error, despliega mensaje.
+          {
+            swal( // Se inicializa sweetalert2
+            {
+              title: "Ups...",
+              type: "error",
+              html: "Error del servidor, intente de nuevo",
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Ok!'
+            });
+          }
+      });
+  }
+  $("#busquedaAlbumes").on('keyup', function(){
+      var consulta = $(this).val();
+      if (consulta != "")
+          Buscar_Albumes(consulta);
+      console.clear();
+  });
+  $("#busquedaAlbumes").on('change', function(){
+      $(this).val('');
+      console.clear();
+  });
+
 });
+function obtenerDatos(ele, e)
+{
+    if (e.isTrigger != undefined) {
+        value= $(ele).nextAll('.dropdown-content').find('img').attr('src'); // Obtiene el id del Album del objeto JSON titulosAlbumes.
+        url = "verAlbumes.php?id="+value;
+        $(location).attr('href',url); // Redirige al dar click
+    }
+}
+
 function eliminarFoto(idFoto)
 {
 	let param = "foto="+idFoto;
@@ -474,5 +517,8 @@ function eliminarAlbum(idAlbum)
 			});
 		}
 	});
-
+}
+function regresarLogin()
+{
+  location.href = '../registro_usuarios.html';
 }

@@ -22,11 +22,11 @@
   }
   if ($subirFoto)
   {
-    echo json_encode(array('mensaje' => "¡Se ha subido la foto al álbum con éxito la información!", 'pagina' => "albumes",'alerta' => "success"));
+    echo json_encode(array('mensaje' => "¡Se ha subido la foto al álbum con éxito!", 'pagina' => "albumes",'alerta' => "success"));
   }
   else
   {
-    echo json_encode(array('mensaje' => "Error, no se pudo procesar su información, intente de nuevo", 'pagina' => "fotos",'alerta' => "error"));
+    echo json_encode(array('mensaje' => "Error, no se pudo procesar su foto, intente de nuevo", 'pagina' => "fotos",'alerta' => "error"));
   }
   Desconectar($conexion);
 ?>

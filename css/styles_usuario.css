@@ -28,6 +28,8 @@
       width: 80%;
   }
 }
+
+
 nav
 {
     padding: 0 10px 0 10px;
@@ -40,13 +42,11 @@ nav .right
     right: 0px;
 }
 
-
 .nav-wrapper .input-field
 {
     padding-top: 7px;
 }
-
-.nav-wrapper form #buscar
+.nav-wrapper form #busquedaAlbumes
 {
     height: 45px;
 }
@@ -113,4 +113,9 @@ nav .right
 }
 .materialboxed.active{
    object-fit:contain;
+}
+
+
+.dropdown-content img{
+  display: none;
 }

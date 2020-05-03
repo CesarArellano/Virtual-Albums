@@ -80,8 +80,8 @@
                     $Salida.= "</tbody></table>";
  }
  else
-   $Salida.= "No se encontraron resultados ):";
+   $Salida.= "<h5>No se encontraron resultados</h5>";
  echo $Salida;
- mysqli_free_result($row);
+ mysqli_free_result($consulta);
  Desconectar($conexion);
 ?>
