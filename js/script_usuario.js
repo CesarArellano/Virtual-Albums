@@ -1,6 +1,7 @@
 $(document).ready(function(e)
 {
   $('ul.tabs').tabs();
+  $("#verHistorialBusqueda").hide();
   $("#modificarperfil").hide();
   $("#crearAlbum").hide();
   $("#formSubirFoto").hide();
@@ -50,12 +51,26 @@ $(document).ready(function(e)
   $("#mostrar_modificar").click(function()
   {
     $("#modificarperfil").show();
+    $("#verHistorialBusqueda").hide();
     $("#perfil").hide();
   });
   $("#mostrar_informacion").click(function()
   {
-    $("#modificarperfil").hide();
     $("#perfil").show();
+    $("#modificarperfil").hide();
+    $("#verHistorialBusqueda").hide();
+  });
+  $("#mostrarPerfil").click(function()
+  {
+    $("#perfil").show();
+    $("#modificarperfil").hide();
+    $("#verHistorialBusqueda").hide();
+  });
+  $("#mostrar_historial").click(function()
+  {
+    $("#verHistorialBusqueda").show();
+    $("#perfil").hide();
+    $("#modificarperfil").hide();
   });
   $("#mostrarCrearAlbum").click(function()
   {
@@ -297,6 +312,7 @@ $(document).ready(function(e)
         }
       });
     }
+
   });
   $("#formularioModificarAlbum").on('submit', function(e)
   {
@@ -348,7 +364,30 @@ $(document).ready(function(e)
       }
     });
   });
-  function Buscar_Albumes(consulta)
+  $("#inputBusqueda").change(function(){
+    $("#inputBusqueda").val(" ");
+    $("#search").hide(200);
+  });
+  var consulta = $("#searchTable").DataTable();
+
+  $("#inputBusqueda").keyup(function(){
+    consulta.search($(this).val()).draw();
+
+    if ($("#inputBusqueda").val() == ""){
+      $("search").css({
+        "height": "auto",
+        "background": "none"
+      })
+
+      $("#search").hide();
+
+    } else {
+      $("#search").fadeIn("fast");
+    }
+  });
+});
+
+function Buscar_Albumes(consulta)
   {
       $.ajax(
       {
@@ -378,26 +417,6 @@ $(document).ready(function(e)
           }
       });
   }
-  $("#busquedaAlbumes").on('keyup', function(){
-      var consulta = $(this).val();
-      if (consulta != "")
-          Buscar_Albumes(consulta);
-      console.clear();
-  });
-  $("#busquedaAlbumes").on('change', function(){
-      $(this).val('');
-      console.clear();
-  });
-
-});
-function obtenerDatos(ele, e)
-{
-    if (e.isTrigger != undefined) {
-        value= $(ele).nextAll('.dropdown-content').find('img').attr('src'); // Obtiene el id del Album del objeto JSON titulosAlbumes.
-        url = "verAlbumes.php?id="+value;
-        $(location).attr('href',url); // Redirige al dar click
-    }
-}
 
 function eliminarFoto(idFoto)
 {
@@ -517,6 +536,125 @@ function eliminarAlbum(idAlbum)
 			});
 		}
 	});
+}
+function cambiarNotificacion(idNotificacionLeida)
+{
+	let param = "idNotificacionLeida="+idNotificacionLeida;
+	$.ajax(
+	{
+		type: 'POST',
+		url: 'notificacionLeida.php',
+		data: param, // Inicializa el objeto con la información de la forma.
+		dataType : 'json', // Indicamos formato de respuesta
+		success: function(data) // Después de enviar los datos se muestra la respuesta del servidor.
+		{
+			if(data.alerta == "error")
+			{
+				titulo = "Ups..."
+			}
+			else
+			{
+				titulo = "Bien hecho!"
+			}
+			swal( // Se inicializa sweetalert2
+			{
+
+				title: titulo,
+				type: data.alerta,
+				html: data.mensaje,
+				confirmButtonColor: '#3085d6',
+				confirmButtonText: 'Ok!'
+			}).then(function ()
+			{
+				if(data.alerta == "success")
+					location.reload();
+			});
+			$(document).click(function()
+			{
+				if(data.alerta == "success")
+					location.reload();
+			});
+			$(document).keyup(function(e)
+			{
+				if (e.which == 27)
+				{
+					if(data.alerta == "success")
+						location.reload();
+				}
+			});
+		},
+		error : function(xhr, status,error) // Si hubo error, despliega mensaje.
+		{
+			swal( // Se inicializa sweetalert2
+			{
+				title: "Ups...",
+				type: "error",
+				html: "Error del servidor, intente de nuevo"+error,
+				confirmButtonColor: '#3085d6',
+				confirmButtonText: 'Ok!'
+			});
+		}
+	});
+}
+function compartirAlbum(idAlbum,idUsuario)
+{
+
+  swal({
+  imageUrl:"../images/email.ico",
+  imageWidth: 150,
+  imageHeight: 150,
+  confirmButtonColor: '#3085d6',
+  confirmButtonText: '¡Compartir!',
+  title: 'Ingresa correo electrónico',
+  html:"<input id='correoCompartir' class='swal2-input'>",
+  preConfirm: function () {
+    return new Promise(function (resolve) {
+      resolve([
+        $('#correoCompartir').val()
+      ])
+    })
+  }
+}).then(function (result) {
+  let correoUsuario = result.toString();
+  let param = "idAlbum="+idAlbum+"&idUsuario="+idUsuario+"&correoUsuario="+correoUsuario;
+  $.ajax(
+	{
+		type: 'POST',
+		url: 'invitacionSuscripcion.php',
+		data: param, // Inicializa el objeto con la información de la forma.
+		dataType : 'json', // Indicamos formato de respuesta
+		success: function(data) // Después de enviar los datos se muestra la respuesta del servidor.
+		{
+			if(data.alerta == "error")
+			{
+				titulo = "Ups..."
+			}
+			else
+			{
+				titulo = "Bien hecho!"
+			}
+			swal( // Se inicializa sweetalert2
+			{
+				title: titulo,
+				type: data.alerta,
+				html: data.mensaje,
+				confirmButtonColor: '#3085d6',
+				confirmButtonText: 'Ok!'
+			})
+		},
+		error : function(xhr, status,error) // Si hubo error, despliega mensaje.
+		{
+			swal( // Se inicializa sweetalert2
+			{
+				title: "Ups...",
+				type: "error",
+				html: "Error del servidor, intente de nuevo"+error,
+				confirmButtonColor: '#3085d6',
+				confirmButtonText: 'Ok!'
+			});
+		}
+	});
+}).catch(swal.noop)
 }
 function regresarLogin()
 {

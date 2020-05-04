@@ -9,14 +9,15 @@
   <p>Fecha de nacimiento: {NACIMIENTO}</p>
   <p>Correo electrónico: {CORREO}</p>
   <br>
-  <center>
   <button class="btn waves-effect waves-light purple darken-1" id="mostrar_modificar" style="margin: 10px">Modificar información
     <i class="material-icons right">edit</i><p>
   </button>
-  <button class="btn waves-effect waves-light light-blue accent-4 center" onclick=" location.href='../logout.php'" style="margin: 10px">Cerrar Sesión
+  <button class="btn waves-effect waves-light green" id="mostrar_historial" style="margin: 10px">Ver historial de búsqueda
+    <i class="material-icons right">assignment</i><p>
+  </button>
+  <button class="btn waves-effect waves-light light-blue accent-4" onclick=" location.href='../logout.php'" style="margin: 10px">Cerrar Sesión
     <i class="material-icons right">exit_to_app</i><p>
   </button>
-  </center>
 </div>
 <div id="modificarperfil">
   <h2>Modificar información personal</h2>
@@ -89,10 +90,20 @@
     </div>
   </div>
   <center>
-  <button class="btn waves-effect waves-light purple darken-1 center-align" id="mostrar_informacion" style="z-index: 0;">Perfil
+  <button class="btn waves-effect waves-light purple darken-1" id="mostrar_informacion" style="z-index: 0;">Perfil
     <i class="material-icons right">arrow_back</i>
   </button>
   </center>
-
 </div>
-<br><br>
+<div id="verHistorialBusqueda">
+  <h2>Historial de búsqueda</h2>
+  <br>
+  {HISTORIAL_BUSQUEDA}
+  <br>
+  <br>
+  <center>
+  <button class="btn waves-effect waves-light green" id="mostrarPerfil" style="z-index: 0;">Perfil
+    <i class="material-icons right">arrow_back</i>
+  </button>
+  </center>
+</div>

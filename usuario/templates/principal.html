@@ -10,6 +10,7 @@
 	<link type="text/css" rel="stylesheet" href="../css/styles_usuario.css"  media="screen,projection"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="../js/jquery.dataTables.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.3.2/sweetalert2.js" charset="utf-8"></script>
   <script type="text/javascript" src="../js/materialize.min.js"></script>
   <script type="text/javascript" src="../js/script_usuario.js"></script>
@@ -19,13 +20,69 @@
   <nav class="nav-extended light-blue accent-4">
     <div class="nav-wrapper">
 			<a id="nav-logo" class="brand-logo center">Virtual Albums</a>
-			<form action="verAlbumes.php" method="GET">
+			<div class="contenedor">
 				<div class="input-field">
-					<input id="busquedaAlbumes" type="search" name="id" class="autocomplete" onchange="obtenerDatos(this, event)">
+					<input id="inputBusqueda" type="search">
 					<label class="label-icon" for="search"><i id="icono_busqueda" class="material-icons">search</i></label>
 					<i class="material-icons">close</i>
 				</div>
-			</form>
+				<div class="search z-depth-2" id="search">
+					<table class="search-table" id="searchTable">
+						<thead>
+							<tr>
+								<td></td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><a href="https://www.youtube.com/">Inicio</a></td>
+							</tr>
+							<tr>
+								<td><a href="#">Cursos</a></td>
+							</tr>
+							<tr>
+								<td><a href="#">Servicios</a></td>
+							</tr>
+							<tr>
+								<td><a href="#">Contacto</a></td>
+							</tr>
+							<tr>
+								<td><a href="#">Curso Html</a></td>
+							</tr>
+							<tr>
+								<td><a href="#">Nuevo Articulo</a></td>
+							</tr>
+							<tr>
+								<td><a href="#">Curso de CSS</a></td>
+							</tr>
+							<tr>
+								<td><a href="#">Curso Javascript</a></td>
+							</tr>
+							<tr>
+								<td><a href="#">Curso Jquery</a></td>
+							</tr>
+							<tr>
+								<td><a href="#">Curso Ajax</a></td>
+							</tr>
+							<tr>
+								<td><a href="#">Curso PHP</a></td>
+							</tr>
+							<tr>
+								<td><a href="#">Curso Angular Js</a></td>
+							</tr>
+							<tr>
+								<td><a href="#">Curso Angular 2</a></td>
+							</tr>
+							<tr>
+								<td><a href="#">Mas cursos</a></td>
+							</tr>
+							<tr>
+								<td><a href="#">Noticias</a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
     </div>
     <div class="nav-content">
       <ul class="tabs tabs-transparent">

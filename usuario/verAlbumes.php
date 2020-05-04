@@ -9,14 +9,21 @@
   $template->setVariable("TITULO", "Virtual Albums | Ver ÁLbumes");
   if(isset($_SESSION['idUsuario']))
   {
+    $idUsuario = intval($_SESSION['idUsuario']);
     $tablaFotosAlbum = "";
     $idAlbum = intval($_GET['id']);
-    $consultaObtenerVisitas = mysqli_query($conexion,"SELECT visitas FROM Albumes WHERE idAlbum = $idAlbum");
+    $notificar = intval($_GET['tipo']);
+    $consultaObtenerVisitas = mysqli_query($conexion,"SELECT visitas,titulo FROM Albumes WHERE idAlbum = $idAlbum");
     $existe = mysqli_num_rows($consultaObtenerVisitas);
     if($existe > 0)
     {
-      $rowVisitaAlbum = mysqli_fetch_assoc($consultaObtenerVisitas);
-      $visitasAlbum = intval($rowVisitaAlbum['visitas']);
+      $rowAlbum = mysqli_fetch_assoc($consultaObtenerVisitas);
+      if($notificar == 1)
+      {
+        $mensaje = "Buscó el álbum: ".$rowAlbum['titulo'];
+        $historialBusqueda = mysqli_query($conexion,"INSERT INTO HistorialBusqueda (idUsuario,busqueda) VALUES($idUsuario,'$mensaje')");
+      }
+      $visitasAlbum = intval($rowAlbum['visitas']);
       $visitasAlbum++;
       $consultaActualizarVisitas = mysqli_query($conexion,"UPDATE Albumes SET visitas = $visitasAlbum WHERE idAlbum = $idAlbum");
       $consultaFotos = mysqli_query($conexion,"SELECT * FROM Fotos WHERE idAlbum = $idAlbum");
