@@ -56,35 +56,34 @@
               <a class='btn-floating halfway-fab waves-effect waves-light red' href='verAlbumes.php?id=".$row['idAlbum']."&tipo=0'><i class='material-icons'>remove_red_eye</i></a>
             </div>
             <div class='card-content'>
-              <center>
               <form action='enviarComentario.php' method='POST'>
                 <div class='star-rating center-align'>
-                  <input id='star-".$i."' type='radio' name='rating' value='star-5'>
+                  <input id='star-".$i."' type='radio' name='rating' value='5'>
                   <label for='star-".$i."' title='5 stars'>
                       <i class='active fa fa-star' aria-hidden='true'>★</i>
                   </label>";
                   $i++;
                   $contenidoUsuario.="
-                  <input id='star-".$i."' type='radio' name='rating' value='star-4'>
+                  <input id='star-".$i."' type='radio' name='rating' value='4'>
                   <label for='star-".$i."' title='4 stars'>
                       <i class='active fa fa-star' aria-hidden='true'>★</i>
                   </label>";
                   $i++;
                   $contenidoUsuario.="
-                  <input id='star-".$i."' type='radio' name='rating' value='star-3'>
+                  <input id='star-".$i."' type='radio' name='rating' value='3'>
                   <label for='star-".$i."' title='3 stars'>
                       <i class='active fa fa-star' aria-hidden='true'>★</i>
                   </label>
                   ";
                   $i++;
                   $contenidoUsuario.="
-                  <input id='star-".$i."' type='radio' name='rating' value='star-2'>
+                  <input id='star-".$i."' type='radio' name='rating' value='2'>
                   <label for='star-".$i."' title='2 stars'>
                       <i class='active fa fa-star' aria-hidden='true'>★</i>
                   </label>";
                   $i++;
                   $contenidoUsuario.="
-                  <input id='star-".$i."' type='radio' name='rating' value='star-1'>
+                  <input id='star-".$i."' type='radio' name='rating' value='1'>
                   <label for='star-".$i."' title='1 star'>
                       <i class='active fa fa-star' >★</i>
                   </label>
@@ -97,7 +96,8 @@
                     <label for='textarea".$i."'>Haz un comentario</label>
                   </div>
                 </div>
-                <center><button class='btn waves-effect waves-light indigo darken-3' onclick='enviarComentario(".$row['idFoto'].")' style='top: -10px'>Enviar comentario<i class='material-icons right'>send</i></button></center>
+                <input type='hidden' name='idFoto' value='".$row['idFoto']."'>
+                <center><button class='btn waves-effect waves-light indigo darken-3' type='submit' style='top: -10px'>Enviar comentario<i class='material-icons right'>send</i></button></center>
                 </form>
             </div>
           </div>
