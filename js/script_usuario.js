@@ -116,17 +116,20 @@ $(document).ready(function(e)
           confirmButtonText: 'Ok!'
         }).then(function ()
         {
-          location.href = "inicio.php";
+            location.reload();
+            location.href = 'inicio.php#tabAlbumes';
         });
         $(document).click(function()
         {
-          location.href = "inicio.php";
+            location.reload();
+            location.href = 'inicio.php#tabAlbumes';
         });
         $(document).keyup(function(e)
         {
           if (e.which == 27)
           {
-            location.href = "inicio.php";
+            location.reload();
+            location.href = 'inicio.php#tabAlbumes';
           }
         });
       },
@@ -197,7 +200,8 @@ $(document).ready(function(e)
           {
             if (data.pagina == "index")
             {
-              location.href = "inicio.php";
+              location.reload();
+              location.href = 'inicio.php#tabPerfil';
             }
 
           });
@@ -205,7 +209,8 @@ $(document).ready(function(e)
           {
             if (data.pagina == "index" )
             {
-              location.href = "inicio.php";
+              location.reload();
+              location.href = 'inicio.php#tabPerfil';
             }
           });
           $(document).keyup(function(e)
@@ -214,7 +219,8 @@ $(document).ready(function(e)
             {
               if (data.pagina == "index" )
               {
-                location.href = "inicio.php";
+                location.reload();
+                location.href = 'inicio.php#tabPerfil';
               }
             }
           });
@@ -364,9 +370,10 @@ $(document).ready(function(e)
       }
     });
   });
+
   $("#inputBusqueda").change(function(){
     $("#inputBusqueda").val(" ");
-    $("#search").hide(200);
+    $("#search").hide(700);
   });
   var consulta = $("#searchTable").DataTable();
 
@@ -376,7 +383,7 @@ $(document).ready(function(e)
     if ($("#inputBusqueda").val() == ""){
       $("search").css({
         "height": "auto",
-        "background": "none"
+        "background": "none",
       })
 
       $("#search").hide();
@@ -508,19 +515,28 @@ function eliminarAlbum(idAlbum)
 			}).then(function ()
 			{
 				if(data.alerta == "success")
-					location.reload();
+        {
+          location.reload();
+          location.href = 'inicio.php#tabAlbumes';
+        }
 			});
 			$(document).click(function()
 			{
 				if(data.alerta == "success")
-					location.reload();
+        {
+          location.reload();
+          location.href = 'inicio.php#tabAlbumes';
+        }
 			});
 			$(document).keyup(function(e)
 			{
 				if (e.which == 27)
 				{
 					if(data.alerta == "success")
-						location.reload();
+          {
+            location.reload();
+            location.href = 'inicio.php#tabAlbumes';
+          }
 				}
 			});
 		},
@@ -567,19 +583,29 @@ function cambiarNotificacion(idNotificacionLeida)
 			}).then(function ()
 			{
 				if(data.alerta == "success")
-					location.reload();
+        {
+          location.reload();
+          location.href = 'inicio.php#tabNotificaciones';
+        }
 			});
 			$(document).click(function()
 			{
 				if(data.alerta == "success")
-					location.reload();
+        {
+          location.reload();
+          location.href = 'inicio.php#tabNotificaciones';
+        }
 			});
 			$(document).keyup(function(e)
 			{
 				if (e.which == 27)
 				{
 					if(data.alerta == "success")
-						location.reload();
+          {
+            location.reload();
+            location.href = 'inicio.php#tabNotificaciones';
+          }
+
 				}
 			});
 		},
@@ -659,4 +685,73 @@ function compartirAlbum(idAlbum,idUsuario)
 function regresarLogin()
 {
   location.href = '../registro_usuarios.html';
+}
+function borrarHistorial(idUsuario)
+{
+  let param = "idUsuario="+idUsuario;
+  $.ajax(
+	{
+		type: 'POST',
+		url: 'eliminarHistorial.php',
+		data: param, // Inicializa el objeto con la información de la forma.
+		dataType : 'json', // Indicamos formato de respuesta
+		success: function(data) // Después de enviar los datos se muestra la respuesta del servidor.
+		{
+			if(data.alerta == "error")
+			{
+				titulo = "Ups..."
+			}
+			else
+			{
+				titulo = "Bien hecho!"
+			}
+			swal( // Se inicializa sweetalert2
+			{
+
+				title: titulo,
+				type: data.alerta,
+				html: data.mensaje,
+				confirmButtonColor: '#3085d6',
+				confirmButtonText: 'Ok!'
+			}).then(function ()
+			{
+				if(data.alerta == "success")
+        {
+          location.reload();
+          location.href = 'inicio.php#tabPerfil';
+        }
+			});
+			$(document).click(function()
+			{
+				if(data.alerta == "success")
+        {
+          location.reload();
+          location.href = 'inicio.php#tabPerfil';
+        }
+			});
+			$(document).keyup(function(e)
+			{
+				if (e.which == 27)
+				{
+					if(data.alerta == "success")
+          {
+            location.reload();
+            location.href = 'inicio.php#tabPerfil';
+          }
+				}
+			});
+		},
+		error : function(xhr, status,error) // Si hubo error, despliega mensaje.
+		{
+			swal( // Se inicializa sweetalert2
+			{
+				title: "Ups...",
+				type: "error",
+				html: "Error del servidor, intente de nuevo"+error,
+				confirmButtonColor: '#3085d6',
+				confirmButtonText: 'Ok!'
+			});
+		}
+	});
+
 }

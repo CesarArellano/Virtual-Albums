@@ -6,7 +6,7 @@
   $conexion = Conectar();
 	$template = new HTML_Template_ITX('./templates');
   $template->loadTemplatefile("verAlbumes.html", true, true);
-  $template->setVariable("TITULO", "Virtual Albums | Ver ÁLbumes");
+  $template->setVariable("TITULO", "Virtual Albums | Ver Álbumes");
   if(isset($_SESSION['idUsuario']))
   {
     $idUsuario = intval($_SESSION['idUsuario']);

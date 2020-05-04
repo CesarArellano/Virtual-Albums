@@ -5,6 +5,23 @@
 	$template = new HTML_Template_ITX('./templates');
   $template->loadTemplatefile("principal.html", true, true);
   $template->setVariable("TITULO", "Virtual Albums | Usuario");
+  $consultaTituloAlbumes = mysqli_query($conexion,"SELECT idAlbum,titulo FROM Albumes  WHERE tipoAlbum = 'Público'");
+  $numerofilas = mysqli_num_rows($consultaTituloAlbumes);
+  $tituloAlbumes = "";
+  if ($numerofilas > 0)
+  {
+    while ($row = mysqli_fetch_array($consultaTituloAlbumes))
+    {
+      $tituloAlbumes .= "<tr><td><a href='verAlbumes.php?id=".$row['idAlbum']."&tipo=1'>".$row['titulo']."</a></td></tr>";
+    }
+    mysqli_free_result($consultaTituloAlbumes);
+  }
+  else
+  {
+    $tituloAlbumes .= "<tr>No hay resultados</tr>";
+  }
+  $template->setVariable("TITULOS_ALBUMES", $tituloAlbumes);
+
   if(isset($_SESSION['idUsuario']))
   {
     $idUsuario = intval($_SESSION['idUsuario']);
@@ -187,11 +204,17 @@
           </div>
         </div>";
       }
+      $historialBusqueda .="<center><button class='btn waves-effect waves-light red' onclick='borrarHistorial(".$idUsuario.")' style='margin: 10px'>Borrar Historial
+        <i class='material-icons right'>close</i></button><button class='btn waves-effect waves-light green' id='mostrarPerfil' style='margin: 10px'>Perfil
+          <i class='material-icons right'>arrow_back</i>
+        </button></center>";
       mysqli_free_result($consultaHistorial);
     }
     else
     {
-      $historialBusqueda .= "<h4 class='center-align'>No tiene historial de búsqueda</h4>";
+      $historialBusqueda .= "<h4 class='center-align'>No tiene historial de búsqueda</h4><center><button class='btn waves-effect waves-light green' id='mostrarPerfil' style='margin: 10px'>Perfil
+        <i class='material-icons right'>arrow_back</i>
+      </button></center>";
     }
 
     $template->addBlockfile("TABS_DE_SELECCION", "TABS", "tabs.html");
@@ -214,6 +237,7 @@
     $template->setVariable("NACIMIENTO", $datosPerfil['nacimiento']);
     $template->setVariable("CORREO", $datosPerfil['correo']);
     $template->setVariable("IDUSUARIO",$idUsuario);
+    $template->setVariable("IDUSUARIO_BORRAR",$idUsuario);
     $template->setVariable("HISTORIAL_BUSQUEDA",$historialBusqueda);
     $template->parseCurrentBlock("PERFIL");
 

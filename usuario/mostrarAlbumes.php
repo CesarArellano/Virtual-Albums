@@ -2,25 +2,23 @@
   include_once '../config.php';
   error_reporting(E_ALL);
   ini_set('display_errors', 1);
-  header('Content-type: application/json; charset=utf-8'); // Se especifica el tipo de contenido a regresar, codificado en utf-8
   $conexion = Conectar();
-  $tituloAlbumes = array();
-  $query = "SELECT idAlbum,titulo FROM Albumes  WHERE tipoAlbum = 'Público'";
-  if (isset($_POST['consulta']))
-  {
-    $texto = mysqli_real_escape_string($conexion, $_POST['consulta']);
-    $query = "SELECT idAlbum,titulo FROM Albumes WHERE tipoAlbum = 'Público' GROUP BY idAlbum HAVING titulo LIKE '%".$texto."%' ";
-  }
-  $consulta = mysqli_query($conexion,$query);
-  $numerofilas = mysqli_num_rows($consulta);
+  $consultaTituloAlbumes = mysqli_query($conexion,"SELECT idAlbum,titulo FROM Albumes  WHERE tipoAlbum = 'Público'");
+  $numerofilas = mysqli_num_rows($consultaTituloAlbumes);
+  $tituloAlbumes = "";
   if ($numerofilas > 0)
   {
-    while ($row = mysqli_fetch_array($consulta))
+    while ($row = mysqli_fetch_array($consultaTituloAlbumes))
     {
-      $tituloAlbumes[$row['titulo']] = $row['idAlbum'];
+      $tituloAlbumes .= "<tr><td><a href='verAlbumes.php?id=".$row['idAlbum']."&tipo=1'>".$row['titulo']."</a></td></tr>";
     }
+    $tituloAlbumes .=  "<tr><td><a href='#'>Hola</a></td></tr>";
+    mysqli_free_result($consultaTituloAlbumes);
   }
-  echo json_encode($tituloAlbumes);
-  mysqli_free_result($consulta);
+  else
+  {
+    $tituloAlbumes .= "<tr>No hay resultados</tr>";
+  }
+  echo $tituloAlbumes;
   Desconectar($conexion);
 ?>
