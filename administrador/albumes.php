@@ -3,7 +3,7 @@
   require_once "HTML/Template/ITX.php";
   $conexion = Conectar();
   if (!isset($_SESSION['tipoUsuario']))
-		header('location: ../inicio.php');
+		header('location: ../index.php');
   $idUsuario = htmlentities($_GET['id']);
   $vacio = 1;
   $vacio2 = 1;

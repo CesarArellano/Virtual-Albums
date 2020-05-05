@@ -327,7 +327,7 @@ $(document).ready(function(e)
           {
             if (data.pagina == "index")
             {
-              location.href = "inicio.php";
+              location.href = "index.php";
             }
 
           });
@@ -335,7 +335,7 @@ $(document).ready(function(e)
           {
             if (data.pagina == "index" )
             {
-              location.href = "inicio.php";
+              location.href = "index.php";
             }
           });
           $(document).keyup(function(e)
@@ -344,7 +344,7 @@ $(document).ready(function(e)
             {
               if (data.pagina == "index" )
               {
-                location.href = "inicio.php";
+                location.href = "index.php";
               }
             }
           });

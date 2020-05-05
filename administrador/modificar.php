@@ -3,7 +3,7 @@
   require_once "HTML/Template/ITX.php";
   $conexion = Conectar();
   if (!isset($_SESSION['tipoUsuario']))
-		header('location: ../inicio.php');
+		header('location: ../index.php');
   $idUsuario = htmlentities($_GET['id']);
   $consulta = mysqli_query($conexion,"SELECT tipoUsuario FROM Usuarios WHERE idUsuario = $idUsuario");
   $row = mysqli_fetch_assoc($consulta);

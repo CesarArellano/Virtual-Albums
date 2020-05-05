@@ -1,8 +1,6 @@
 <?php
   include "../config.php";
   require_once "HTML/Template/ITX.php";
-  error_reporting(E_ALL);
-  ini_set('display_errors', 1);
   $conexion = Conectar();
 	$template = new HTML_Template_ITX('./templates');
   $template->loadTemplatefile("verAlbumes.html", true, true);
@@ -102,7 +100,7 @@
     mysqli_free_result($consultaInformacionAlbum);
   }
   else
-    header('location: ../inicio.php');
+    header('location: ../index.php');
 
   Desconectar($conexion);
 ?>

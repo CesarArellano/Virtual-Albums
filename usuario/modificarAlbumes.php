@@ -1,8 +1,6 @@
 <?php
   include "../config.php";
   require_once "HTML/Template/ITX.php";
-  error_reporting(E_ALL);
-  ini_set('display_errors', 1);
   $conexion = Conectar();
 	$template = new HTML_Template_ITX('./templates');
   $template->loadTemplatefile("modificarAlbumes.html", true, true);
@@ -14,7 +12,7 @@
     $rowInformacionAlbum = mysqli_fetch_assoc($consultaInformacionAlbum);
   }
   else
-    header('location: ../inicio.php');
+    header('location: ../index.php');
 
   $template->setVariable("TITULO_ALBUM", $rowInformacionAlbum['titulo']);
   $template->setVariable("IDALBUM",$idAlbum);

@@ -3,14 +3,14 @@
   require_once "HTML/Template/ITX.php";
   $conexion = Conectar();
   if (!isset($_SESSION['tipoUsuario']))
-		header('location: ../inicio.php');
+		header('location: ../index.php');
   $mensaje = htmlentities($_GET['mensaje']);
   $p = htmlentities($_GET['p']);
   $alerta = htmlentities($_GET['a']);
   switch ($p)
     {
       case 'index':
-        $pagina = 'inicio.php';
+        $pagina = 'index.php';
         break;
     }
 

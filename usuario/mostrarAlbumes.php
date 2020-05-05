@@ -1,7 +1,5 @@
 <?php
   include_once '../config.php';
-  error_reporting(E_ALL);
-  ini_set('display_errors', 1);
   $conexion = Conectar();
   $consultaTituloAlbumes = mysqli_query($conexion,"SELECT idAlbum,titulo FROM Albumes  WHERE tipoAlbum = 'Público'");
   $numerofilas = mysqli_num_rows($consultaTituloAlbumes);

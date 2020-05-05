@@ -1,7 +1,5 @@
 <?php
   include '../config.php';
-  error_reporting(E_ALL);
-  ini_set('display_errors', 1);
   header('Content-type: application/json; charset=utf-8'); // Se especifica el tipo de contenido a regresar, codificado en utf-8
   $conexion = Conectar();
   $idUsuario = $_POST['idUsuario']; //Guardamos todas las variables que nos llegaron por medio de POST

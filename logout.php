@@ -6,5 +6,5 @@
   	$query = mysqli_query($conexion,$strQuery);
     $_SESSION = array();
     session_destroy();
-    header("location: inicio.php");
+    header("location: index.php");
 ?>

@@ -1,8 +1,6 @@
 <?php
   include '../config.php';
-  header('Content-type: application/json; charset=utf-8');
-  error_reporting(E_ALL);
-  ini_set('display_errors', 1); // Se especifica el tipo de contenido a regresar, codificado en utf-8
+  header('Content-type: application/json; charset=utf-8'); // Se especifica el tipo de contenido a regresar, codificado en utf-8
   $conexion = Conectar();
   $idAlbum= $_POST['album'];
   $directorio = "images/albumes/"; //Definimos el directorio para el usuario donde se van a guardar las imágenes

@@ -1,8 +1,6 @@
 <?php
   include '../config.php';
-  header('Content-type: application/json; charset=utf-8');
-  error_reporting(E_ALL);
-  ini_set('display_errors', 1); // Se especifica el tipo de contenido a regresar, codificado en utf-8
+  header('Content-type: application/json; charset=utf-8');  // Se especifica el tipo de contenido a regresar, codificado en utf-8
   $conexion = Conectar();
   $idAlbum = intval($_POST['idAlbum']);
   $idUsuario = intval($_POST['idUsuario']);

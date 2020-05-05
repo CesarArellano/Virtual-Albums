@@ -117,19 +117,19 @@ $(document).ready(function(e)
         }).then(function ()
         {
             location.reload();
-            location.href = 'inicio.php#tabAlbumes';
+            location.href = 'index.php#tabAlbumes';
         });
         $(document).click(function()
         {
             location.reload();
-            location.href = 'inicio.php#tabAlbumes';
+            location.href = 'index.php#tabAlbumes';
         });
         $(document).keyup(function(e)
         {
           if (e.which == 27)
           {
             location.reload();
-            location.href = 'inicio.php#tabAlbumes';
+            location.href = 'index.php#tabAlbumes';
           }
         });
       },
@@ -201,7 +201,7 @@ $(document).ready(function(e)
             if (data.pagina == "index")
             {
               location.reload();
-              location.href = 'inicio.php#tabPerfil';
+              location.href = 'index.php#tabPerfil';
             }
 
           });
@@ -210,7 +210,7 @@ $(document).ready(function(e)
             if (data.pagina == "index" )
             {
               location.reload();
-              location.href = 'inicio.php#tabPerfil';
+              location.href = 'index.php#tabPerfil';
             }
           });
           $(document).keyup(function(e)
@@ -220,7 +220,7 @@ $(document).ready(function(e)
               if (data.pagina == "index" )
               {
                 location.reload();
-                location.href = 'inicio.php#tabPerfil';
+                location.href = 'index.php#tabPerfil';
               }
             }
           });
@@ -343,17 +343,17 @@ $(document).ready(function(e)
           confirmButtonText: 'Ok!'
         }).then(function ()
         {
-          location.href = "inicio.php#tabAlbumes";
+          location.href = "index.php#tabAlbumes";
         });
         $(document).click(function()
         {
-          location.href = "inicio.php#tabAlbumes";
+          location.href = "index.php#tabAlbumes";
         });
         $(document).keyup(function(e)
         {
           if (e.which == 27)
           {
-            location.href = "inicio.php#tabAlbumes";
+            location.href = "index.php#tabAlbumes";
           }
         });
       },
@@ -393,37 +393,6 @@ $(document).ready(function(e)
     }
   });
 });
-
-function Buscar_Albumes(consulta)
-  {
-      $.ajax(
-      {
-          url: 'mostrarAlbumes.php',
-          type: 'POST',
-          dataType: 'html',
-          data: {consulta: consulta},
-          success: function(data) // Después de enviar los datos se muestra la respuesta del servidor.
-          {
-            let titulosAlbumes = JSON.parse(data);
-            $('input.autocomplete').autocomplete({
-              data: titulosAlbumes,
-              limit: 10,
-              minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
-            });
-          },
-          error : function(xhr, status) // Si hubo error, despliega mensaje.
-          {
-            swal( // Se inicializa sweetalert2
-            {
-              title: "Ups...",
-              type: "error",
-              html: "Error del servidor, intente de nuevo",
-              confirmButtonColor: '#3085d6',
-              confirmButtonText: 'Ok!'
-            });
-          }
-      });
-  }
 
 function eliminarFoto(idFoto)
 {
@@ -517,7 +486,7 @@ function eliminarAlbum(idAlbum)
 				if(data.alerta == "success")
         {
           location.reload();
-          location.href = 'inicio.php#tabAlbumes';
+          location.href = 'index.php#tabAlbumes';
         }
 			});
 			$(document).click(function()
@@ -525,7 +494,7 @@ function eliminarAlbum(idAlbum)
 				if(data.alerta == "success")
         {
           location.reload();
-          location.href = 'inicio.php#tabAlbumes';
+          location.href = 'index.php#tabAlbumes';
         }
 			});
 			$(document).keyup(function(e)
@@ -535,7 +504,7 @@ function eliminarAlbum(idAlbum)
 					if(data.alerta == "success")
           {
             location.reload();
-            location.href = 'inicio.php#tabAlbumes';
+            location.href = 'index.php#tabAlbumes';
           }
 				}
 			});
@@ -585,7 +554,7 @@ function cambiarNotificacion(idNotificacionLeida)
 				if(data.alerta == "success")
         {
           location.reload();
-          location.href = 'inicio.php#tabNotificaciones';
+          location.href = 'index.php#tabNotificaciones';
         }
 			});
 			$(document).click(function()
@@ -593,7 +562,7 @@ function cambiarNotificacion(idNotificacionLeida)
 				if(data.alerta == "success")
         {
           location.reload();
-          location.href = 'inicio.php#tabNotificaciones';
+          location.href = 'index.php#tabNotificaciones';
         }
 			});
 			$(document).keyup(function(e)
@@ -603,7 +572,7 @@ function cambiarNotificacion(idNotificacionLeida)
 					if(data.alerta == "success")
           {
             location.reload();
-            location.href = 'inicio.php#tabNotificaciones';
+            location.href = 'index.php#tabNotificaciones';
           }
 
 				}
@@ -718,7 +687,7 @@ function borrarHistorial(idUsuario)
 				if(data.alerta == "success")
         {
           location.reload();
-          location.href = 'inicio.php#tabPerfil';
+          location.href = 'index.php#tabPerfil';
         }
 			});
 			$(document).click(function()
@@ -726,7 +695,7 @@ function borrarHistorial(idUsuario)
 				if(data.alerta == "success")
         {
           location.reload();
-          location.href = 'inicio.php#tabPerfil';
+          location.href = 'index.php#tabPerfil';
         }
 			});
 			$(document).keyup(function(e)
@@ -736,7 +705,7 @@ function borrarHistorial(idUsuario)
 					if(data.alerta == "success")
           {
             location.reload();
-            location.href = 'inicio.php#tabPerfil';
+            location.href = 'index.php#tabPerfil';
           }
 				}
 			});

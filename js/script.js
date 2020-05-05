@@ -64,7 +64,7 @@ $(document).ready(function(e)
           switch (data.pagina) //Evaluamos a qué página se redirigirá.
           {
             case 'index':
-              pagina = 'inicio.php';
+              pagina = 'index.php';
               break;
             case 'registro':
               pagina = 0;
@@ -133,10 +133,10 @@ $(document).ready(function(e)
         switch (data.tipoUsuario) //Evaluamos qué tipo de usuario es para saber a donde redirigirlo
         {
           case 'administrador':
-            pagina = 'administrador/inicio.php';
+            pagina = 'administrador/index.php';
             break;
           case 'usuario':
-            pagina = 'usuario/inicio.php';
+            pagina = 'usuario/index.php';
             break;
           case 'index':
             pagina = 0;
