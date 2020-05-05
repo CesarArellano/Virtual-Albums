@@ -373,7 +373,7 @@ $(document).ready(function(e)
 
   $("#inputBusqueda").change(function(){
     $("#inputBusqueda").val(" ");
-    $("#search").hide(700);
+    $("#search").slideUp(700);
   });
   var consulta = $("#searchTable").DataTable();
 

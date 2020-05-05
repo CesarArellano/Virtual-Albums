@@ -5,28 +5,40 @@
 	$template = new HTML_Template_ITX('./templates');
   $template->loadTemplatefile("principal.html", true, true);
   $template->setVariable("TITULO", "Virtual Albums | Usuario");
-  $consultaTituloAlbumes = mysqli_query($conexion,"SELECT idAlbum,titulo FROM Albumes  WHERE tipoAlbum = 'Público'");
-  $numerofilas = mysqli_num_rows($consultaTituloAlbumes);
-  $tituloAlbumes = "";
-  if ($numerofilas > 0)
-  {
-    while ($row = mysqli_fetch_array($consultaTituloAlbumes))
-    {
-      $tituloAlbumes .= "<tr><td><a href='verAlbumes.php?id=".$row['idAlbum']."&tipo=1'>".$row['titulo']."</a></td></tr>";
-    }
-    mysqli_free_result($consultaTituloAlbumes);
-  }
-  else
-  {
-    $tituloAlbumes .= "<tr>No hay resultados</tr>";
-  }
-  $template->setVariable("TITULOS_ALBUMES", $tituloAlbumes);
-
   if(isset($_SESSION['idUsuario']))
   {
     $idUsuario = intval($_SESSION['idUsuario']);
+    $tipoUsuario = intval($_SESSION['tipoUsuario']);
+    if($tipoUsuario == 1)
+    {
+      $queryBusqueda = "SELECT idAlbum,titulo FROM Albumes";
+      $queryFeed = "SELECT idFoto, idAlbum, titulo, nombreTema, rutaFoto,nombreUsuario,apPaternoUsuario,apMaternoUsuario,foto,visitas FROM Albumes INNER JOIN Temas USING(idTema) INNER JOIN Fotos USING(idAlbum) INNER JOIN Usuarios USING(idUsuario) WHERE idUsuario != $idUsuario ORDER BY idFoto DESC";
+    }
+    else
+    {
+      $queryBusqueda = "SELECT DISTINCT idAlbum,titulo FROM Albumes LEFT JOIN Usuarios USING(idUsuario) LEFT JOIN Suscripciones USING(idAlbum) WHERE tipoAlbum = 'Publico' OR (tipoAlbum = 'Privado' AND Suscripciones.idUsuario = $idUsuario)";
+      $queryFeed = "SELECT idFoto, Albumes.idAlbum AS 'idAlbum', titulo, nombreTema, rutaFoto, nombreUsuario, apPaternoUsuario, apMaternoUsuario, foto, visitas FROM Albumes INNER JOIN Temas USING(idTema) LEFT JOIN Fotos USING(idAlbum) LEFT JOIN Usuarios USING(idUsuario) LEFT JOIN Suscripciones USING(idAlbum) WHERE ((autorizada = 1 AND tipoAlbum = 'Publico') OR (autorizada = 1 AND tipoAlbum = 'Privado' AND Suscripciones.idUsuario = $idUsuario)) AND Albumes.idUsuario != $idUsuario GROUP BY idFoto ORDER BY idFoto DESC";
+    }
+    //Sección búsqueda de álbumes
+    $consultaTituloAlbumes = mysqli_query($conexion,$queryBusqueda);
+    $numerofilas = mysqli_num_rows($consultaTituloAlbumes);
+    $tituloAlbumes = "";
+    if ($numerofilas > 0)
+    {
+      while ($row = mysqli_fetch_array($consultaTituloAlbumes))
+      {
+        $tituloAlbumes .= "<tr><td><a href='verAlbumes.php?id=".$row['idAlbum']."&tipo=1'>".$row['titulo']."</a></td></tr>";
+      }
+      mysqli_free_result($consultaTituloAlbumes);
+    }
+    else
+    {
+      $tituloAlbumes .= "<tr>No hay resultados</tr>";
+    }
+    $template->setVariable("TITULOS_ALBUMES", $tituloAlbumes);
+
     //Sección Inicio
-    $consultaFeed = mysqli_query($conexion,"SELECT idFoto, idAlbum, titulo, nombreTema, rutaFoto,nombreUsuario,apPaternoUsuario,apMaternoUsuario,foto,visitas FROM Albumes INNER JOIN Temas USING(idTema) INNER JOIN Fotos USING(idAlbum) INNER JOIN Usuarios USING(idUsuario) WHERE autorizada = 1 AND tipoAlbum = 'Público' AND idUsuario != $idUsuario ORDER BY idFoto DESC");
+    $consultaFeed = mysqli_query($conexion,$queryFeed);
     $numerofilas = mysqli_num_rows($consultaFeed);
     if ($numerofilas > 0)
     {
@@ -115,6 +127,10 @@
     {
       $foto = "../images/avatar.png";
     }
+    elseif ($datosPerfil['tipoUsuario'] == 1)
+    {
+      $foto = "../administrador/images/perfil/".$datosPerfil['foto'];
+    }
     else
     {
       $foto = "images/perfil/".$datosPerfil['foto'];
@@ -155,7 +171,7 @@
     else
       $tablaAlbumesUsuario.= "<h4 class='center-align'>Aún no ha creado ningún álbum</h4>";
     //Sección Notificaciones
-    $consultaNotificaciones = mysqli_query($conexion,"SELECT idNotificacionLeida, contenido,estado FROM Notificaciones INNER JOIN NotificacionesLeidas USING(idNotificacion) WHERE idUsuario = $idUsuario");
+    $consultaNotificaciones = mysqli_query($conexion,"SELECT idNotificacionLeida, contenido,estado FROM Notificaciones INNER JOIN NotificacionesLeidas USING(idNotificacion) WHERE idUsuario = $idUsuario ORDER BY idNotificacion DESC");
     $numerofilas = mysqli_num_rows($consultaNotificaciones);
     if ($numerofilas > 0)
     {
@@ -253,6 +269,25 @@
     $template->setVariable("CONTENIDO_ALBUMES", "");
     $template->setVariable("CONTENIDO_NOTIFICACIONES", "");
     $template->setVariable("CONTENIDO_PERFIL", "");
+    //Sección búsqueda de álbumes
+    $queryBusqueda = "SELECT idAlbum,titulo FROM Albumes WHERE tipoAlbum = 'Público'";
+    $consultaTituloAlbumes = mysqli_query($conexion,$queryBusqueda);
+    $numerofilas = mysqli_num_rows($consultaTituloAlbumes);
+    $tituloAlbumes = "";
+    if ($numerofilas > 0)
+    {
+      while ($row = mysqli_fetch_array($consultaTituloAlbumes))
+      {
+        $tituloAlbumes .= "<tr><td><a href='verAlbumes.php?id=".$row['idAlbum']."&tipo=1'>".$row['titulo']."</a></td></tr>";
+      }
+      mysqli_free_result($consultaTituloAlbumes);
+    }
+    else
+    {
+      $tituloAlbumes .= "<tr>No hay resultados</tr>";
+    }
+    $template->setVariable("TITULOS_ALBUMES", $tituloAlbumes);
+
     //Sección Inicio
     $consultaFeed = mysqli_query($conexion,"SELECT idAlbum,titulo,nombreTema, rutaFoto,nombreUsuario,apPaternoUsuario,apMaternoUsuario,foto,visitas FROM Albumes INNER JOIN Temas USING(idTema) INNER JOIN Fotos USING(idAlbum) INNER JOIN Usuarios USING(idUsuario) WHERE autorizada = 1 AND tipoAlbum = 'Público' ORDER BY idFoto DESC");
     $numerofilas = mysqli_num_rows($consultaFeed);

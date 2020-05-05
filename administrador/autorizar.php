@@ -7,12 +7,13 @@
 	$autorizar = mysqli_query($conexion,"UPDATE Fotos SET autorizada = '1' WHERE idFoto = $idFoto");
 	if($autorizar)
 	{
-      $consulta = mysqli_query($conexion,"SELECT idUsuario,idAlbum,rutaFoto FROM Fotos INNER JOIN Albumes USING(idAlbum) INNER JOIN Usuarios USING(idUsuario) WHERE idFoto = $idFoto");
+      $consulta = mysqli_query($conexion,"SELECT idUsuario,idAlbum,rutaFoto,titulo FROM Fotos INNER JOIN Albumes USING(idAlbum) INNER JOIN Usuarios USING(idUsuario) WHERE idFoto = $idFoto");
       $row = mysqli_fetch_assoc($consulta);
       $idUsuario = $row['idUsuario'];
       $idAlbum = $row['idAlbum'];
       $nombreFoto = $row['rutaFoto'];
-      $mensaje = "La fotografía ".$nombreFoto." ha sido publicada en el sistema";
+			$nombreAlbum = $row['titulo'];
+      $mensaje = "La fotografía ".$nombreFoto." del álbum: ".$nombreAlbum." ha sido publicada en el sistema";
       $notificacion_uno = mysqli_query($conexion,"INSERT INTO Notificaciones (idAlbum,contenido) VALUES($idAlbum,'$mensaje')");
       $idNotificacion = mysqli_insert_id($conexion);
       $obtener_usuarios = mysqli_query($conexion, "SELECT idUsuario FROM Suscripciones WHERE idAlbum = $idAlbum");
