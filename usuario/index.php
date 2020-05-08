@@ -46,6 +46,13 @@
       $contenidoUsuario = "<div class='row'>";
         while ($row = mysqli_fetch_assoc($consultaFeed))
         {
+          $idFoto = intval($row['idFoto']);
+          $consultaPuntuacion = mysqli_query($conexion,"SELECT puntuacion FROM PuntuacionesComentarios LEFT JOIN Usuarios USING(idUsuario) WHERE idUsuario = $idUsuario AND idFoto = $idFoto AND puntuacion IS NOT NULL");
+          $numeroFilasPuntuacion = mysqli_num_rows($consultaPuntuacion);
+          if($numeroFilasPuntuacion == 1)
+          {
+            $rowPuntuacion = mysqli_fetch_assoc($consultaPuntuacion);
+          }
           if($row['foto'] == NULL)
           {
             $fotoPerfil = "../images/avatar.png";
@@ -69,52 +76,96 @@
             </div>
             <div class='card-content'>
               <form action='enviarComentario.php' method='POST'>
-                <div class='star-rating center-align'>
-                  <input id='star-".$i."' type='radio' name='rating' value='5'>
-                  <label for='star-".$i."' title='5 stars'>
-                      <i class='active fa fa-star' aria-hidden='true'>★</i>
-                  </label>";
-                  $i++;
-                  $contenidoUsuario.="
-                  <input id='star-".$i."' type='radio' name='rating' value='4'>
-                  <label for='star-".$i."' title='4 stars'>
-                      <i class='active fa fa-star' aria-hidden='true'>★</i>
-                  </label>";
-                  $i++;
-                  $contenidoUsuario.="
-                  <input id='star-".$i."' type='radio' name='rating' value='3'>
-                  <label for='star-".$i."' title='3 stars'>
-                      <i class='active fa fa-star' aria-hidden='true'>★</i>
-                  </label>
-                  ";
-                  $i++;
-                  $contenidoUsuario.="
-                  <input id='star-".$i."' type='radio' name='rating' value='2'>
-                  <label for='star-".$i."' title='2 stars'>
-                      <i class='active fa fa-star' aria-hidden='true'>★</i>
-                  </label>";
-                  $i++;
-                  $contenidoUsuario.="
-                  <input id='star-".$i."' type='radio' name='rating' value='1'>
-                  <label for='star-".$i."' title='1 star'>
-                      <i class='active fa fa-star' >★</i>
-                  </label>
-                </div>";
+                <div class='star-rating center-align'>";
+                if($numeroFilasPuntuacion == 1 AND $rowPuntuacion['puntuacion'] == 5.0)
+                  $contenidoUsuario .= "<input id='star-".$i."' type='radio' name='rating' value='5' checked>";
+                else
+                  $contenidoUsuario .= "<input id='star-".$i."' type='radio' name='rating' value='5'>";
+
+                $contenidoUsuario .= "<label for='star-".$i."' title='5 stars'>
+                        <i class='active fa fa-star' aria-hidden='true'>★</i>
+                    </label>";
                 $i++;
-                $contenidoUsuario.="
-                <div class='row'>
-                  <div class='input-field col s12'>
-                    <textarea id='textarea".$i."' class='materialize-textarea' name='comentario' style='overflow:scroll;' required></textarea>
-                    <label for='textarea".$i."'>Haz un comentario</label>
+                if($numeroFilasPuntuacion == 1 AND $rowPuntuacion['puntuacion'] == 4.0)
+                  $contenidoUsuario .= "<input id='star-".$i."' type='radio' name='rating' value='4' checked>";
+                else
+                  $contenidoUsuario .= "<input id='star-".$i."' type='radio' name='rating' value='4'>";
+
+                $contenidoUsuario .= "<label for='star-".$i."' title='4 stars'>
+                        <i class='active fa fa-star' aria-hidden='true'>★</i>
+                    </label>";
+                $i++;
+
+                if($numeroFilasPuntuacion == 1 AND $rowPuntuacion['puntuacion'] == 3.0)
+                  $contenidoUsuario .= "<input id='star-".$i."' type='radio' name='rating' value='3' checked>";
+                else
+                  $contenidoUsuario .= "<input id='star-".$i."' type='radio' name='rating' value='3'>";
+
+                $contenidoUsuario .= "<label for='star-".$i."' title='3 stars'>
+                  <i class='active fa fa-star' aria-hidden='true'>★</i>
+                  </label>";
+                $i++;
+
+                if($numeroFilasPuntuacion == 1 AND $rowPuntuacion['puntuacion'] == 2.0)
+                  $contenidoUsuario .= "<input id='star-".$i."' type='radio' name='rating' value='2' checked>";
+                else
+                  $contenidoUsuario .= "<input id='star-".$i."' type='radio' name='rating' value='2'>";
+
+                $contenidoUsuario.="<label for='star-".$i."' title='2 stars'>
+                        <i class='active fa fa-star' aria-hidden='true'>★</i>
+                    </label>";
+                $i++;
+
+                if($numeroFilasPuntuacion == 1 AND $rowPuntuacion['puntuacion'] == 1.0)
+                  $contenidoUsuario .= "<input id='star-".$i."' type='radio' name='rating' value='1' checked>";
+                else
+                  $contenidoUsuario .= "<input id='star-".$i."' type='radio' name='rating' value='1'>";
+
+                $contenidoUsuario.="<label for='star-".$i."' title='1 star'>
+                        <i class='active fa fa-star' >★</i>
+                    </label>
+                  </div>";
+                $i++;
+                  $contenidoUsuario.="
+                  <div class='row'>
+                    <div class='input-field col s12'>
+                      <textarea id='textarea".$i."' class='materialize-textarea' name='comentario' style='overflow:scroll;'></textarea>
+                      <label for='textarea".$i."'>Haz un comentario</label>
+                    </div>
                   </div>
-                </div>
-                <input type='hidden' name='idFoto' value='".$row['idFoto']."'>
-                <center><button class='btn waves-effect waves-light indigo darken-3' type='submit' style='top: -10px'>Enviar comentario<i class='material-icons right'>send</i></button></center>
-                </form>
-            </div>
-          </div>
-          </div>";
-          $i++;
+                  <input type='hidden' name='idFoto' value='".$idFoto."'>
+                  <input type='hidden' name='idAlbum' value='".$idAlbum."'>
+                  <input type='hidden' name='tipo' value='1'>
+                  <center><button class='btn waves-effect waves-light indigo darken-3' type='submit' style='top: -25px;'>Enviar<i class='material-icons right'>send</i></button></center>
+                  </form>";
+                $consultaComentarios = mysqli_query($conexion,"SELECT nombreUsuario,apPaternoUsuario,apMaternoUsuario,comentario,foto,tipoUsuario FROM PuntuacionesComentarios LEFT JOIN Usuarios USING(idUsuario) WHERE idFoto = $idFoto AND puntuacion IS NULL ORDER BY idFoto DESC");
+                $numeroFilasComentarios = mysqli_num_rows($consultaComentarios);
+                $contenidoUsuario .= "<h5>Comentarios</h5><div class='cajaComentarios'>";
+                if($numeroFilasComentarios > 0)
+                {
+                  while($row = mysqli_fetch_assoc($consultaComentarios))
+                  {
+                    if($row['foto'] == NULL)
+                    {
+                      $fotoPerfil = "../images/avatar.png";
+                    }
+                    else
+                    {
+                      if($row['tipoUsuario'] == 1)
+                        $fotoPerfil = "../administrador/images/perfil/".$row['foto'];
+                      else
+                        $fotoPerfil = "images/perfil/".$row['foto'];
+                    }
+                    $contenidoUsuario .= "<img class='ajusteImagenComentarios' src='".$fotoPerfil."'><p class='tituloNombreUsuario2'>".$row['nombreUsuario']." ".$row['apPaternoUsuario']." ".$row['apMaternoUsuario']."</p>";
+                    $contenidoUsuario .= "<p class='comentarios' style='top:-15px;'>".$row['comentario']."</p>";
+                  }
+                }
+                else
+                {
+                  $contenidoUsuario .= "<h5 class='center-align' style='position:relative; top:60px;'>No hay comentarios</h5>";
+                }
+
+                $contenidoUsuario .= "</div></div></div></div>";
       }
       $contenidoUsuario.= "</div>";
     }

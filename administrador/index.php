@@ -9,28 +9,173 @@
   $idUsuario = $_SESSION['idUsuario'];
 
   $query = mysqli_query($conexion,"SELECT * FROM Usuarios WHERE idUsuario = $idUsuario");
-  $row = mysqli_fetch_assoc($query);
-  if($row['foto'] == NULL)
+  $rowPerfil = mysqli_fetch_assoc($query);
+  if($rowPerfil['foto'] == NULL)
     $rutaImagen = "../images/avatar.png";
   else
-    $rutaImagen = "images/perfil/".$row['foto'];
+    $rutaImagen = "images/perfil/".$rowPerfil['foto'];
+
+  $contenidoAnalisis = "<div class ='container'>"; //Preparamos un contenedor para el módulo de análisis de información
+
+  //INICIO DE ÁLBUMES MÁS VISTOS
+  $consultaAlbumesMasVistos = mysqli_query($conexion, "SELECT idAlbum, titulo, fechaAlbum, tipoAlbum, visitas FROM Albumes ORDER BY visitas DESC"); //Query que busca los álbumes más visitados
+  $numeroFilasAlbumesMasVistos = mysqli_num_rows($consultaAlbumesMasVistos);
+  //Creamos la tabla y le ponemos el encabezado
+  $contenidoAnalisis.=
+  "
+  <table class='responsive-table highlight centered'>
+  <h4>Álbumes más vistos</h4>
+    <thead>
+      <th>Título</th>
+      <th>Fecha del álbum</th>
+      <th>Privacidad del álbum</th>
+      <th>Visitas</th>
+    </thead>
+    <tbody>";
+
+  while ($row = mysqli_fetch_assoc($consultaAlbumesMasVistos)) //Rellenamos la tabla con los datos que devolvió el query
+  {
+      $contenidoAnalisis.= "<tr>
+      <td>".$row['titulo']."</td>
+      <td>".$row['fechaAlbum']."</td>
+      <td>".$row['tipoAlbum']."</td>
+      <td>".$row['visitas']."</td>
+      <td><a href='verFotos.php?id=".$row['idAlbum']."'>Ver el álbum</a></td>
+      </tr>";
+  }
+
+  $contenidoAnalisis.= "</tbody></table>"; //Cerramos la tabla
+
+  if($numeroFilasAlbumesMasVistos == 0) //Mensaje si no hay coincidencias
+    $contenidoAnalisis.= "<p>No se encontraron álbumes</p>";
+
+  mysqli_free_result($consultaAlbumesMasVistos);
+  //FIN DE ÁLBUMES MÁS VISTOS
+
+  //INICIO DE ÁLBUMES CON MÁS FOTOS
+  $consultaAlbumesMasFotos = mysqli_query($conexion, "SELECT idAlbum, titulo, fechaAlbum, tipoAlbum, COUNT(idAlbum) AS 'Cantidad de fotos' FROM Albumes LEFT JOIN Fotos USING (idAlbum) GROUP BY idAlbum ORDER BY COUNT(idAlbum) DESC"); //Query que busca los álbumes con más fotos
+  $numeroFilasAlbumesMasFotos = mysqli_num_rows($consultaAlbumesMasFotos);
+  //Creamos la tabla y le ponemos el encabezado
+  $contenidoAnalisis.=
+  "
+  <table class='responsive-table highlight centered'>
+  <h4>Álbumes con más fotografías</h4>
+    <thead>
+      <th>Título</th>
+      <th>Fecha del álbum</th>
+      <th>Privacidad del álbum</th>
+      <th>Cantidad de fotografías</th>
+    </thead>
+    <tbody>";
+
+  while ($row = mysqli_fetch_assoc($consultaAlbumesMasFotos)) //Rellenamos la tabla con los datos que devolvió el query
+  {
+      $contenidoAnalisis.= "<tr>
+      <td>".$row['titulo']."</td>
+      <td>".$row['fechaAlbum']."</td>
+      <td>".$row['tipoAlbum']."</td>
+      <td>".$row['Cantidad de fotos']."</td>
+      <td><a href='verFotos.php?id=".$row['idAlbum']."'>Ver el álbum</a></td>
+      </tr>";
+  }
+
+  $contenidoAnalisis.= "</tbody></table>"; //Cerramos la tabla
+
+  if($numeroFilasAlbumesMasFotos == 0) //Mensaje si no hay coincidencias
+    $contenidoAnalisis.= "<p>No se encontraron álbumes</p>";
+
+  mysqli_free_result($consultaAlbumesMasFotos);
+  //FIN DE ÁLBUMES CON MÁS FOTOS
+
+  //INICIO DE FOTOS CON MÁS COMENTARIOS
+  $consultaFotosMasComentarios = mysqli_query($conexion, "SELECT idAlbum, titulo, fechaAlbum, tipoAlbum, COUNT(idAlbum) AS 'Cantidad de fotos' FROM Albumes LEFT JOIN Fotos USING (idAlbum) GROUP BY idAlbum ORDER BY COUNT(idAlbum) DESC"); //Query que búsca las fotos con más comentarios
+  $numeroFilasFotosMasComentarios = mysqli_num_rows($consultaFotosMasComentarios);
+  //Creamos la tabla y le ponemos el encabezado
+  $contenidoAnalisis.=
+  "
+  <table class='responsive-table highlight centered'>
+  <h4>Fotos con más comentarios</h4>
+    <thead>
+      <th>Título</th>
+      <th>Fecha del álbum</th>
+      <th>Privacidad del álbum</th>
+      <th>Cantidad de fotografías</th>
+    </thead>
+    <tbody>";
+
+  while ($row = mysqli_fetch_assoc($consultaFotosMasComentarios)) //Rellenamos la tabla con los datos que devolvió el query
+  {
+      $contenidoAnalisis.= "<tr>
+      <td>".$row['titulo']."</td>
+      <td>".$row['fechaAlbum']."</td>
+      <td>".$row['tipoAlbum']."</td>
+      <td>".$row['Cantidad de fotos']."</td>
+      <td><a href='verFotos.php?id=".$row['idAlbum']."'>Ver el álbum</a></td>
+      </tr>";
+  }
+
+  $contenidoAnalisis.= "</tbody></table>"; //Cerramos la tabla
+
+  if($numeroFilasFotosMasComentarios == 0) //Mensaje si no hay coincidencias
+    $contenidoAnalisis.= "<p>No se encontraron álbumes</p>";
+
+  mysqli_free_result($consultaFotosMasComentarios);
+  //FIN DE FOTOS CON MÁS COMENTARIOS
+
+  //INICIO DE ÁLBUMES MEJOR PUNTUADOS
+  $consultaAlbumesMejorPuntuados = mysqli_query($conexion, "SELECT idAlbum, titulo, fechaAlbum, tipoAlbum, COUNT(idAlbum) AS 'Cantidad de fotos' FROM Albumes LEFT JOIN Fotos USING (idAlbum) GROUP BY idAlbum ORDER BY COUNT(idAlbum) DESC"); //Query que busca los álbumes mejor puntuados
+  $numeroFilasAlbumesMejorPuntuados = mysqli_num_rows($consultaAlbumesMejorPuntuados);
+  //Creamos la tabla y le ponemos el encabezado
+  $contenidoAnalisis.=
+  "
+  <table class='responsive-table highlight centered'>
+  <h4>Álbumes mejor puntuados</h4>
+    <thead>
+      <th>Título</th>
+      <th>Fecha del álbum</th>
+      <th>Privacidad del álbum</th>
+      <th>Cantidad de fotografías</th>
+    </thead>
+    <tbody>";
+
+  while ($row = mysqli_fetch_assoc($consultaAlbumesMejorPuntuados)) //Rellenamos la tabla con los datos que devolvió el query
+  {
+      $contenidoAnalisis.= "<tr>
+      <td>".$row['titulo']."</td>
+      <td>".$row['fechaAlbum']."</td>
+      <td>".$row['tipoAlbum']."</td>
+      <td>".$row['Cantidad de fotos']."</td>
+      <td><a href='verFotos.php?id=".$row['idAlbum']."'>Ver el álbum</a></td>
+      </tr>";
+  }
+
+  $contenidoAnalisis.= "</tbody></table>"; //Cerramos la tabla
+
+  if($numeroFilasAlbumesMejorPuntuados == 0) //Mensaje si no hay coincidencias
+    $contenidoAnalisis.= "<p>No se encontraron álbumes</p>";
+
+  mysqli_free_result($consultaAlbumesMejorPuntuados);
+  //FIN DE ÁLBUMES MEJOR PUNTUADOS
+
+  $contenidoAnalisis.="</div>"; //Cierre del contenedor del módulo de análisis de información
+
   $template = new HTML_Template_ITX('./templates');
   $template->loadTemplatefile("principal.html", true, true);
   $template->setVariable("TITULO", "Virtual Albums | Administración");
   $template->setVariable("IMAGEN",$rutaImagen);
-  $template->setVariable("USUARIO",$row['nombreUsuario']);
+  $template->setVariable("USUARIO",$rowPerfil['nombreUsuario']);
   $template->addBlockfile("CONTENIDO_INICIO", "INICIO", "inicio.html");
   $template->touchBlock('INICIO');
   $template->addBlockfile("CONTENIDO_ADMIN", "ADMIN", "admin.html");
   $template->touchBlock('ADMIN');
   $template->addBlockfile("CONTENIDO_REGISTRO", "REGISTRO", "registro.html");
-  $template->touchBlock('REGISTRO');
+  $template->touchBlock("REGISTRO");
   $template->addBlockfile("CONTENIDO_BUSQUEDA", "BUSQUEDA", "busqueda.html");
   $template->touchBlock('BUSQUEDA');
-  $template->addBlockfile("CONTENIDO_VISUALIZACION", "VISUALIZACION", "visualizacion.html");
-  $template->touchBlock('VISUALIZACION');
   $template->addBlockfile("CONTENIDO_ANALISIS", "ANALISIS", "analisis.html");
-  $template->touchBlock('ANALISIS');
+  $template->setCurrentBlock('ANALISIS');
+  $template->setVariable("CONTENIDO_ANALISIS", $contenidoAnalisis);
+  $template->parseCurrentBlock('ANALISIS');
   $template->show();
 
   Desconectar($conexion);

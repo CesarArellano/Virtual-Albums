@@ -2,11 +2,11 @@
   include_once '../config.php';
   $conexion = Conectar();
   $Salida = "";
-  $query = "SELECT idUsuario, nombreUsuario, apPaternoUsuario, apMaternoUsuario, titulo, idFoto, rutaFoto, autorizada FROM Fotos INNER JOIN Albumes USING(idAlbum) INNER JOIN Usuarios USING(idUsuario) WHERE tipoUsuario = 2 AND autorizada = 0";
+  $query = "SELECT idUsuario, nombreUsuario, apPaternoUsuario, apMaternoUsuario, titulo, idFoto, rutaFoto, autorizada FROM Fotos INNER JOIN Albumes USING(idAlbum) INNER JOIN Usuarios USING(idUsuario) WHERE autorizada = 0";
   if (isset($_POST['Consulta']))
   {
     $texto = mysqli_real_escape_string($conexion, $_POST['Consulta']);
-    $query = "SELECT idUsuario, nombreUsuario, apPaternoUsuario, apMaternoUsuario, titulo, idFoto, rutaFoto, autorizada FROM Fotos INNER JOIN Albumes USING(idAlbum) INNER JOIN Usuarios USING(idUsuario) WHERE autorizada = 0 AND tipoUsuario = 2 GROUP BY idFoto HAVING nombreUsuario LIKE '%".$texto."%' OR titulo LIKE '%".$texto."%' OR rutaFoto LIKE '%".$texto."%'";
+    $query = "SELECT idUsuario, nombreUsuario, apPaternoUsuario, apMaternoUsuario, titulo, idFoto, rutaFoto, autorizada FROM Fotos INNER JOIN Albumes USING(idAlbum) INNER JOIN Usuarios USING(idUsuario) WHERE autorizada = 0 GROUP BY idFoto HAVING nombreUsuario LIKE '%".$texto."%' OR titulo LIKE '%".$texto."%' OR rutaFoto LIKE '%".$texto."%'";
   }
   $consulta = mysqli_query($conexion,$query);
   $numerofilas = mysqli_num_rows($consulta);

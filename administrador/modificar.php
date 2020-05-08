@@ -9,15 +9,7 @@
   $row = mysqli_fetch_assoc($consulta);
   $tipoUsuarioRegistro = $row['tipoUsuario'];
   $template = new HTML_Template_ITX('./templates');
-  if($tipoUsuarioRegistro == 1)
-  {
-    $template->loadTemplatefile("modificar_administrador.html", true, true);
-  }
-  else
-  {
-    $template->loadTemplatefile("modificar.html", true, true);
-  }
-
+  $template->loadTemplatefile("modificar.html", true, true);
   $template->setVariable("TITULO", "Virtual Albums");
   $template->setVariable("IDUSUARIO", $idUsuario);
   $template->setVariable("TIPOUSUARIO", $tipoUsuarioRegistro);

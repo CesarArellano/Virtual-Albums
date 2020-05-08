@@ -722,5 +722,4 @@ function borrarHistorial(idUsuario)
 			});
 		}
 	});
-
 }

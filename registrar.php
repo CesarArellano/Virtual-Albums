@@ -1,7 +1,5 @@
 <?php
   include 'config.php';
-  error_reporting(E_ALL);
-  ini_set('display_errors', 1);
   header('Content-type: application/json; charset=utf-8'); // Se especifica el tipo de contenido a regresar, codificado en utf-8
   $conexion = Conectar();
   $nombreRegistro = $_POST['nombreRegistro']; //Guardamos todas las variables que nos llegaron por medio de POST
@@ -11,6 +9,9 @@
   $passwordRegistro = $_POST['passwordRegistro'];
   $rutaFotoPerfilRegistro = $_POST['rutaFotoPerfilRegistro'];
   $tipoUsuarioRegistro = $_POST['tipoUsuarioRegistro'];
+  $escolaridadRegistro = $_POST['escolaridadRegistro'];
+  $direccionRegistro = $_POST['direccionRegistro'];
+  $fechaNacimientoRegistro = $_POST['fechaNacimientoRegistro'];
 
   if($tipoUsuarioRegistro == 1)
   {
@@ -18,9 +19,6 @@
   }
   if($tipoUsuarioRegistro == 2) // Datos a extraer solo usuario.
   {
-    $escolaridadRegistro = $_POST['escolaridadRegistro'];
-    $direccionRegistro = $_POST['direccionRegistro'];
-    $fechaNacimientoRegistro = $_POST['fechaNacimientoRegistro'];
     $directorio = "usuario/images/perfil/"; //Definimos el directorio para el usuario donde se van a guardar las imágenes
   }
 
@@ -44,10 +42,7 @@
       $directoriocompleto = $directorio.$nombreArchivo;
       if (move_uploaded_file($_FILES['rutaFotoPerfilRegistro']["tmp_name"], $directoriocompleto)) //Sube la imágen, si se sube correctamente ejecuta el query con foto de perfil, si no, lo ejecuta sin foto de perfil
       {
-        if($tipoUsuarioRegistro == 1) //Si estamos registrando un administrador sólo guardamos la información de login (con foto de perfil)
-          $query = mysqli_query($conexion,"INSERT INTO Usuarios (nombreUsuario, apPaternoUsuario, apMaternoUsuario, foto, correo, password, tipoUsuario) VALUES('$nombreRegistro', '$apPaternoRegistro', '$apMaternoRegistro', '$nombreArchivo', '$correoRegistro', '$passwordRegistro', $tipoUsuarioRegistro)");
-        else //Si estamos registrando un usuario guardamos todos sus datos personales (con foto de perfil)
-          $query = mysqli_query($conexion,"INSERT INTO Usuarios (nombreUsuario, apPaternoUsuario, apMaternoUsuario, escolaridad, direccion, nacimiento, foto, correo, password, tipoUsuario) VALUES('$nombreRegistro', '$apPaternoRegistro', '$apMaternoRegistro', '$escolaridadRegistro', '$direccionRegistro', '$fechaNacimientoRegistro','$nombreArchivo', '$correoRegistro', '$passwordRegistro', $tipoUsuarioRegistro)");
+        $query = mysqli_query($conexion,"INSERT INTO Usuarios (nombreUsuario, apPaternoUsuario, apMaternoUsuario, escolaridad, direccion, nacimiento, foto, correo, password, tipoUsuario) VALUES('$nombreRegistro', '$apPaternoRegistro', '$apMaternoRegistro', '$escolaridadRegistro', '$direccionRegistro', '$fechaNacimientoRegistro','$nombreArchivo', '$correoRegistro', '$passwordRegistro', $tipoUsuarioRegistro)");
       }
       else
       {
@@ -56,10 +51,7 @@
     }
     else
     {
-      if($tipoUsuarioRegistro == 1)  //Si estamos registrando un administrador sólo guardamos la información de login (sin foto de perfil)
-        $query = mysqli_query($conexion,"INSERT INTO Usuarios (nombreUsuario, apPaternoUsuario, apMaternoUsuario, correo, password, tipoUsuario) VALUES('$nombreRegistro', '$apPaternoRegistro', '$apMaternoRegistro', '$correoRegistro', '$passwordRegistro', $tipoUsuarioRegistro)");
-      else //Si estamos registrando un usuario guardamos todos sus datos personales (sin foto de perfil)
-        $query = mysqli_query($conexion,"INSERT INTO Usuarios (nombreUsuario, apPaternoUsuario, apMaternoUsuario, escolaridad, direccion, nacimiento, correo, password, tipoUsuario) VALUES('$nombreRegistro', '$apPaternoRegistro', '$apMaternoRegistro', '$escolaridadRegistro', '$direccionRegistro', '$fechaNacimientoRegistro', '$correoRegistro', '$passwordRegistro', $tipoUsuarioRegistro)");
+      $query = mysqli_query($conexion,"INSERT INTO Usuarios (nombreUsuario, apPaternoUsuario, apMaternoUsuario, escolaridad, direccion, nacimiento, correo, password, tipoUsuario) VALUES('$nombreRegistro', '$apPaternoRegistro', '$apMaternoRegistro', '$escolaridadRegistro', '$direccionRegistro', '$fechaNacimientoRegistro', '$correoRegistro', '$passwordRegistro', $tipoUsuarioRegistro)");
     }
     if ($query)
     {
@@ -67,7 +59,7 @@
     }
     else
     {
-      echo json_encode(array('mensaje' => "Error, no se pudo procesar su información, intente de nuevo", 'pagina' => "registro",'alerta' => "error"));
+      echo json_encode(array('mensaje' => "Error, no se pudo procesar su información, intente de nuevo.", 'pagina' => "registro",'alerta' => "error"));
     }
   }
   Desconectar($conexion);

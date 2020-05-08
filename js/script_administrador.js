@@ -34,7 +34,6 @@ $(document).ready(function(e)
   $("#admin").hide();
   $("#registro").hide();
   $("#busqueda").hide();
-  $("#visualizacion").hide();
   $("#analisis").hide();
 
   $("#select_inicio").click(function()
@@ -43,7 +42,6 @@ $(document).ready(function(e)
     $("#admin").hide();
     $("#registro").hide();
     $("#busqueda").hide();
-    $("#visualizacion").hide();
     $("#analisis").hide();
   });
   $("#select_admin").click(function()
@@ -52,7 +50,6 @@ $(document).ready(function(e)
     $("#admin").show();
     $("#registro").hide();
     $("#busqueda").hide();
-    $("#visualizacion").hide();
     $("#analisis").hide();
   });
   $("#select_registro").click(function()
@@ -61,7 +58,6 @@ $(document).ready(function(e)
     $("#admin").hide();
     $("#registro").show();
     $("#busqueda").hide();
-    $("#visualizacion").hide();
     $("#analisis").hide();
   });
 
@@ -71,16 +67,6 @@ $(document).ready(function(e)
     $("#admin").hide();
     $("#registro").hide();
     $("#busqueda").show();
-    $("#visualizacion").hide();
-    $("#analisis").hide();
-  });
-  $("#select_visualizacion").click(function()
-  {
-    $("#inicio_contenido").hide();
-    $("#admin").hide();
-    $("#registro").hide();
-    $("#busqueda").hide();
-    $("#visualizacion").show();
     $("#analisis").hide();
   });
   $("#select_analisis").click(function()
@@ -89,7 +75,6 @@ $(document).ready(function(e)
     $("#admin").hide();
     $("#registro").hide();
     $("#busqueda").hide();
-    $("#visualizacion").hide();
     $("#analisis").show();
   });
   $(Buscar_Datos());
@@ -193,7 +178,7 @@ $(document).ready(function(e)
           Buscar_Albumes();
   });
 
-  $("#form-admins").on('submit', function(e)
+  $("#formAdmins").on('submit', function(e)
   {
     e.preventDefault();
     let nombreFoto, flag = 0;
