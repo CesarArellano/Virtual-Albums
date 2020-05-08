@@ -12,12 +12,12 @@
     if($tipoUsuario == 1)
     {
       $queryBusqueda = "SELECT idAlbum,titulo FROM Albumes";
-      $queryFeed = "SELECT idFoto, idAlbum, titulo, nombreTema, rutaFoto,nombreUsuario,apPaternoUsuario,apMaternoUsuario,foto,visitas FROM Albumes INNER JOIN Temas USING(idTema) INNER JOIN Fotos USING(idAlbum) INNER JOIN Usuarios USING(idUsuario) WHERE idUsuario != $idUsuario ORDER BY idFoto DESC";
+      $queryFeed = "SELECT idFoto, idAlbum, titulo, nombreTema, rutaFoto,nombreUsuario,apPaternoUsuario,apMaternoUsuario,foto,visitas FROM Albumes INNER JOIN Temas USING(idTema) INNER JOIN Fotos USING(idAlbum) INNER JOIN Usuarios USING(idUsuario) WHERE idUsuario != $idUsuario AND autorizada = 1 ORDER BY idFoto DESC";
     }
     else
     {
       $queryBusqueda = "SELECT DISTINCT idAlbum,titulo FROM Albumes LEFT JOIN Usuarios USING(idUsuario) LEFT JOIN Suscripciones USING(idAlbum) WHERE tipoAlbum = 'Publico' OR (tipoAlbum = 'Privado' AND Suscripciones.idUsuario = $idUsuario)";
-      $queryFeed = "SELECT idFoto, Albumes.idAlbum AS 'idAlbum', titulo, nombreTema, rutaFoto, nombreUsuario, apPaternoUsuario, apMaternoUsuario, foto, visitas FROM Albumes INNER JOIN Temas USING(idTema) LEFT JOIN Fotos USING(idAlbum) LEFT JOIN Usuarios USING(idUsuario) LEFT JOIN Suscripciones USING(idAlbum) WHERE ((autorizada = 1 AND tipoAlbum = 'Publico') OR (autorizada = 1 AND tipoAlbum = 'Privado' AND Suscripciones.idUsuario = $idUsuario)) AND Albumes.idUsuario != $idUsuario GROUP BY idFoto ORDER BY idFoto DESC";
+      $queryFeed = "SELECT idFoto, Albumes.idAlbum AS 'idAlbum', titulo, nombreTema, rutaFoto, nombreUsuario, apPaternoUsuario, apMaternoUsuario, foto, visitas FROM Albumes INNER JOIN Temas USING(idTema) LEFT JOIN Fotos USING(idAlbum) LEFT JOIN Usuarios USING(idUsuario) LEFT JOIN Suscripciones USING(idAlbum) WHERE ((tipoAlbum = 'Publico') OR (tipoAlbum = 'Privado' AND Suscripciones.idUsuario = $idUsuario)) AND (Albumes.idUsuario != $idUsuario AND autorizada = 1) GROUP BY idFoto ORDER BY idFoto DESC";
     }
     //Sección búsqueda de álbumes
     $consultaTituloAlbumes = mysqli_query($conexion,$queryBusqueda);
@@ -221,6 +221,36 @@
     }
     else
       $tablaAlbumesUsuario.= "<h4 class='center-align'>Aún no ha creado ningún álbum</h4>";
+    //Suscripciones
+    $consultaSuscripciones = mysqli_query($conexion,"SELECT nombreUsuario,apPaternoUsuario, apMaternoUsuario,idAlbum, titulo, fechaAlbum, tipoAlbum FROM Albumes a LEFT JOIN Usuarios USING(idUsuario) INNER JOIN Suscripciones s USING(idAlbum) WHERE s.idUsuario = $idUsuario AND a.idUsuario != $idUsuario GROUP BY idAlbum");
+    $numerofilas = mysqli_num_rows($consultaSuscripciones);
+    if ($numerofilas > 0)
+    {
+      $tablaSuscripcionesUsuario = "<table class='responsive-table highlight centered'>
+        <thead>
+          <th>Autor álbum</th>
+          <th>Título álbum</th>
+          <th>Privacidad del álbum</th>
+          <th>Fecha álbum</th>
+          <th></th>
+          <th></th>
+        </thead>
+        <tbody>";
+        while ($row = mysqli_fetch_assoc($consultaSuscripciones))
+        {
+          $tablaSuscripcionesUsuario.= "<tr>
+          <td>".$row['nombreUsuario']." ".$row['apPaternoUsuario']." ".$row['apMaternoUsuario']."</td>
+          <td>".$row['titulo']."</td>
+          <td>".$row['tipoAlbum']."</td>
+          <td>".$row['fechaAlbum']."</td>
+          <td><a href='verAlbumes.php?id=".$row['idAlbum']."&tipo=0'>Ver el álbum</a></td>
+          <td><a href='#' onclick='eliminarSuscripcion(".$row['idAlbum'].")'>Eliminar suscripción</a></td>
+          </tr>";
+      }
+      $tablaSuscripcionesUsuario.= "</tbody></table>";
+    }
+    else
+      $tablaSuscripcionesUsuario.= "<h4 class='center-align'>Aún no está suscrito a ningún álbum</h4>";
     //Sección Notificaciones
     $consultaNotificaciones = mysqli_query($conexion,"SELECT idNotificacionLeida, contenido,estado FROM Notificaciones INNER JOIN NotificacionesLeidas USING(idNotificacion) WHERE idUsuario = $idUsuario ORDER BY idNotificacion DESC");
     $numerofilas = mysqli_num_rows($consultaNotificaciones);
@@ -231,6 +261,7 @@
           <th>Notificación</th>
           <th></th>
           <th><th>
+          <th></th>
         </thead>
         <tbody>";
         while ($row = mysqli_fetch_assoc($consultaNotificaciones))
@@ -240,15 +271,14 @@
             if($row['estado'] == "Leída")
             {
               $tablaNotificacionesUsuario.="<td><h2 class='blue-text'></h2></td>
-                <td><p>Leída</p></td>
-              </tr>";
+                <td><p>Leída</p></td>";
             }
             else
             {
               $tablaNotificacionesUsuario.="<td><h2 class='blue-text'>•</h2></td>
-                <td><a href='#' onclick='cambiarNotificacion(".$row['idNotificacionLeida'].")'>Marcar como leída</a></td>
-              </tr>";
+                <td><a href='#' onclick='cambiarNotificacion(".$row['idNotificacionLeida'].")'>Marcar como leída</a></td>";
             }
+          $tablaNotificacionesUsuario.= "<td><a href='#' onclick='eliminarNotificacion(".$row['idNotificacionLeida'].")'>Eliminar notificación</a></td></tr>";
 
       }
       $tablaNotificacionesUsuario.= "</tbody></table>";
@@ -290,6 +320,7 @@
     $template->setCurrentBlock('ALBUMES');
     $template->setVariable("IDUSUARIO",$idUsuario);
     $template->setVariable("CONTENIDO_ALBUM",$tablaAlbumesUsuario);
+    $template->setVariable("CONTENIDO_SUSCRIPCIONES",$tablaSuscripcionesUsuario);
     $template->parseCurrentBlock("ALBUMES");
     $template->addBlockfile("CONTENIDO_NOTIFICACIONES", "NOTIFICACIONES", "notificaciones.html");
     $template->setCurrentBlock('NOTIFICACIONES');
@@ -351,6 +382,10 @@
           {
             $fotoPerfil = "../images/avatar.png";
           }
+          elseif ($row['tipoUsuario'] == 1)
+          {
+            $fotoPerfil = "../administrador/images/perfil/".$row['foto'];
+          }
           else
           {
             $fotoPerfil = "images/perfil/".$row['foto'];
@@ -369,7 +404,7 @@
               <a class='btn-floating halfway-fab waves-effect waves-light red' href='verAlbumes.php?id=".$row['idAlbum']."'><i class='material-icons'>remove_red_eye</i></a>
             </div>
             <div class='card-content'>
-              <h5 class='center-align'>No hay comentarios</h5>
+              <h5 class='center-align'>Inicia sesión para ver comentarios</h5>
             </div>
           </div>
           </div>";

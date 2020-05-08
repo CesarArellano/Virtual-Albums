@@ -591,6 +591,75 @@ function cambiarNotificacion(idNotificacionLeida)
 		}
 	});
 }
+function eliminarNotificacion(idNotificacionLeida)
+{
+	let param = "idNotificacionLeida="+idNotificacionLeida;
+	$.ajax(
+	{
+		type: 'POST',
+		url: 'eliminarNotificacion.php',
+		data: param, // Inicializa el objeto con la información de la forma.
+		dataType : 'json', // Indicamos formato de respuesta
+		success: function(data) // Después de enviar los datos se muestra la respuesta del servidor.
+		{
+			if(data.alerta == "error")
+			{
+				titulo = "Ups..."
+			}
+			else
+			{
+				titulo = "Bien hecho!"
+			}
+			swal( // Se inicializa sweetalert2
+			{
+
+				title: titulo,
+				type: data.alerta,
+				html: data.mensaje,
+				confirmButtonColor: '#3085d6',
+				confirmButtonText: 'Ok!'
+			}).then(function ()
+			{
+				if(data.alerta == "success")
+        {
+          location.reload();
+          location.href = 'index.php#tabNotificaciones';
+        }
+			});
+			$(document).click(function()
+			{
+				if(data.alerta == "success")
+        {
+          location.reload();
+          location.href = 'index.php#tabNotificaciones';
+        }
+			});
+			$(document).keyup(function(e)
+			{
+				if (e.which == 27)
+				{
+					if(data.alerta == "success")
+          {
+            location.reload();
+            location.href = 'index.php#tabNotificaciones';
+          }
+
+				}
+			});
+		},
+		error : function(xhr, status,error) // Si hubo error, despliega mensaje.
+		{
+			swal( // Se inicializa sweetalert2
+			{
+				title: "Ups...",
+				type: "error",
+				html: "Error del servidor, intente de nuevo"+error,
+				confirmButtonColor: '#3085d6',
+				confirmButtonText: 'Ok!'
+			});
+		}
+	});
+}
 function compartirAlbum(idAlbum,idUsuario)
 {
 
@@ -722,4 +791,76 @@ function borrarHistorial(idUsuario)
 			});
 		}
 	});
+}
+function eliminarSuscripcion(idAlbum)
+{
+  let param = "album="+idAlbum;
+  $.ajax(
+	{
+		type: 'POST',
+		url: 'eliminarSuscripcion.php',
+		data: param, // Inicializa el objeto con la información de la forma.
+		dataType : 'json', // Indicamos formato de respuesta
+		success: function(data) // Después de enviar los datos se muestra la respuesta del servidor.
+		{
+			if(data.alerta == "error")
+			{
+				titulo = "Ups..."
+			}
+			else
+			{
+				titulo = "Bien hecho!"
+			}
+			swal( // Se inicializa sweetalert2
+			{
+
+				title: titulo,
+				type: data.alerta,
+				html: data.mensaje,
+				confirmButtonColor: '#3085d6',
+				confirmButtonText: 'Ok!'
+			}).then(function ()
+			{
+				if(data.alerta == "success")
+        {
+          location.reload();
+          location.href = 'index.php#tabAlbumes';
+        }
+			});
+			$(document).click(function()
+			{
+				if(data.alerta == "success")
+        {
+          location.reload();
+          location.href = 'index.php#tabAlbumes';
+        }
+			});
+			$(document).keyup(function(e)
+			{
+				if (e.which == 27)
+				{
+					if(data.alerta == "success")
+          {
+            location.reload();
+            location.href = 'index.php#tabAlbumes';
+          }
+				}
+			});
+		},
+		error : function(xhr, status,error) // Si hubo error, despliega mensaje.
+		{
+			swal( // Se inicializa sweetalert2
+			{
+				title: "Ups...",
+				type: "error",
+				html: "Error del servidor, intente de nuevo"+error,
+				confirmButtonColor: '#3085d6',
+				confirmButtonText: 'Ok!'
+			});
+		}
+	});
+}
+function verAlbum(idAlbum)
+{
+  location.href = "verAlbumes.php?id="+idAlbum+"tipo=0";
 }

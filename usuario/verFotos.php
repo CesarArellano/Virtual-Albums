@@ -16,7 +16,10 @@
       $tablaFotosUsuario = "<div class='row'>";
       while($rowFotos = mysqli_fetch_assoc($consultaFotos))
       {
-        $tablaFotosUsuario .= "<div class='col l3 s6'><div class='card hoverable'><div class='card-image'><img class='materialboxed ajusteImagen2' src='images/albumes/".$rowFotos['rutaFoto']."'><span class='card-title'>Foto</span><div class='card-action'><center><button class='btn waves-effect waves-light red' onclick='eliminarFoto(".$rowFotos['idFoto'].")'>Eliminar foto<i class='material-icons right'>clear</i></button></center>
+        $tablaFotosUsuario .= "<div class='col l3 s6'><div class='card hoverable'><div class='card-image'><img class='materialboxed ajusteImagen2' src='images/albumes/".$rowFotos['rutaFoto']."'><span class='card-title'>Foto</span><div class='card-action'><center>
+        <button class='btn waves-effect waves-light red' onclick='eliminarFoto(".$rowFotos['idFoto'].")' style='margin: 10px'>Eliminar foto<i class='material-icons right'>clear</i></button>
+        <button class='btn waves-effect waves-light indigo darken-3' onclick='verAlbum(".$idAlbum.")' style='margin: 10px'>Ver más<i class='material-icons right'>apps</i></button>
+        </center>
         </div></div></div></div></td>";
       }
 

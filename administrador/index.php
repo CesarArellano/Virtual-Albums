@@ -88,7 +88,7 @@
   //FIN DE ÁLBUMES CON MÁS FOTOS
 
   //INICIO DE FOTOS CON MÁS COMENTARIOS
-  $consultaFotosMasComentarios = mysqli_query($conexion, "SELECT idAlbum, titulo, fechaAlbum, tipoAlbum, COUNT(idAlbum) AS 'Cantidad de fotos' FROM Albumes LEFT JOIN Fotos USING (idAlbum) GROUP BY idAlbum ORDER BY COUNT(idAlbum) DESC"); //Query que búsca las fotos con más comentarios
+  $consultaFotosMasComentarios = mysqli_query($conexion, "SELECT nombreUsuario, apPaternoUsuario, apMaternoUsuario, rutaFoto, titulo, fechaFoto, COUNT(comentario) as 'Cuantos' FROM Usuarios LEFT JOIN Albumes USING (idUsuario) LEFT JOIN Fotos USING (idAlbum) LEFT JOIN PuntuacionesComentarios USING (idFoto) WHERE comentario IS NOT NULL GROUP BY (idFoto) ORDER BY COUNT(comentario) DESC"); //Query que búsca las fotos con más comentarios
   $numeroFilasFotosMasComentarios = mysqli_num_rows($consultaFotosMasComentarios);
   //Creamos la tabla y le ponemos el encabezado
   $contenidoAnalisis.=
@@ -96,20 +96,22 @@
   <table class='responsive-table highlight centered'>
   <h4>Fotos con más comentarios</h4>
     <thead>
-      <th>Título</th>
-      <th>Fecha del álbum</th>
-      <th>Privacidad del álbum</th>
-      <th>Cantidad de fotografías</th>
+      <th>Autor</th>
+      <th>Vista previa</th>
+      <th>Álbum</th>
+      <th>Fecha de la foto</th>
+      <th>Cantidad de comentarios</th>
     </thead>
     <tbody>";
 
   while ($row = mysqli_fetch_assoc($consultaFotosMasComentarios)) //Rellenamos la tabla con los datos que devolvió el query
   {
       $contenidoAnalisis.= "<tr>
+      <td>".$row['nombreUsuario']." ".$row['apPaternoUsuario']." ".$row['apMaternoUsuario']."</td>
+      <td>".$row['rutaFoto']."</td>
       <td>".$row['titulo']."</td>
-      <td>".$row['fechaAlbum']."</td>
-      <td>".$row['tipoAlbum']."</td>
-      <td>".$row['Cantidad de fotos']."</td>
+      <td>".$row['fechaFoto']."</td>
+      <td>".$row['Cuantos']."</td>
       <td><a href='verFotos.php?id=".$row['idAlbum']."'>Ver el álbum</a></td>
       </tr>";
   }
@@ -123,7 +125,7 @@
   //FIN DE FOTOS CON MÁS COMENTARIOS
 
   //INICIO DE ÁLBUMES MEJOR PUNTUADOS
-  $consultaAlbumesMejorPuntuados = mysqli_query($conexion, "SELECT idAlbum, titulo, fechaAlbum, tipoAlbum, COUNT(idAlbum) AS 'Cantidad de fotos' FROM Albumes LEFT JOIN Fotos USING (idAlbum) GROUP BY idAlbum ORDER BY COUNT(idAlbum) DESC"); //Query que busca los álbumes mejor puntuados
+  $consultaAlbumesMejorPuntuados = mysqli_query($conexion, "SELECT titulo, fechaAlbum, tipoAlbum, AVG(puntuacion) AS 'Promedio de estrellas' FROM Albumes LEFT JOIN Fotos USING(idAlbum) LEFT JOIN PuntuacionesComentarios USING (idFoto) WHERE puntuacion IS NOT NULL GROUP BY idAlbum ORDER BY AVG(puntuacion) DESC"); //Query que busca los álbumes mejor puntuados
   $numeroFilasAlbumesMejorPuntuados = mysqli_num_rows($consultaAlbumesMejorPuntuados);
   //Creamos la tabla y le ponemos el encabezado
   $contenidoAnalisis.=
@@ -134,7 +136,7 @@
       <th>Título</th>
       <th>Fecha del álbum</th>
       <th>Privacidad del álbum</th>
-      <th>Cantidad de fotografías</th>
+      <th>Promedio de estrellas</th>
     </thead>
     <tbody>";
 
@@ -144,7 +146,7 @@
       <td>".$row['titulo']."</td>
       <td>".$row['fechaAlbum']."</td>
       <td>".$row['tipoAlbum']."</td>
-      <td>".$row['Cantidad de fotos']."</td>
+      <td>".$row['Promedio de estrellas']."</td>
       <td><a href='verFotos.php?id=".$row['idAlbum']."'>Ver el álbum</a></td>
       </tr>";
   }

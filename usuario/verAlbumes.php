@@ -5,13 +5,13 @@
 	$template = new HTML_Template_ITX('./templates');
   $template->loadTemplatefile("verAlbumes.html", true, true);
   $template->setVariable("TITULO", "Virtual Albums | Ver Álbumes");
+  $idAlbum = intval($_GET['id']);
+  $notificar = intval($_GET['tipo']);
+  $tablaFotosAlbum = "";
   if(isset($_SESSION['idUsuario']))
   {
     $idUsuario = intval($_SESSION['idUsuario']);
     $tipoUsuario = intval($_SESSION['tipoUsuario']);
-    $tablaFotosAlbum = "";
-    $idAlbum = intval($_GET['id']);
-    $notificar = intval($_GET['tipo']);
     $consultaObtenerVisitas = mysqli_query($conexion,"SELECT visitas,titulo FROM Albumes WHERE idAlbum = $idAlbum");
     $existe = mysqli_num_rows($consultaObtenerVisitas);
     if($existe > 0)
@@ -25,7 +25,7 @@
       $visitasAlbum = intval($rowAlbum['visitas']);
       $visitasAlbum++;
       $consultaActualizarVisitas = mysqli_query($conexion,"UPDATE Albumes SET visitas = $visitasAlbum WHERE idAlbum = $idAlbum");
-      $consultaFotos = mysqli_query($conexion,"SELECT * FROM Fotos WHERE idAlbum = $idAlbum ORDER BY idFoto DESC");
+      $consultaFotos = mysqli_query($conexion,"SELECT * FROM Fotos WHERE idAlbum = $idAlbum AND autorizada = 1 ORDER BY idFoto DESC");
       $numerofilas = mysqli_num_rows($consultaFotos);
       if ($numerofilas > 0)
       {
@@ -147,15 +147,49 @@
     {
         $tablaFotosAlbum .= "<br><h4 class='center-align'>No existe el álbum</h4>";
     }
-    $consultaInformacionAlbum = mysqli_query($conexion,"SELECT nombreUsuario,apPaternoUsuario, apMaternoUsuario, titulo FROM Albumes INNER JOIN Usuarios USING(idUsuario) WHERE idAlbum = $idAlbum");
-    $rowInformacionAlbum = mysqli_fetch_assoc($consultaInformacionAlbum);
-    $template->setVariable("TITULO_ALBUM", "<h2>Álbum: ".$rowInformacionAlbum['titulo']."</h2><h4>Autor: ".$rowInformacionAlbum['nombreUsuario']." ".$rowInformacionAlbum['apPaternoUsuario']." ".$rowInformacionAlbum['apMaternoUsuario'] );
-    $template->setVariable("FOTOS",$tablaFotosAlbum);
-    $template->show();
-    mysqli_free_result($consultaInformacionAlbum);
   }
   else
-    header('location: ../index.php');
+  {
+    $consultaObtenerVisitas = mysqli_query($conexion,"SELECT visitas,titulo FROM Albumes WHERE idAlbum = $idAlbum");
+    $existe = mysqli_num_rows($consultaObtenerVisitas);
+    if($existe > 0)
+    {
+      $rowAlbum = mysqli_fetch_assoc($consultaObtenerVisitas);
+      $visitasAlbum = intval($rowAlbum['visitas']);
+      $visitasAlbum++;
+      $consultaActualizarVisitas = mysqli_query($conexion,"UPDATE Albumes SET visitas = $visitasAlbum WHERE idAlbum = $idAlbum");
+      $consultaFotos = mysqli_query($conexion,"SELECT * FROM Fotos WHERE idAlbum = $idAlbum AND autorizada = 1 ORDER BY idFoto DESC");
+      $numerofilas = mysqli_num_rows($consultaFotos);
+      if ($numerofilas > 0)
+      {
+        $tablaFotosAlbum = "<div class='row'>";
+        while($rowFotos = mysqli_fetch_assoc($consultaFotos))
+        {
+          $idFoto = intval($rowFotos['idFoto']);
+          $tablaFotosAlbum .= "<div class='col l6 m6 s12'><div class='card hoverable'><div class='card-image'><img class='materialboxed ajusteImagen' src='images/albumes/".$rowFotos['rutaFoto']."'></div>
+          <div class='card-content'> <h5 class='center-align'>Inicia sesión para ver comentarios</h5>";
+          $tablaFotosAlbum .= "</div></div></div>";
+        }
+        $tablaFotosAlbum .= "</div>";
+        mysqli_free_result($consultaObtenerVisitas);
+        mysqli_free_result($consultaFotos);
+      }
+      else
+      {
+        $tablaFotosAlbum.= "<br><br><h4 class='center-align'>Aún no ha subido ninguna foto al álbum.</h4>";
+      }
+    }
+    else
+    {
+        $tablaFotosAlbum .= "<br><h4 class='center-align'>No existe el álbum</h4>";
+    }
+  }
+  $consultaInformacionAlbum = mysqli_query($conexion,"SELECT nombreUsuario,apPaternoUsuario, apMaternoUsuario, titulo FROM Albumes INNER JOIN Usuarios USING(idUsuario) WHERE idAlbum = $idAlbum");
+  $rowInformacionAlbum = mysqli_fetch_assoc($consultaInformacionAlbum);
+  $template->setVariable("TITULO_ALBUM", "<h2>Álbum: ".$rowInformacionAlbum['titulo']."</h2><h4>Autor: ".$rowInformacionAlbum['nombreUsuario']." ".$rowInformacionAlbum['apPaternoUsuario']." ".$rowInformacionAlbum['apMaternoUsuario'] );
+  $template->setVariable("FOTOS",$tablaFotosAlbum);
+  $template->show();
+  mysqli_free_result($consultaInformacionAlbum);
 
   Desconectar($conexion);
 ?>
