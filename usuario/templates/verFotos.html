@@ -10,6 +10,7 @@
   <link type="text/css" rel="stylesheet" href="../css/styles_usuario.css"  media="screen,projection"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="../js/jquery.dataTables.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.3.2/sweetalert2.js" charset="utf-8"></script>
   <script type="text/javascript" src="../js/materialize.min.js"></script>
 	<script type="text/javascript" src="../js/script_usuario.js"></script>
@@ -23,20 +24,20 @@
 	</nav>
   <div class="container">
     <div id="mostrarFotos">
-      <button class="btn waves-effect waves-light right" style="margin: 10px" id="mostrarSubirFotos">Subir fotos
+      <button class="btn waves-effect waves-light indigo darken-3 right" style="margin: 10px" id="mostrarSubirFotos">Subir fotos
         <i class="material-icons right">file_upload</i>
       </button>
       <h2>{TITULO_ALBUM}</h2>
       {FOTOS}
 			<center>
-				<button class="btn waves-effect waves-light" style="margin: 10px" onclick="location.href='index.php#tabAlbumes'">Regresar a álbumes
+				<button class="btn waves-effect waves-light indigo darken-3" style="margin: 10px" onclick="location.href='index.php#tabAlbumes'">Regresar a álbumes
           <i class="material-icons right">arrow_back</i>
         </button>
       </center>
     </div>
     <div id="formSubirFoto">
 			<br>
-			<button class="btn waves-effect waves-light right" style="margin: 10px" id="botonMostrarFotos">Volver al álbum
+			<button class="btn waves-effect waves-light indigo darken-3 right" style="margin: 10px" id="botonMostrarFotos">Volver al álbum
         <i class="material-icons right">arrow_back</i>
       </button>
 			<h2>Subir foto</h2>
@@ -46,7 +47,7 @@
 		        <div class="card-content">
 		          <div class="row">
 		            <div class="file-field input-field col l12 s12">
-		              <div class="btn waves-effect waves-light">
+		              <div class="btn waves-effect waves-light indigo darken-3">
 		                <i class="material-icons prefix" id="Icono_Imagen">image</i>
 		                <span id="texto-boton-imagen">Buscar foto</span>
 		                <input type="file" name="rutaSubirFoto" accept="image/*" required>
@@ -60,7 +61,7 @@
 		        </div>
 		        <center>
 		        <div class="card-action center-align">
-		          <button class="btn waves-effect waves-light" type="submit" name="action" style="margin: 10px">Subir
+		          <button class="btn waves-effect waves-light indigo darken-3" type="submit" name="action" style="margin: 10px">Subir
 		            <i class="material-icons right">send</i>
 		          </button>
 		        </div>

@@ -92,7 +92,10 @@ $(document).ready(function(e)
     $("#mostrarFotos").show();
     $("#formSubirFoto").hide();
   });
-
+  $("#regresarAdmin").click(function()
+  {
+    location.href="../administrador/index.php";
+  });
   $("#formularioCrearAlbum").on('submit', function(e)
   {
     e.preventDefault();
@@ -305,7 +308,7 @@ $(document).ready(function(e)
             }
           });
         },
-        error : function(xhr, status) // Si hubo error, despliega mensaje.
+        error : function(xhr, status,error) // Si hubo error, despliega mensaje.
         {
           swal( // Se inicializa sweetalert2
           {

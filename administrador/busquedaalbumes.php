@@ -2,11 +2,11 @@
   include_once '../config.php';
   $conexion = Conectar();
   $Salida = "";
-  $query = "SELECT idAlbum,titulo,nombretema, u.idUsuario AS 'idPropietario', nombreUsuario, fechaAlbum, AVG(puntuacion) AS 'promedioPuntuacion' FROM Usuarios u INNER JOIN Albumes a USING(idUsuario) INNER JOIN Fotos USING(idAlbum) INNER JOIN Temas t ON a.idTema = t.idTema  LEFT JOIN PuntuacionesComentarios USING(idFoto) GROUP BY idAlbum";
+  $query = "SELECT idAlbum,titulo,nombretema, u.idUsuario AS 'idPropietario', nombreUsuario, fechaAlbum, AVG(puntuacion) AS 'promedioPuntuacion' FROM Albumes a LEFT JOIN Usuarios u USING(idUsuario) LEFT JOIN Fotos USING(idAlbum) LEFT JOIN Temas t ON a.idTema = t.idTema  LEFT JOIN PuntuacionesComentarios USING(idFoto) GROUP BY idAlbum";
   if (isset($_POST['Consulta']))
   {
     $texto = mysqli_real_escape_string($conexion, $_POST['Consulta']);
-    $query = "SELECT idAlbum,titulo,nombretema, u.idUsuario AS 'idPropietario', nombreUsuario, fechaAlbum, AVG(puntuacion) AS 'promedioPuntuacion' FROM Usuarios u INNER JOIN Albumes a USING(idUsuario) INNER JOIN Fotos USING(idAlbum) INNER JOIN Temas t ON a.idTema = t.idTema  LEFT JOIN PuntuacionesComentarios USING(idFoto) WHERE nombreUsuario LIKE '%".$texto."%' OR titulo LIKE '%".$texto."%' OR nombreTema LIKE '%".$texto."%' GROUP BY idAlbum";
+    $query = "SELECT idAlbum,titulo,nombretema, u.idUsuario AS 'idPropietario', nombreUsuario, fechaAlbum, AVG(puntuacion) AS 'promedioPuntuacion' FROM Albumes a LEFT JOIN Usuarios u USING(idUsuario) LEFT JOIN Fotos USING(idAlbum) LEFT JOIN Temas t ON a.idTema = t.idTema  LEFT JOIN PuntuacionesComentarios USING(idFoto) WHERE nombreUsuario LIKE '%".$texto."%' OR titulo LIKE '%".$texto."%' OR nombreTema LIKE '%".$texto."%' GROUP BY idAlbum";
   }
   $consulta = mysqli_query($conexion,$query);
   $numerofilas = mysqli_num_rows($consulta);
@@ -40,7 +40,7 @@
                           <td>".$row['nombreUsuario']."</td>
                           <td>".$row['fechaAlbum']."</td>
                           <td>".$puntuacion."</td>
-                          <td><a href='vermas.php?foto=".$row['idAlbum']."'>Ver más</a></td>
+                          <td><a href='verAlbumes.php?id=".$row['idAlbum']."'>Ver más</a></td>
                         </tr>";
                     }
                     $Salida.= "</tbody></table>";

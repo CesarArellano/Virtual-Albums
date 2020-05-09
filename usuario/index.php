@@ -5,19 +5,23 @@
 	$template = new HTML_Template_ITX('./templates');
   $template->loadTemplatefile("principal.html", true, true);
   $template->setVariable("TITULO", "Virtual Albums | Usuario");
+  $boton = "";
   if(isset($_SESSION['idUsuario']))
   {
     $idUsuario = intval($_SESSION['idUsuario']);
     $tipoUsuario = intval($_SESSION['tipoUsuario']);
     if($tipoUsuario == 1)
     {
+      $boton = "<button class='btn waves-effect waves-light indigo darken-1 right' id='regresarAdmin'>Regresar admin<i class='material-icons left'>arrow_back</i></button>";
       $queryBusqueda = "SELECT idAlbum,titulo FROM Albumes";
-      $queryFeed = "SELECT idFoto, idAlbum, titulo, nombreTema, rutaFoto,nombreUsuario,apPaternoUsuario,apMaternoUsuario,foto,visitas FROM Albumes INNER JOIN Temas USING(idTema) INNER JOIN Fotos USING(idAlbum) INNER JOIN Usuarios USING(idUsuario) WHERE idUsuario != $idUsuario AND autorizada = 1 ORDER BY idFoto DESC";
+      $queryFeed = "SELECT idFoto, idAlbum, titulo, nombreTema, rutaFoto,nombreUsuario,apPaternoUsuario,apMaternoUsuario,foto FROM Albumes INNER JOIN Temas USING(idTema) INNER JOIN Fotos USING(idAlbum) INNER JOIN Usuarios USING(idUsuario) WHERE idUsuario != $idUsuario AND autorizada = 1 ORDER BY idFoto DESC";
+      $queryPuntuacion = "SELECT idFoto FROM Albumes INNER JOIN Temas USING(idTema) INNER JOIN Fotos USING(idAlbum) INNER JOIN Usuarios USING(idUsuario) WHERE idUsuario != $idUsuario AND autorizada = 1 ORDER BY idFoto DESC";
     }
     else
     {
       $queryBusqueda = "SELECT DISTINCT idAlbum,titulo FROM Albumes LEFT JOIN Usuarios USING(idUsuario) LEFT JOIN Suscripciones USING(idAlbum) WHERE tipoAlbum = 'Publico' OR (tipoAlbum = 'Privado' AND Suscripciones.idUsuario = $idUsuario)";
-      $queryFeed = "SELECT idFoto, Albumes.idAlbum AS 'idAlbum', titulo, nombreTema, rutaFoto, nombreUsuario, apPaternoUsuario, apMaternoUsuario, foto, visitas FROM Albumes INNER JOIN Temas USING(idTema) LEFT JOIN Fotos USING(idAlbum) LEFT JOIN Usuarios USING(idUsuario) LEFT JOIN Suscripciones USING(idAlbum) WHERE ((tipoAlbum = 'Publico') OR (tipoAlbum = 'Privado' AND Suscripciones.idUsuario = $idUsuario)) AND (Albumes.idUsuario != $idUsuario AND autorizada = 1) GROUP BY idFoto ORDER BY idFoto DESC";
+      $queryFeed = "SELECT idFoto, Albumes.idAlbum AS 'idAlbum', titulo, nombreTema, rutaFoto, nombreUsuario, apPaternoUsuario, apMaternoUsuario, foto FROM Albumes INNER JOIN Temas USING(idTema) LEFT JOIN Fotos USING(idAlbum) LEFT JOIN Usuarios USING(idUsuario) LEFT JOIN Suscripciones USING(idAlbum) WHERE ((tipoAlbum = 'Publico') OR (tipoAlbum = 'Privado' AND Suscripciones.idUsuario = $idUsuario)) AND (Albumes.idUsuario != $idUsuario AND autorizada = 1) GROUP BY idFoto ORDER BY idFoto DESC";
+      $queryPuntuacion = "SELECT idFoto FROM Albumes INNER JOIN Temas USING(idTema) LEFT JOIN Fotos USING(idAlbum) LEFT JOIN Usuarios USING(idUsuario) LEFT JOIN Suscripciones USING(idAlbum) WHERE ((tipoAlbum = 'Publico') OR (tipoAlbum = 'Privado' AND Suscripciones.idUsuario = $idUsuario)) AND (Albumes.idUsuario != $idUsuario AND autorizada = 1) GROUP BY idFoto ORDER BY idFoto DESC";
     }
     //Sección búsqueda de álbumes
     $consultaTituloAlbumes = mysqli_query($conexion,$queryBusqueda);
@@ -38,13 +42,15 @@
     $template->setVariable("TITULOS_ALBUMES", $tituloAlbumes);
 
     //Sección Inicio
+    $consultaPuntuacionFoto = mysqli_query($conexion,"SELECT ROUND(AVG(puntuacion),2) as 'puntuacionPromedio' FROM Fotos LEFT JOIN PuntuacionesComentarios USING (idFoto) WHERE idFoto IN ($queryPuntuacion) GROUP BY idFoto ORDER BY idFoto DESC");
     $consultaFeed = mysqli_query($conexion,$queryFeed);
     $numerofilas = mysqli_num_rows($consultaFeed);
     if ($numerofilas > 0)
     {
       $i = 0;
       $contenidoUsuario = "<div class='row'>";
-        while ($row = mysqli_fetch_assoc($consultaFeed))
+
+        while ($row = mysqli_fetch_assoc($consultaFeed) AND $row2 = mysqli_fetch_assoc($consultaPuntuacionFoto))
         {
           $idFoto = intval($row['idFoto']);
           $consultaPuntuacion = mysqli_query($conexion,"SELECT puntuacion FROM PuntuacionesComentarios LEFT JOIN Usuarios USING(idUsuario) WHERE idUsuario = $idUsuario AND idFoto = $idFoto AND puntuacion IS NOT NULL");
@@ -61,6 +67,14 @@
           {
             $fotoPerfil = "images/perfil/".$row['foto'];
           }
+          if($row2['puntuacionPromedio'] == NULL)
+          {
+            $rating = 0;
+          }
+          else
+          {
+            $rating = $row2['puntuacionPromedio'];
+          }
           $nombreUsuario =  $row['nombreUsuario']." ".$row['apPaternoUsuario']." ".$row['apMaternoUsuario'];
           $fotosAlbum = "images/albumes/".$row['rutaFoto'];
           $contenidoUsuario.= "<div class='col l6 m12 s12'>
@@ -71,10 +85,10 @@
             <hr style='border: 0.5px solid gray;'>
             <div class='card-image' style='top:-7px;'>
               <img class='materialboxed ajusteImagen' src='".$fotosAlbum."'>
-              <span class='card-title' style='background-color:black; opacity:0.8; font-size:18px'>Álbum: ".$row['titulo']."<br>Tema: ".$row['nombreTema']."<br>Visitas: ".$row['visitas']."</span>
+              <span class='card-title' style='background-color:black; opacity:0.8; font-size:18px'>Álbum: ".$row['titulo']."<br>Tema: ".$row['nombreTema']."</span>
               <a class='btn-floating halfway-fab waves-effect waves-light red' href='verAlbumes.php?id=".$row['idAlbum']."&tipo=0'><i class='material-icons'>remove_red_eye</i></a>
             </div>
-            <div class='card-content'>
+            <div class='card-content'><p class='center-align' style='position:relative;top:-20px;'>Rating: ".$rating."</p>
               <form action='enviarComentario.php' method='POST'>
                 <div class='star-rating center-align'>";
                 if($numeroFilasPuntuacion == 1 AND $rowPuntuacion['puntuacion'] == 5.0)
@@ -187,7 +201,8 @@
       $foto = "images/perfil/".$datosPerfil['foto'];
     }
     //Sección Álbumes
-    $consultaAlbumes = mysqli_query($conexion,"SELECT idAlbum, titulo, visitas, fechaAlbum, tipoAlbum, nombreTema, COUNT(idfoto) AS 'cuantasFotos' FROM Albumes LEFT JOIN Temas USING(idTema) LEFT JOIN Fotos USING(idAlbum) WHERE idUsuario = $idUsuario GROUP BY idAlbum");
+    $consultaObtenerVisitas = mysqli_query($conexion,"SELECT COUNT(Visitas.idAlbum) as 'visitas' FROM Albumes LEFT JOIN Visitas USING (idAlbum) WHERE idUsuario = $idUsuario GROUP BY idAlbum ORDER BY idAlbum DESC");
+    $consultaAlbumes = mysqli_query($conexion,"SELECT idAlbum, titulo, fechaAlbum, tipoAlbum, nombreTema, COUNT(idfoto) AS 'cuantasFotos' FROM Albumes LEFT JOIN Temas USING(idTema) LEFT JOIN Fotos USING(idAlbum) WHERE idUsuario = $idUsuario GROUP BY idAlbum ORDER BY idAlbum DESC");
     $numerofilas = mysqli_num_rows($consultaAlbumes);
     if ($numerofilas > 0)
     {
@@ -202,11 +217,11 @@
           <th></th>
         </thead>
         <tbody>";
-        while ($row = mysqli_fetch_assoc($consultaAlbumes))
+        while ($row = mysqli_fetch_assoc($consultaAlbumes) AND $row2 = mysqli_fetch_assoc($consultaObtenerVisitas))
         {
           $tablaAlbumesUsuario.= "<tr>
           <td>".$row['titulo']."</td>
-          <td>".$row['visitas']."</td>
+          <td>".$row2['visitas']."</td>
           <td>".$row['fechaAlbum']."</td>
           <td>".$row['tipoAlbum']."</td>
           <td>".$row['nombreTema']."</td>
@@ -220,7 +235,9 @@
       $tablaAlbumesUsuario.= "</tbody></table>";
     }
     else
-      $tablaAlbumesUsuario.= "<h4 class='center-align'>Aún no ha creado ningún álbum</h4>";
+    {
+      $tablaAlbumesUsuario.= "<h4 class='center-align'>No ha creado álbumes</h4>";
+    }
     //Suscripciones
     $consultaSuscripciones = mysqli_query($conexion,"SELECT nombreUsuario,apPaternoUsuario, apMaternoUsuario,idAlbum, titulo, fechaAlbum, tipoAlbum FROM Albumes a LEFT JOIN Usuarios USING(idUsuario) INNER JOIN Suscripciones s USING(idAlbum) WHERE s.idUsuario = $idUsuario AND a.idUsuario != $idUsuario GROUP BY idAlbum");
     $numerofilas = mysqli_num_rows($consultaSuscripciones);
@@ -371,7 +388,7 @@
     $template->setVariable("TITULOS_ALBUMES", $tituloAlbumes);
 
     //Sección Inicio
-    $consultaFeed = mysqli_query($conexion,"SELECT idAlbum,titulo,nombreTema, rutaFoto,nombreUsuario,apPaternoUsuario,apMaternoUsuario,foto,visitas FROM Albumes INNER JOIN Temas USING(idTema) INNER JOIN Fotos USING(idAlbum) INNER JOIN Usuarios USING(idUsuario) WHERE autorizada = 1 AND tipoAlbum = 'Público' ORDER BY idFoto DESC");
+    $consultaFeed = mysqli_query($conexion,"SELECT idAlbum,titulo,nombreTema, rutaFoto,nombreUsuario,apPaternoUsuario,apMaternoUsuario,foto FROM Albumes INNER JOIN Temas USING(idTema) INNER JOIN Fotos USING(idAlbum) INNER JOIN Usuarios USING(idUsuario) WHERE autorizada = 1 AND tipoAlbum = 'Público' ORDER BY idFoto DESC");
     $numerofilas = mysqli_num_rows($consultaFeed);
     if ($numerofilas > 0)
     {
@@ -400,7 +417,7 @@
           <hr>
             <div class='card-image' style='top:-7px;'>
               <img class='materialboxed ajusteImagen' src='".$fotosAlbum."'>
-              <span class='card-title' style='background-color:black; opacity:0.8; font-size:18px'>Álbum: ".$row['titulo']."<br>Tema: ".$row['nombreTema']."<br>Visitas: ".$row['visitas']."</span>
+              <span class='card-title' style='background-color:black; opacity:0.8; font-size:18px'>Álbum: ".$row['titulo']."<br>Tema: ".$row['nombreTema']."</span>
               <a class='btn-floating halfway-fab waves-effect waves-light red' href='verAlbumes.php?id=".$row['idAlbum']."'><i class='material-icons'>remove_red_eye</i></a>
             </div>
             <div class='card-content'>
@@ -419,6 +436,7 @@
 
   $template->addBlockfile("CONTENIDO_INICIO", "INICIO", "inicio.html");
   $template->setCurrentBlock('INICIO');
+  $template->setVariable("BOTON",$boton);
   $template->setVariable("CONTENIDO_FEED",$contenidoUsuario);
   $template->parseCurrentBlock('INICIO');
   $template->show();

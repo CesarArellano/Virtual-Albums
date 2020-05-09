@@ -18,7 +18,7 @@
   $contenidoAnalisis = "<div class ='container'>"; //Preparamos un contenedor para el módulo de análisis de información
 
   //INICIO DE ÁLBUMES MÁS VISTOS
-  $consultaAlbumesMasVistos = mysqli_query($conexion, "SELECT idAlbum, titulo, fechaAlbum, tipoAlbum, visitas FROM Albumes ORDER BY visitas DESC"); //Query que busca los álbumes más visitados
+  $consultaAlbumesMasVistos = mysqli_query($conexion, "SELECT idAlbum, titulo, fechaAlbum, tipoAlbum, count(idAlbum) as 'visitas' FROM Albumes LEFT JOIN Visitas USING (idAlbum) GROUP BY idAlbum ORDER BY count(idAlbum) DESC"); //Query que busca los álbumes más visitados
   $numeroFilasAlbumesMasVistos = mysqli_num_rows($consultaAlbumesMasVistos);
   //Creamos la tabla y le ponemos el encabezado
   $contenidoAnalisis.=
@@ -40,7 +40,7 @@
       <td>".$row['fechaAlbum']."</td>
       <td>".$row['tipoAlbum']."</td>
       <td>".$row['visitas']."</td>
-      <td><a href='verFotos.php?id=".$row['idAlbum']."'>Ver el álbum</a></td>
+      <td><a href='verAlbumes.php?id=".$row['idAlbum']."'>Ver el álbum</a></td>
       </tr>";
   }
 
@@ -75,7 +75,7 @@
       <td>".$row['fechaAlbum']."</td>
       <td>".$row['tipoAlbum']."</td>
       <td>".$row['Cantidad de fotos']."</td>
-      <td><a href='verFotos.php?id=".$row['idAlbum']."'>Ver el álbum</a></td>
+      <td><a href='verAlbumes.php?id=".$row['idAlbum']."'>Ver el álbum</a></td>
       </tr>";
   }
 
@@ -112,7 +112,7 @@
       <td>".$row['titulo']."</td>
       <td>".$row['fechaFoto']."</td>
       <td>".$row['Cuantos']."</td>
-      <td><a href='verFotos.php?id=".$row['idAlbum']."'>Ver el álbum</a></td>
+      <td><a href='verAlbumes.php?id=".$row['idAlbum']."'>Ver el álbum</a></td>
       </tr>";
   }
 
@@ -147,7 +147,7 @@
       <td>".$row['fechaAlbum']."</td>
       <td>".$row['tipoAlbum']."</td>
       <td>".$row['Promedio de estrellas']."</td>
-      <td><a href='verFotos.php?id=".$row['idAlbum']."'>Ver el álbum</a></td>
+      <td><a href='verAlbumes.php?id=".$row['idAlbum']."'>Ver el álbum</a></td>
       </tr>";
   }
 

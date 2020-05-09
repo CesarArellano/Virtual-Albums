@@ -13,8 +13,17 @@
 	<script src="../js/jquery.dataTables.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.3.2/sweetalert2.js" charset="utf-8"></script>
   <script type="text/javascript" src="../js/materialize.min.js"></script>
-	<script type="text/javascript" src="../js/script_usuario.js"></script>
+	<script type="text/javascript" src="../js/script_administrador.js"></script>
 </head>
+<style>
+	.star-rating label:hover,
+	.star-rating label:hover~label,
+	.star-rating input[type=radio]:checked~label
+	{
+		pointer-events: none;
+	  color: #f2b600;
+	}
+</style>
 <body>
 <main>
 	<nav class="light-blue accent-4 ">
@@ -26,7 +35,7 @@
     <div id="mostrarFotos">
 			<br>
 			<center>
-				<button class="btn waves-effect waves-light indigo darken-1 right" style="margin: 10px" onclick="location.href='index.php#tabInicio'">Regresar a álbumes
+				<button class="btn waves-effect waves-light indigo darken-1 right" style="margin: 10px" onclick="location.href='index.php#tabInicio'">Regresar
 					<i class="material-icons right">arrow_back</i>
 				</button>
 			</center>
