@@ -52,6 +52,35 @@
   mysqli_free_result($consultaAlbumesMasVistos);
   //FIN DE ÁLBUMES MÁS VISTOS
 
+  //INICIO DE ÁLBUMES MAS VISTO POR MES
+  $contenidoAnalisis .= "<h4>Álbumes más vistos por mes</h4>
+  <div class='row'>
+    <div class='input-field col l6 s12'>
+    <i class='material-icons prefix'>account_circle</i>
+    <input type='number' id='albumAnio' name='albumAnio' >
+    <label for='albumAnio'>Ingresa el año</label>
+    </div>
+    <div class='input-field col l6 s12'>
+    <select name='albumMes' id='albumMes'>
+      <option value='' disabled selected>Selecciona la sección</option>
+      <option value='January'>Enero</option>
+      <option value='February'>Febrero</option>
+      <option value='March'>Marzo</option>
+      <option value='April'>Abril</option>
+      <option value='May'>Mayo</option>
+      <option value='June'>Junio</option>
+      <option value='July'>Julio</option>
+      <option value='August'>Agosto</option>
+      <option value='September'>Septiembre</option>
+      <option value='October'>Octubre</option>
+      <option value='November'>Noviembre</option>
+      <option value='December'>Diciembre</option>
+    </select>
+    <label for='albumMes'>Mes</label>
+  </div></div>
+  <div id='datosAlbumesMes'></div>";
+  //FIN DE ÁLBUMES MAS VISTO POR MES
+
   //INICIO DE ÁLBUMES CON MÁS FOTOS
   $consultaAlbumesMasFotos = mysqli_query($conexion, "SELECT idAlbum, titulo, fechaAlbum, tipoAlbum, COUNT(idAlbum) AS 'Cantidad de fotos' FROM Albumes LEFT JOIN Fotos USING (idAlbum) GROUP BY idAlbum ORDER BY COUNT(idAlbum) DESC"); //Query que busca los álbumes con más fotos
   $numeroFilasAlbumesMasFotos = mysqli_num_rows($consultaAlbumesMasFotos);
@@ -129,9 +158,8 @@
   $numeroFilasAlbumesMejorPuntuados = mysqli_num_rows($consultaAlbumesMejorPuntuados);
   //Creamos la tabla y le ponemos el encabezado
   $contenidoAnalisis.=
-  "
+  "<h4>Álbumes mejor puntuados</h4>
   <table class='responsive-table highlight centered'>
-  <h4>Álbumes mejor puntuados</h4>
     <thead>
       <th>Título</th>
       <th>Fecha del álbum</th>

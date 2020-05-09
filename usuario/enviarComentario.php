@@ -58,7 +58,7 @@
     }
     elseif($existePuntuacion == 0)
     {
-      $insertarComentario = mysqli_query($conexion, "INSERT INTO PuntuacionesComentarios(idUsuario,idFoto,comentario) VALUES($idUsuario,$idFoto,'$comentario')");
+      $insertarComentario = mysqli_query($conexion, "INSERT INTO PuntuacionesComentarios(idUsuario,idFoto,comentario,fechaComentario) VALUES($idUsuario,$idFoto,'$comentario',NOW())");
       mysqli_free_result($insertarComentario);
       $mensaje = "El usuario ".$nombreUsuario." comentó en la foto ".$nombreFoto." del álbum ".$nombreAlbum;
       $notificacion_uno = mysqli_query($conexion,"INSERT INTO Notificaciones (idAlbum,contenido) VALUES($idAlbum,'$mensaje')");
@@ -86,7 +86,7 @@
         $notificacion_uno = mysqli_query($conexion,"INSERT INTO Notificaciones (idAlbum,contenido) VALUES($idAlbum,'$mensaje')");
         $idNotificacionPuntuacion = mysqli_insert_id($conexion);
       }
-      $insertarComentario = mysqli_query($conexion, "INSERT INTO PuntuacionesComentarios(idUsuario,idFoto,comentario) VALUES($idUsuario,$idFoto,'$comentario')");
+      $insertarComentario = mysqli_query($conexion, "INSERT INTO PuntuacionesComentarios(idUsuario,idFoto,comentario,fechaComentario) VALUES($idUsuario,$idFoto,'$comentario',NOW())");
       $mensaje = "El usuario ".$nombreUsuario." comentó en la foto ".$nombreFoto." del álbum ".$nombreAlbum;
       $notificacion_dos = mysqli_query($conexion,"INSERT INTO Notificaciones (idAlbum,contenido) VALUES($idAlbum,'$mensaje')");
       $idNotificacionComentario = mysqli_insert_id($conexion);

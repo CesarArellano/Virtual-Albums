@@ -25,7 +25,7 @@ $(document).ready(function(e)
 		labelMonthSelect: 'Selecciona un mes',
 		labelYearSelect: 'Selecciona un año',
     min:new Date(1900,0,1), // Fecha mínima de nacimiento (formato del constructor: "año,mes[Rango de meses: 0-11 ],día").
-    max: new Date(2005,11,31), // Fecha máxima de nacimiento.
+    max: new Date(), // Fecha máxima de nacimiento.
     format: 'yyyy-mm-dd',
     firstDay: true
 	});

@@ -8,7 +8,22 @@
     <div class="row">
       <div class="input-field col s12">
         <input id="buscaralbumes" type="text" class="validate">
-        <label for="buscaralbumes">Busca por propietario, título, tema o rango de fechas del album</label>
+        <label for="buscaralbumes">Busca por propietario, título o tema</label>
+      </div>
+      <div class="input-field col l4 m6 s12">
+        <input id="fecha1" type="date" class="datepicker">
+        <label for="fecha1">Busca por rango de fechas (valor mínimo)</label>
+      </div>
+      <div class="input-field col l4 m6 s12">
+        <input id="fecha2" type="date" class="datepicker">
+        <label for="fecha2">Busca por rango de fechas (valor máximo)</label>
+      </div>
+      <div class="input-field col l4 m12 s12">
+        <center>
+          <button class="btn waves-effect waves-light cyan darken-2" id="busquedaFechas">Buscar
+            <i class="material-icons right">send</i>
+          </button>
+        </center>
       </div>
     </div>
     <div id="datosalbumes"></div>

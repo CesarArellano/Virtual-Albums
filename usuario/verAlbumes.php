@@ -116,32 +116,32 @@
             <input type='hidden' name='tipo' value='2'>
             <center><button class='btn waves-effect waves-light indigo darken-3' type='submit' style='top: -25px;'>Enviar<i class='material-icons right'>send</i></button></center>
             </form>";
-          $consultaComentarios = mysqli_query($conexion,"SELECT nombreUsuario,apPaternoUsuario,apMaternoUsuario,comentario,foto,tipoUsuario FROM PuntuacionesComentarios LEFT JOIN Usuarios USING(idUsuario) WHERE idFoto = $idFoto AND puntuacion IS NULL");
-          $numeroFilasComentarios = mysqli_num_rows($consultaComentarios);
-          $tablaFotosAlbum .= "<h5>Comentarios</h5><div class='cajaComentarios'>";
-          if($numeroFilasComentarios > 0)
-          {
-            while($row = mysqli_fetch_assoc($consultaComentarios))
+            $consultaComentarios = mysqli_query($conexion,"SELECT nombreUsuario,apPaternoUsuario,apMaternoUsuario,comentario, fechaComentario, foto,tipoUsuario FROM PuntuacionesComentarios LEFT JOIN Usuarios USING(idUsuario) WHERE idFoto = $idFoto AND puntuacion IS NULL ORDER BY idFoto DESC");
+            $numeroFilasComentarios = mysqli_num_rows($consultaComentarios);
+            $tablaFotosAlbum .= "<h5>Comentarios</h5><div class='cajaComentarios'>";
+            if($numeroFilasComentarios > 0)
             {
-              if($row['foto'] == NULL)
+              while($row = mysqli_fetch_assoc($consultaComentarios))
               {
-                $fotoPerfil = "../images/avatar.png";
-              }
-              else
-              {
-                if($row['tipoUsuario'] == 1)
-                  $fotoPerfil = "../administrador/images/perfil/".$row['foto'];
+                if($row['foto'] == NULL)
+                {
+                  $fotoPerfil = "../images/avatar.png";
+                }
                 else
-                  $fotoPerfil = "images/perfil/".$row['foto'];
+                {
+                  if($row['tipoUsuario'] == 1)
+                    $fotoPerfil = "../administrador/images/perfil/".$row['foto'];
+                  else
+                    $fotoPerfil = "images/perfil/".$row['foto'];
+                }
+                $tablaFotosAlbum .= "<img class='ajusteImagenComentarios' src='".$fotoPerfil."'><p class='tituloNombreUsuario2'>".$row['nombreUsuario']." ".$row['apPaternoUsuario']." ".$row['apMaternoUsuario']."</p>";
+                $tablaFotosAlbum .= "<p style='opacity: 0.8; font-size:15px;position:relative;top:-22px;'>".$row['fechaComentario']."</p><p class='comentarios' style='top:-26px; position:relative;'>".$row['comentario']."</p>";
               }
-              $tablaFotosAlbum .= "<img class='ajusteImagenComentarios' src='".$fotoPerfil."'><p class='tituloNombreUsuario2'>".$row['nombreUsuario']." ".$row['apPaternoUsuario']." ".$row['apMaternoUsuario']."</p>";
-              $tablaFotosAlbum .= "<p class='comentarios'>".$row['comentario']."</p>";
             }
-          }
-          else
-          {
-            $tablaFotosAlbum .= "<h5 class='center-align' style='position:relative; top:60px;'>No hay comentarios</h5>";
-          }
+            else
+            {
+              $tablaFotosAlbum .= "<h5 class='center-align' style='position:relative; top:60px;'>No hay comentarios</h5>";
+            }
 
           $tablaFotosAlbum .= "</div></div></div></div>";
         }

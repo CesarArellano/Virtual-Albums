@@ -19,7 +19,7 @@
   $tipoUsuario = $fila['tipoUsuario'];
   mysqli_free_result($consultaUsuario);
   // Ejecutamos el query
-  $result = mysqli_query($conexion, "SELECT idAlbum, titulo, tipoAlbum, fechaAlbum FROM Albumes WHERE idUsuario = $idUsuario") or die("Could not execute query");
+  $result = mysqli_query($conexion, "SELECT idAlbum, titulo, tipoAlbum, fechaAlbum, COUNT(Visitas.idAlbum) as 'visitas' FROM Albumes LEFT JOIN Visitas USING(idAlbum) WHERE idUsuario = $idUsuario GROUP BY idAlbum") or die("Could not execute query");
 
   while($line = mysqli_fetch_assoc($result))
   {
@@ -30,7 +30,7 @@
     // Desplegamos la informacion de cada presidentes y se rellena con la información obtenida de la BD.
     $template->setVariable("TITULOALBUM", $line['titulo']);
     $template->setVariable("TIPOALBUM", $line['tipoAlbum']);
-    $template->setVariable("VISITASALBUM", '0');
+    $template->setVariable("VISITASALBUM", $line['visitas']);
     $template->setVariable("FECHAALBUM", $line['fechaAlbum']);
 
     $result2 = mysqli_query($conexion, "SELECT count(idFoto) as cantidadFotos FROM Fotos WHERE idAlbum = $line[idAlbum]") or die("Could not execute query");
@@ -66,7 +66,7 @@
     $template->setCurrentBlock("SUSCRIPCIONES"); // Nos ubicamos en el bloque HTML SUSCRIPCIONES
 
     // Ejecutamos el query
-    $result4 = mysqli_query($conexion, "SELECT idAlbum, titulo, tipoAlbum, fechaAlbum FROM Albumes LEFT JOIN Suscripciones s USING (idAlbum) WHERE s.idUsuario = $idUsuario") or die("Could not execute query");
+    $result4 = mysqli_query($conexion, "SELECT idAlbum, titulo, tipoAlbum, fechaAlbum, COUNT(Visitas.idAlbum) as 'visitas' FROM Albumes a LEFT JOIN Suscripciones s USING (idAlbum) LEFT JOIN Visitas USING(idAlbum) WHERE s.idUsuario = $idUsuario AND a.idUsuario != $idUsuario GROUP BY idAlbum") or die("Could not execute query");
 
     while($line4 = mysqli_fetch_assoc($result4))
     {
@@ -77,7 +77,7 @@
       // Desplegamos la informacion de cada presidentes y se rellena con la información obtenida de la BD.
       $template->setVariable("TITULOSUSCRIPCION", $line4['titulo']);
       $template->setVariable("TIPOSUSCRIPCION", $line4['tipoAlbum']);
-      $template->setVariable("VISITASSUSCRIPCION", '0');
+      $template->setVariable("VISITASSUSCRIPCION", $line4['visitas']);
       $template->setVariable("FECHASUSCRIPCION", $line4['fechaAlbum']);
 
       $result5 = mysqli_query($conexion, "SELECT count(idFoto) as cantidadFotos FROM Fotos WHERE idAlbum = $line4[idAlbum]") or die("Could not execute query");

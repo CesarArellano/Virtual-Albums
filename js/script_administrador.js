@@ -22,7 +22,7 @@ $(document).ready(function(e)
 		labelMonthSelect: 'Selecciona un mes',
 		labelYearSelect: 'Selecciona un año',
     min:new Date(1900,0,1), // Fecha mínima de nacimiento (formato del constructor: "año,mes[Rango de meses: 0-11 ],día").
-    max: new Date(2005,11,31), // Fecha máxima de nacimiento.
+    max: new Date(), // Fecha máxima de nacimiento.
     format: 'yyyy-mm-dd',
     firstDay: true // Empieza en día Lunes y no en Domingo.
 	});
@@ -76,6 +76,104 @@ $(document).ready(function(e)
     $("#registro").hide();
     $("#busqueda").hide();
     $("#analisis").show();
+  });
+  function Albumes_Mes(mes,anio)
+  {
+    let param = "mesAlbum="+mes+"&anioAlbum="+anio;
+      $.ajax(
+      {
+          url: 'albumesMes.php',
+          type: 'POST',
+          dataType: 'html',
+          data: param,
+          success: function(data) // Después de enviar los datos se muestra la respuesta del servidor.
+          {
+            console.log(data);
+            $("#datosAlbumesMes").html(data);
+          },
+          error : function(xhr, status) // Si hubo error, despliega mensaje.
+          {
+            swal( // Se inicializa sweetalert2
+            {
+              title: "Ups...",
+              type: "error",
+              html: "Error del servidor, intente de nuevo",
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Ok!'
+            });
+          }
+      });
+  }
+
+  $("#albumMes").on('change', function(){
+      let mes = $(this).val();
+      let anio;
+      if (mes != "")
+      {
+        anio = $("#albumAnio").val();
+        if(anio != "")
+        {
+          Albumes_Mes(mes,anio);
+        }
+        else
+        {
+          swal( // Se inicializa sweetalert2
+          {
+            title: "Ups...",
+            type: "error",
+            html: "Error, ingresa el año",
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Ok!'
+          });
+        }
+      }
+  });
+  function Rango_Fechas(fecha1, fecha2)
+  {
+    let param = "fecha1="+fecha1+"&fecha2="+fecha2;
+    console.log(param);
+      $.ajax(
+      {
+          url: 'rangoFechas.php',
+          type: 'POST',
+          dataType: 'html',
+          data: param,
+          success: function(data) // Después de enviar los datos se muestra la respuesta del servidor.
+          {
+            $("#datosalbumes").html(data);
+          },
+          error : function(xhr, status) // Si hubo error, despliega mensaje.
+          {
+            swal( // Se inicializa sweetalert2
+            {
+              title: "Ups...",
+              type: "error",
+              html: "Error del servidor, intente de nuevo",
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Ok!'
+            });
+          }
+      });
+  }
+  $("#busquedaFechas").on('click', function(){
+      let fecha1 = $("#fecha1").val();
+      let fecha2 = $("#fecha2").val();
+      if(fecha1 != "" && fecha2 != "")
+      {
+        Rango_Fechas(fecha1,fecha2);
+      }
+      else
+      {
+        swal( // Se inicializa sweetalert2
+        {
+          title: "Ups...",
+          type: "error",
+          html: "Error, falta(n) fecha(s)",
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Ok!'
+        });
+      }
+
   });
   $(Buscar_Datos());
   $(Buscar_Fotos());

@@ -152,7 +152,7 @@
                   <input type='hidden' name='tipo' value='1'>
                   <center><button class='btn waves-effect waves-light indigo darken-3' type='submit' style='top: -25px;'>Enviar<i class='material-icons right'>send</i></button></center>
                   </form>";
-                $consultaComentarios = mysqli_query($conexion,"SELECT nombreUsuario,apPaternoUsuario,apMaternoUsuario,comentario,foto,tipoUsuario FROM PuntuacionesComentarios LEFT JOIN Usuarios USING(idUsuario) WHERE idFoto = $idFoto AND puntuacion IS NULL ORDER BY idFoto DESC");
+                $consultaComentarios = mysqli_query($conexion,"SELECT nombreUsuario,apPaternoUsuario,apMaternoUsuario,comentario, fechaComentario, foto,tipoUsuario FROM PuntuacionesComentarios LEFT JOIN Usuarios USING(idUsuario) WHERE idFoto = $idFoto AND puntuacion IS NULL ORDER BY idFoto DESC");
                 $numeroFilasComentarios = mysqli_num_rows($consultaComentarios);
                 $contenidoUsuario .= "<h5>Comentarios</h5><div class='cajaComentarios'>";
                 if($numeroFilasComentarios > 0)
@@ -171,7 +171,7 @@
                         $fotoPerfil = "images/perfil/".$row['foto'];
                     }
                     $contenidoUsuario .= "<img class='ajusteImagenComentarios' src='".$fotoPerfil."'><p class='tituloNombreUsuario2'>".$row['nombreUsuario']." ".$row['apPaternoUsuario']." ".$row['apMaternoUsuario']."</p>";
-                    $contenidoUsuario .= "<p class='comentarios' style='top:-15px;'>".$row['comentario']."</p>";
+                    $contenidoUsuario .= "<p style='opacity: 0.8; position:relative;top:-15px;'>".$row['fechaComentario']."</p><p class='comentarios' style='top:-15px;'>".$row['comentario']."</p>";
                   }
                 }
                 else
@@ -202,7 +202,7 @@
     }
     //Sección Álbumes
     $consultaObtenerVisitas = mysqli_query($conexion,"SELECT COUNT(Visitas.idAlbum) as 'visitas' FROM Albumes LEFT JOIN Visitas USING (idAlbum) WHERE idUsuario = $idUsuario GROUP BY idAlbum ORDER BY idAlbum DESC");
-    $consultaAlbumes = mysqli_query($conexion,"SELECT idAlbum, titulo, fechaAlbum, tipoAlbum, nombreTema, COUNT(idfoto) AS 'cuantasFotos' FROM Albumes LEFT JOIN Temas USING(idTema) LEFT JOIN Fotos USING(idAlbum) WHERE idUsuario = $idUsuario GROUP BY idAlbum ORDER BY idAlbum DESC");
+    $consultaAlbumes = mysqli_query($conexion,"SELECT idAlbum, titulo, fechaAlbum, tipoAlbum, nombreTema, COUNT(DISTINCT idfoto) AS 'cuantasFotos' FROM Albumes a LEFT JOIN Temas USING(idTema) LEFT JOIN Fotos USING(idAlbum) LEFT JOIN PuntuacionesComentarios USING(idFoto)  WHERE a.idUsuario = $idUsuario GROUP BY idAlbum ORDER BY idAlbum DESC");
     $numerofilas = mysqli_num_rows($consultaAlbumes);
     if ($numerofilas > 0)
     {
@@ -226,7 +226,7 @@
           <td>".$row['tipoAlbum']."</td>
           <td>".$row['nombreTema']."</td>
           <td>".$row['cuantasFotos']."</td>
-          <td><a href='verFotos.php?id=".$row['idAlbum']."'>Ver el álbum</a></td>
+          <td><a href='verFotos.php?id=".$row['idAlbum']."'>Administrar álbum</a></td>
           <td><a href='modificarAlbumes.php?id=".$row['idAlbum']."'>Modificar información</a></td>
           <td><a href='#' onclick='eliminarAlbum(".$row['idAlbum'].")'>Eliminar</a></td>
           <td><a href='#' onclick='compartirAlbum(".$row['idAlbum'].",".$idUsuario.")'>Compartir</a></td>
@@ -237,6 +237,32 @@
     else
     {
       $tablaAlbumesUsuario.= "<h4 class='center-align'>No ha creado álbumes</h4>";
+    }
+    //Mejores puntuados
+    $consultaAlbumesPuntuados = mysqli_query($conexion,"SELECT idAlbum, titulo, fechaAlbum, ROUND(AVG(puntuacion),2) AS 'promedioPuntuacion' FROM Albumes a LEFT JOIN Fotos USING(idAlbum) LEFT JOIN PuntuacionesComentarios USING(idFoto)  WHERE a.idUsuario = $idUsuario GROUP BY idAlbum HAVING promedioPuntuacion IS NOT NULL ORDER BY promedioPuntuacion DESC");
+    $numerofilas = mysqli_num_rows($consultaAlbumesPuntuados);
+    if ($numerofilas > 0)
+    {
+      $tablaAlbumesPuntuados = "<table class='responsive-table highlight centered'>
+        <thead>
+          <th>Título</th>
+          <th>Puntuacion</th>
+          <th></th>
+        </thead>
+        <tbody>";
+        while ($row = mysqli_fetch_assoc($consultaAlbumesPuntuados))
+        {
+          $tablaAlbumesPuntuados.= "<tr>
+          <td>".$row['titulo']."</td>
+          <td>".$row['promedioPuntuacion']."</td>
+          <td><a href='verAlbumes.php?id=".$row['idAlbum']."'>Ver el álbum</a></td>
+          </tr>";
+      }
+      $tablaAlbumesPuntuados.= "</tbody></table>";
+    }
+    else
+    {
+      $tablaAlbumesPuntuados.= "<h4 class='center-align'>No hay puntuaciones</h4>";
     }
     //Suscripciones
     $consultaSuscripciones = mysqli_query($conexion,"SELECT nombreUsuario,apPaternoUsuario, apMaternoUsuario,idAlbum, titulo, fechaAlbum, tipoAlbum FROM Albumes a LEFT JOIN Usuarios USING(idUsuario) INNER JOIN Suscripciones s USING(idAlbum) WHERE s.idUsuario = $idUsuario AND a.idUsuario != $idUsuario GROUP BY idAlbum");
@@ -337,6 +363,7 @@
     $template->setCurrentBlock('ALBUMES');
     $template->setVariable("IDUSUARIO",$idUsuario);
     $template->setVariable("CONTENIDO_ALBUM",$tablaAlbumesUsuario);
+    $template->setVariable("CONTENIDO_MEJOR_PUNTUADOS",$tablaAlbumesPuntuados);
     $template->setVariable("CONTENIDO_SUSCRIPCIONES",$tablaSuscripcionesUsuario);
     $template->parseCurrentBlock("ALBUMES");
     $template->addBlockfile("CONTENIDO_NOTIFICACIONES", "NOTIFICACIONES", "notificaciones.html");
