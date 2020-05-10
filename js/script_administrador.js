@@ -1,8 +1,8 @@
 $(document).ready(function(e)
 {
-  $(".button-collapse").sideNav();
-  $('.materialboxed').materialbox();
-  $('ul.tabs').tabs();
+  $(".button-collapse").sideNav(); // Habilita barra lateral del admin
+  $('.materialboxed').materialbox(); // Habilita el,efecto de zoom a las fotos
+  $('ul.tabs').tabs(); // Habilita los elementos tabs
   $("select").material_select(); // Inicializa el select
   $("select[required]").css({display: "block", height: 0, padding: 0, width: 0, position: 'absolute'}); // Muestra en pantalla un mensaje de que el campo del select está vacío.
   $('.datepicker').pickadate( // Inicializa el calendario datepicker de materialize
@@ -31,11 +31,14 @@ $(document).ready(function(e)
     e.preventDefault(); // Arreglo falla datepicker materialize
   });
   // $(".tabs-content").css('height','1000px'); // Ajusta los divs de los tabs del módulo administración
+
+  //Se deshabilitan apartados del admin, sólo mostrará el inicio
   $("#admin").hide();
   $("#registro").hide();
   $("#busqueda").hide();
   $("#analisis").hide();
 
+   // Dependiendo que herramienta quiera utilizar se esconden los demás apartados
   $("#select_inicio").click(function()
   {
     $("#inicio_contenido").show();
@@ -77,6 +80,7 @@ $(document).ready(function(e)
     $("#busqueda").hide();
     $("#analisis").show();
   });
+  //Busca los álbumes más visitados en un mes
   function Albumes_Mes(mes,anio)
   {
     let param = "mesAlbum="+mes+"&anioAlbum="+anio;
@@ -104,18 +108,18 @@ $(document).ready(function(e)
           }
       });
   }
-
+  //Cuando se selecciona un mes en el select, se dispara la función
   $("#albumMes").on('change', function(){
-      let mes = $(this).val();
+      let mes = $(this).val(); // Obtiene el valor del mes.
       let anio;
-      if (mes != "")
+      if (mes != "") // Verifica que no esté vacía
       {
-        anio = $("#albumAnio").val();
-        if(anio != "")
+        anio = $("#albumAnio").val(); //Obtiene el año del input text.
+        if(anio != "") // Si ingreso un año procede a buscar el álbum.
         {
           Albumes_Mes(mes,anio);
         }
-        else
+        else // Manda mensaje de error
         {
           swal( // Se inicializa sweetalert2
           {
@@ -128,6 +132,7 @@ $(document).ready(function(e)
         }
       }
   });
+  // Devuelve álbumes creados entre el rango de fechas determinado por el usuario
   function Rango_Fechas(fecha1, fecha2)
   {
     let param = "fecha1="+fecha1+"&fecha2="+fecha2;
@@ -155,14 +160,15 @@ $(document).ready(function(e)
           }
       });
   }
+  // Al darle click a buscar álbumes de tal rango de fechas se dispara el evento
   $("#busquedaFechas").on('click', function(){
       let fecha1 = $("#fecha1").val();
       let fecha2 = $("#fecha2").val();
-      if(fecha1 != "" && fecha2 != "")
+      if(fecha1 != "" && fecha2 != "") // Valida que la dos entradas tengan una fecha para buscar posteriormente
       {
         Rango_Fechas(fecha1,fecha2);
       }
-      else
+      else // Si no manda mensaje de error.
       {
         swal( // Se inicializa sweetalert2
         {
@@ -175,9 +181,11 @@ $(document).ready(function(e)
       }
 
   });
+  // Ejecuta funciones para mostrar todos los datos de usuarios, fotos y álbumes, antes de buscar.
   $(Buscar_Datos());
   $(Buscar_Fotos());
   $(Buscar_Albumes());
+  // Busca usuarios por diferentes filtros
   function Buscar_Datos(Consulta)
   {
       $.ajax(
@@ -203,6 +211,7 @@ $(document).ready(function(e)
           }
       });
   }
+  // Busca fotos a autorizar por diferentes filtros
   function Buscar_Fotos(Consulta)
   {
       $.ajax(
@@ -228,6 +237,7 @@ $(document).ready(function(e)
           }
       });
   }
+  // Busca álbumes por diferentes filtros
   function Buscar_Albumes(Consulta)
   {
       $.ajax(
@@ -253,7 +263,7 @@ $(document).ready(function(e)
           }
       });
   }
-
+ // Busca usuarios por diferentes filtros al escribir en el input text
   $("#buscar").on('keyup', function(){
       var Valor = $(this).val();
       if (Valor != "")
@@ -261,6 +271,7 @@ $(document).ready(function(e)
       else
           Buscar_Datos();
   });
+   // Busca fotos por diferentes filtros al escribir en el input text
   $("#buscarfotos").on('keyup', function(){
       var Valor = $(this).val();
       if (Valor != "")
@@ -268,6 +279,7 @@ $(document).ready(function(e)
       else
           Buscar_Fotos();
   });
+   // Busca álbumes por diferentes filtros al escribir en el input text
   $("#buscaralbumes").on('keyup', function(){
       var Valor = $(this).val();
       if (Valor != "")
@@ -276,12 +288,13 @@ $(document).ready(function(e)
           Buscar_Albumes();
   });
 
+   // Ejecuta función cuando se registre un administrador
   $("#formAdmins").on('submit', function(e)
   {
     e.preventDefault();
     let nombreFoto, flag = 0;
-    nombreFoto = $("#rutaFotoPerfilRegistro").val();
-    if(nombreFoto != '')
+    nombreFoto = $("#rutaFotoPerfilRegistro").val(); // Obtiene el valor de la cadena de la foto
+    if(nombreFoto != '') // Si existe la imagen, valida
     {
       if (!(/\.(jpg|jpeg|png|gif|bmp|tiff|raw|JPG|PNG)$/i).test(nombreFoto)) // si el archivo no tiene estas extensiones
           flag = 1;
@@ -297,7 +310,7 @@ $(document).ready(function(e)
         confirmButtonText: 'Ok!'
       });
     }
-    else
+    else // Ejecuta script php para registrarlo
     {
       $.ajax(
       {
@@ -361,12 +374,13 @@ $(document).ready(function(e)
       });
     }
   });
+  // Si se quiere actualizar la información de algún usuario
   $("#form-update").on('submit', function(e)
   {
     e.preventDefault();
     let nombreFoto, flag = 0;
     nombreFoto = $("#rutaFotoPerfilRegistro").val();
-    if(nombreFoto != '')
+    if(nombreFoto != '') //Verifica extensión de la imagen
     {
       if (!(/\.(jpg|jpeg|png|gif|bmp|tiff|raw|JPG|PNG)$/i).test(nombreFoto)) // si el archivo no tiene estas extensiones
           flag = 1;
@@ -382,7 +396,7 @@ $(document).ready(function(e)
         confirmButtonText: 'Ok!'
       });
     }
-    else
+    else // Se procede a actualizar información
     {
       $.ajax(
       {

@@ -1,10 +1,10 @@
 $(document).ready(function(e)
 {
-  $('ul.tabs').tabs();
-  $("#verHistorialBusqueda").hide();
-  $("#modificarperfil").hide();
-  $("#crearAlbum").hide();
-  $("#formSubirFoto").hide();
+  $('ul.tabs').tabs(); // Habilita las tabs.
+  $("#verHistorialBusqueda").hide(); //Oculta el historial de búsqueda
+  $("#modificarperfil").hide(); //Oculta modificar perfil
+  $("#crearAlbum").hide(); // Oculta la forma del álbum
+  $("#formSubirFoto").hide(); // Oculta la forma de subir foto.
   $("select").material_select(); // Inicializa el select
   $("select[required]").css({display: "block", height: 0, padding: 0, width: 0, position: 'absolute'}); // Muestra en pantalla un mensaje de que el campo del select está vacío.
   $('.datepicker').pickadate( // Inicializa el calendario datepicker de materialize
@@ -34,7 +34,7 @@ $(document).ready(function(e)
   {
     e.preventDefault(); // Arreglo falla datepicker materialize
   });
-  // Mandamos una petición asíncrona mediante método POST al servidor
+  // Mandamos una petición asíncrona mediante método POST al servidor, para obtener temas de los álbumes y ponerlos en el select
 		$.post('obtenerTemas.php',function(data)
 		{
 				for (var i = 0; i < data.length ; i++)
@@ -47,7 +47,7 @@ $(document).ready(function(e)
 					 $('#temaCrearAlbum').material_select();
 				}
 		}, 'json');
-
+  // Dependiendo a que botón se dé click ocultará o mostrar determinados elementos
   $("#mostrar_modificar").click(function()
   {
     $("#modificarperfil").show();
@@ -92,6 +92,7 @@ $(document).ready(function(e)
     $("#mostrarFotos").show();
     $("#formSubirFoto").hide();
   });
+  //Regresa al admin cuando está en el modo de visualización
   $("#regresarAdmin").click(function()
   {
     location.href="../administrador/index.php";
@@ -149,7 +150,7 @@ $(document).ready(function(e)
       }
     });
   });
-
+  //Cuando se quiere actualizar información del usuario se dispara el evento para modificar los datos.
   $("#form-update").on('submit', function(e)
   {
     e.preventDefault();
@@ -373,26 +374,26 @@ $(document).ready(function(e)
       }
     });
   });
-
+  //Cuando se sale del elemento de búsqueda, deja vacío el input y ejecuta animación de deslizar hacia arriba
   $("#inputBusqueda").change(function(){
     $("#inputBusqueda").val(" ");
     $("#search").slideUp(700);
   });
-  var consulta = $("#searchTable").DataTable();
+  var consulta = $("#searchTable").DataTable(); // Ejecuta el método DataTable() para realizar la búsqueda de los álbumes
 
   $("#inputBusqueda").keyup(function(){
-    consulta.search($(this).val()).draw();
+    consulta.search($(this).val()).draw(); // dibuja un recuadro en blanco con el texto los álbumes según lo escrito en el input de búsqueda
 
-    if ($("#inputBusqueda").val() == ""){
+    if ($("#inputBusqueda").val() == ""){ // Si no hay nada en el input, no muestra ningun álbum
       $("search").css({
         "height": "auto",
         "background": "none",
       })
 
-      $("#search").hide();
+      $("#search").hide(); //Oculta el input search
 
     } else {
-      $("#search").fadeIn("fast");
+      $("#search").fadeIn("fast"); // efectos de búsqueda
     }
   });
 });
@@ -525,6 +526,7 @@ function eliminarAlbum(idAlbum)
 		}
 	});
 }
+// Cambiar el estado de la notificación de no leída a leída
 function cambiarNotificacion(idNotificacionLeida)
 {
 	let param = "idNotificacionLeida="+idNotificacionLeida;
@@ -663,6 +665,7 @@ function eliminarNotificacion(idNotificacionLeida)
 		}
 	});
 }
+//Cuando un usuario quiere compartir / suscribir a otro usuario se ejecuta está función que procede a registrarlo como suscripción si cumple con ciertas normas básicas.
 function compartirAlbum(idAlbum,idUsuario)
 {
 
@@ -673,16 +676,16 @@ function compartirAlbum(idAlbum,idUsuario)
   confirmButtonColor: '#3085d6',
   confirmButtonText: '¡Compartir!',
   title: 'Ingresa correo electrónico',
-  html:"<input id='correoCompartir' class='swal2-input'>",
+  html:"<input id='correoCompartir' class='swal2-input'>", //prompt con un input para ingresar el usuario
   preConfirm: function () {
     return new Promise(function (resolve) {
       resolve([
-        $('#correoCompartir').val()
+        $('#correoCompartir').val() // Obtiene la cadena del correo
       ])
     })
   }
 }).then(function (result) {
-  let correoUsuario = result.toString();
+  let correoUsuario = result.toString(); // Asigna variable con el nombre del correo, ya que el formato de respuesta es un json lo convierte a cadena
   let param = "idAlbum="+idAlbum+"&idUsuario="+idUsuario+"&correoUsuario="+correoUsuario;
   $.ajax(
 	{
@@ -723,10 +726,12 @@ function compartirAlbum(idAlbum,idUsuario)
 	});
 }).catch(swal.noop)
 }
+// Cuando un visitante quiera regresar a la página principal, lo redigirá a registro_usuarios.html para invitarlo a que se registre
 function regresarLogin()
 {
   location.href = '../registro_usuarios.html';
 }
+//Borra el historial de busqueda del usuario logeado.
 function borrarHistorial(idUsuario)
 {
   let param = "idUsuario="+idUsuario;
@@ -795,6 +800,7 @@ function borrarHistorial(idUsuario)
 		}
 	});
 }
+// Procede a eliminar suscripción
 function eliminarSuscripcion(idAlbum)
 {
   let param = "album="+idAlbum;
@@ -863,7 +869,8 @@ function eliminarSuscripcion(idAlbum)
 		}
 	});
 }
+// Cuando esté en algún álbum de su propiedad, habrá un botón que lo redirigirá para ver su álbum completo
 function verAlbum(idAlbum)
 {
-  location.href = "verAlbumes.php?id="+idAlbum+"tipo=0";
+  location.href = "verAlbumes.php?id="+idAlbum+"tipo=0"; // Tipo 0 indica que no se registrará en su historial de búsqueda
 }

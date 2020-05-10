@@ -10,14 +10,14 @@
   {
     $idUsuario = intval($_SESSION['idUsuario']);
     $tipoUsuario = intval($_SESSION['tipoUsuario']);
-    if($tipoUsuario == 1)
+    if($tipoUsuario == 1) // Si usuario es admin se le mostrará un botón para regresarlo a su apartado y le despliega todos los álbumes que hay en el sistema
     {
       $boton = "<button class='btn waves-effect waves-light indigo darken-1 right' id='regresarAdmin'>Regresar admin<i class='material-icons left'>arrow_back</i></button>";
       $queryBusqueda = "SELECT idAlbum,titulo FROM Albumes";
       $queryFeed = "SELECT idFoto, idAlbum, titulo, nombreTema, rutaFoto,nombreUsuario,apPaternoUsuario,apMaternoUsuario,foto FROM Albumes INNER JOIN Temas USING(idTema) INNER JOIN Fotos USING(idAlbum) INNER JOIN Usuarios USING(idUsuario) WHERE idUsuario != $idUsuario AND autorizada = 1 ORDER BY idFoto DESC";
       $queryPuntuacion = "SELECT idFoto FROM Albumes INNER JOIN Temas USING(idTema) INNER JOIN Fotos USING(idAlbum) INNER JOIN Usuarios USING(idUsuario) WHERE idUsuario != $idUsuario AND autorizada = 1 ORDER BY idFoto DESC";
     }
-    else
+    else // Si es usuario le presenta sólo los álbumes públicos y a los que esté suscritos cuando estos sean privados
     {
       $queryBusqueda = "SELECT DISTINCT idAlbum,titulo FROM Albumes LEFT JOIN Usuarios USING(idUsuario) LEFT JOIN Suscripciones USING(idAlbum) WHERE tipoAlbum = 'Publico' OR (tipoAlbum = 'Privado' AND Suscripciones.idUsuario = $idUsuario)";
       $queryFeed = "SELECT idFoto, Albumes.idAlbum AS 'idAlbum', titulo, nombreTema, rutaFoto, nombreUsuario, apPaternoUsuario, apMaternoUsuario, foto FROM Albumes INNER JOIN Temas USING(idTema) LEFT JOIN Fotos USING(idAlbum) LEFT JOIN Usuarios USING(idUsuario) LEFT JOIN Suscripciones USING(idAlbum) WHERE ((tipoAlbum = 'Publico') OR (tipoAlbum = 'Privado' AND Suscripciones.idUsuario = $idUsuario)) AND (Albumes.idUsuario != $idUsuario AND autorizada = 1) GROUP BY idFoto ORDER BY idFoto DESC";
@@ -29,13 +29,13 @@
     $tituloAlbumes = "";
     if ($numerofilas > 0)
     {
-      while ($row = mysqli_fetch_array($consultaTituloAlbumes))
+      while ($row = mysqli_fetch_array($consultaTituloAlbumes)) // Rellena contenido de todos los álbumes que puede ver el usuario
       {
         $tituloAlbumes .= "<tr><td><a href='verAlbumes.php?id=".$row['idAlbum']."&tipo=1'>".$row['titulo']."</a></td></tr>";
       }
       mysqli_free_result($consultaTituloAlbumes);
     }
-    else
+    else // Si no hay ningún álbum por ver, se despliega esto en la búsqueda
     {
       $tituloAlbumes .= "<tr>No hay resultados</tr>";
     }
@@ -47,7 +47,7 @@
     $numerofilas = mysqli_num_rows($consultaFeed);
     if ($numerofilas > 0)
     {
-      $i = 0;
+      $i = 0; // Crea inputs únicos para distingir una foto de otra
       $contenidoUsuario = "<div class='row'>";
 
         while ($row = mysqli_fetch_assoc($consultaFeed) AND $row2 = mysqli_fetch_assoc($consultaPuntuacionFoto))
@@ -59,17 +59,17 @@
           {
             $rowPuntuacion = mysqli_fetch_assoc($consultaPuntuacion);
           }
-          if($row['foto'] == NULL)
+          if($row['foto'] == NULL) // Valida si el autor de la foto no tiene foto de perfil le pone una por defecto
           {
             $fotoPerfil = "../images/avatar.png";
           }
-          else
+          else // si tiene foto la busca.
           {
             $fotoPerfil = "images/perfil/".$row['foto'];
           }
           if($row2['puntuacionPromedio'] == NULL)
           {
-            $rating = 0;
+            $rating = 0; // Si no hya rating la deja en 0
           }
           else
           {
@@ -91,6 +91,7 @@
             <div class='card-content'><p class='center-align' style='position:relative;top:-20px;'>Rating: ".$rating."</p>
               <form action='enviarComentario.php' method='POST'>
                 <div class='star-rating center-align'>";
+                // Si ya hiciste una puntuación a determinada foto, aparecerá valorada con el debido puntaje.
                 if($numeroFilasPuntuacion == 1 AND $rowPuntuacion['puntuacion'] == 5.0)
                   $contenidoUsuario .= "<input id='star-".$i."' type='radio' name='rating' value='5' checked>";
                 else
@@ -154,20 +155,20 @@
                   </form>";
                 $consultaComentarios = mysqli_query($conexion,"SELECT nombreUsuario,apPaternoUsuario,apMaternoUsuario,comentario, fechaComentario, foto,tipoUsuario FROM PuntuacionesComentarios LEFT JOIN Usuarios USING(idUsuario) WHERE idFoto = $idFoto AND puntuacion IS NULL ORDER BY idFoto DESC");
                 $numeroFilasComentarios = mysqli_num_rows($consultaComentarios);
-                $contenidoUsuario .= "<h5>Comentarios</h5><div class='cajaComentarios'>";
+                $contenidoUsuario .= "<h5>Comentarios</h5><div class='cajaComentarios'>"; // caja de comentarios, se muestran los comentarios, con el usuario, su foto y fecha del comentario
                 if($numeroFilasComentarios > 0)
                 {
                   while($row = mysqli_fetch_assoc($consultaComentarios))
                   {
-                    if($row['foto'] == NULL)
+                    if($row['foto'] == NULL) // Si no tiene foto de perfil le ponemos una por default
                     {
                       $fotoPerfil = "../images/avatar.png";
                     }
                     else
                     {
-                      if($row['tipoUsuario'] == 1)
+                      if($row['tipoUsuario'] == 1)  // Si es admin, se busca en un directorio
                         $fotoPerfil = "../administrador/images/perfil/".$row['foto'];
-                      else
+                      else // Si es usuario se busca en otro directorio
                         $fotoPerfil = "images/perfil/".$row['foto'];
                     }
                     $contenidoUsuario .= "<img class='ajusteImagenComentarios' src='".$fotoPerfil."'><p class='tituloNombreUsuario2'>".$row['nombreUsuario']." ".$row['apPaternoUsuario']." ".$row['apMaternoUsuario']."</p>";
@@ -389,7 +390,7 @@
     mysqli_free_result($consultaFeed);
 
   }
-  else
+  else // Si el usuario es visitante, solo podrá ver la sección de Inicio (Feed) para ver fotos de álbumes públicos, no padrá ver, ni hacer comentarios, ni realizar puntuaciones.
   {
     $template->setVariable("TABS_DE_SELECCION", "");
     $template->setVariable("CONTENIDO_ALBUMES", "");

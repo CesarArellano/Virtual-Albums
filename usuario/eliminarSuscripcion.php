@@ -2,9 +2,10 @@
   include '../config.php';
   header('Content-type: application/json; charset=utf-8'); // Se especifica el tipo de contenido a regresar, codificado en utf-8
   $conexion = Conectar();
+  //Obtiene los valores por método POST y se convierten a valores enteros.
   $idUsuario = intval($_SESSION['idUsuario']);
-  $idAlbum= $_POST['album'];
-
+  $idAlbum= intval($_POST['album']);
+  // Se procede a eliminar la suscripciones a álbumes ajenos
   $consulta = mysqli_query($conexion,"DELETE FROM Suscripciones WHERE idAlbum = $idAlbum AND idUsuario = $idUsuario");
   if ($consulta)
   {

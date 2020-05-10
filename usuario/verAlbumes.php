@@ -18,32 +18,36 @@
     if($existe > 0)
     {
       $rowAlbum = mysqli_fetch_assoc($consultaExisteAlbum);
-      if($notificar == 1)
+      if($notificar == 1) // Cuando se entró a la página por el buscador se procede a insertar al historial de búsqueda del usuario
       {
         $mensaje = "Buscó el álbum: ".$rowAlbum['titulo'];
         $historialBusqueda = mysqli_query($conexion,"INSERT INTO HistorialBusqueda (idUsuario,busqueda) VALUES($idUsuario,'$mensaje')");
       }
+      //Muestra las fotos que estén autorizadas
       $queryFotos = "SELECT idFoto FROM Fotos WHERE idAlbum = $idAlbum AND autorizada = 1 ORDER BY idFoto DESC";
+      // Registra visita del usuario
       $consultaInsertarVisitas = mysqli_query($conexion,"INSERT INTO Visitas(fechaVisita,idAlbum) VALUES(CURDATE(),$idAlbum)");
+      // Obtiene las visitas del álbum para luego desplegarlas en la página
       $consultaObtenerVisitas = mysqli_query($conexion,"SELECT COUNT(Visitas.idAlbum) as 'visitas' FROM Albumes LEFT JOIN Visitas USING (idAlbum) WHERE idAlbum = $idAlbum");
       $visitasPorAlbum = mysqli_fetch_assoc($consultaObtenerVisitas);
+      //Obtiene el rating de la foto
       $consultaPuntuacionFoto = mysqli_query($conexion,"SELECT ROUND(AVG(puntuacion),2) as 'puntuacionPromedio' FROM Fotos LEFT JOIN PuntuacionesComentarios USING (idFoto) WHERE idFoto IN ($queryFotos) GROUP BY idFoto ORDER BY idFoto DESC");
       $consultaFotos = mysqli_query($conexion,"SELECT * FROM Fotos WHERE idAlbum = $idAlbum AND autorizada = 1 ORDER BY idFoto DESC");
       $numerofilas = mysqli_num_rows($consultaFotos);
       if ($numerofilas > 0)
       {
-        $i = 1;
+        $i = 1; // Crea inputs únicos para que se pueda comentar y puntuar correctamente
         $tablaFotosAlbum = "<div class='row'>";
-        while($rowFotos = mysqli_fetch_assoc($consultaFotos) AND $row2 = mysqli_fetch_assoc($consultaPuntuacionFoto))
+        while($rowFotos = mysqli_fetch_assoc($consultaFotos) AND $row2 = mysqli_fetch_assoc($consultaPuntuacionFoto)) // Se procede a rellenar con las fotos del álbum
         {
-          $idFoto = intval($rowFotos['idFoto']);
+          $idFoto = intval($rowFotos['idFoto']); // Se obtiene el id de la foto para buscar su puntaje que hizo el usuario y mostrar en estrellas
           $consultaPuntuacion = mysqli_query($conexion,"SELECT puntuacion FROM PuntuacionesComentarios LEFT JOIN Usuarios USING(idUsuario) WHERE idUsuario = $idUsuario AND idFoto = $idFoto AND puntuacion IS NOT NULL");
           $numeroFilasPuntuacion = mysqli_num_rows($consultaPuntuacion);
           if($numeroFilasPuntuacion == 1)
           {
             $rowPuntuacion = mysqli_fetch_assoc($consultaPuntuacion);
           }
-          if($row2['puntuacionPromedio'] == NULL)
+          if($row2['puntuacionPromedio'] == NULL) // Si no hay puntaje se setea con 0 el valor
           {
             $rating = 0;
           }
@@ -55,6 +59,7 @@
           <div class='card-content'><p class='center-align' style='position:relative;top:-12px; font-size:15px'>Rating: ".$rating."</p>
           <form action='enviarComentario.php' method='POST'>
             <div class='star-rating center-align'>";
+          //Si se hizo un puntaje previo se muestra al usuario en forma de estrellas
           if($numeroFilasPuntuacion == 1 AND $rowPuntuacion['puntuacion'] == 5.0)
             $tablaFotosAlbum .= "<input id='star-".$i."' type='radio' name='rating' value='5' checked>";
           else
@@ -118,20 +123,20 @@
             </form>";
             $consultaComentarios = mysqli_query($conexion,"SELECT nombreUsuario,apPaternoUsuario,apMaternoUsuario,comentario, fechaComentario, foto,tipoUsuario FROM PuntuacionesComentarios LEFT JOIN Usuarios USING(idUsuario) WHERE idFoto = $idFoto AND puntuacion IS NULL ORDER BY idFoto DESC");
             $numeroFilasComentarios = mysqli_num_rows($consultaComentarios);
-            $tablaFotosAlbum .= "<h5>Comentarios</h5><div class='cajaComentarios'>";
+            $tablaFotosAlbum .= "<h5>Comentarios</h5><div class='cajaComentarios'>"; // caja de comentarios, se muestran los comentarios, con el usuario, su foto y fecha del comentario
             if($numeroFilasComentarios > 0)
             {
               while($row = mysqli_fetch_assoc($consultaComentarios))
               {
-                if($row['foto'] == NULL)
+                if($row['foto'] == NULL) // Si no tiene foto de perfil le ponemos una por default
                 {
                   $fotoPerfil = "../images/avatar.png";
                 }
                 else
                 {
-                  if($row['tipoUsuario'] == 1)
+                  if($row['tipoUsuario'] == 1) // Si es admin, se busca en un directorio
                     $fotoPerfil = "../administrador/images/perfil/".$row['foto'];
-                  else
+                  else // Si es usuario se busca en otro directorio
                     $fotoPerfil = "images/perfil/".$row['foto'];
                 }
                 $tablaFotosAlbum .= "<img class='ajusteImagenComentarios' src='".$fotoPerfil."'><p class='tituloNombreUsuario2'>".$row['nombreUsuario']." ".$row['apPaternoUsuario']." ".$row['apMaternoUsuario']."</p>";
@@ -159,7 +164,7 @@
         $tablaFotosAlbum .= "<br><h4 class='center-align'>No existe el álbum</h4>";
     }
   }
-  else
+  else // Si es visitante le dará acceso a ver las fotos del álbum público, pero no podrá puntuar, ni comentar
   {
     $consultaObtenerVisitas = mysqli_query($conexion,"SELECT titulo FROM Albumes WHERE idAlbum = $idAlbum");
     $existe = mysqli_num_rows($consultaObtenerVisitas);

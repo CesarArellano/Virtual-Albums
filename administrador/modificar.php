@@ -4,10 +4,10 @@
   $conexion = Conectar();
   if (!isset($_SESSION['tipoUsuario']))
 		header('location: ../index.php');
-  $idUsuario = htmlentities($_GET['id']);
+  $idUsuario = htmlentities($_GET['id']); // Se obtiene el id del usuario a modificar su información
   $consulta = mysqli_query($conexion,"SELECT tipoUsuario FROM Usuarios WHERE idUsuario = $idUsuario");
   $row = mysqli_fetch_assoc($consulta);
-  $tipoUsuarioRegistro = $row['tipoUsuario'];
+  $tipoUsuarioRegistro = $row['tipoUsuario']; //Obtiene tipo de usuario de acuerdo al id recibido
   $template = new HTML_Template_ITX('./templates');
   $template->loadTemplatefile("modificar.html", true, true);
   $template->setVariable("TITULO", "Virtual Albums");

@@ -1,8 +1,10 @@
 <?php
-  include 'config.php';
+  include 'config.php'; // Se manda a llamar el archivo de configuración de la BD
   header('Content-type: application/json; charset=utf-8'); // Se especifica el tipo de contenido a regresar, codificado en utf-8
+  //Se conecta a la BD
   $conexion = Conectar();
-  $nombreRegistro = $_POST['nombreRegistro']; //Guardamos todas las variables que nos llegaron por medio de POST
+  //Guardamos todas las variables que nos llegaron por medio de POST
+  $nombreRegistro = $_POST['nombreRegistro'];
   $apPaternoRegistro = $_POST['apPaternoRegistro'];
   $apMaternoRegistro = $_POST['apMaternoRegistro'];
   $correoRegistro = $_POST['correoRegistro'];
@@ -12,6 +14,11 @@
   $escolaridadRegistro = $_POST['escolaridadRegistro'];
   $direccionRegistro = $_POST['direccionRegistro'];
   $fechaNacimientoRegistro = $_POST['fechaNacimientoRegistro'];
+
+  if(count(explode("'",$correoRegistro))>1 || count(explode('"',$correoRegistro))>1) // Se sanitiza la variable correo
+  {    //Se manda json de error.
+		echo json_encode(array('mensaje' => "Error, no se pudo procesar su información, intente de nuevo.", 'pagina' => "registro",'alerta' => "error"));
+	}
 
   if($tipoUsuarioRegistro == 1)
   {
@@ -31,7 +38,7 @@
   }
   else
   {
-    if ($rutaFotoPerfilRegistro != '')
+    if ($rutaFotoPerfilRegistro != '') // Si se quiere subir foto de perfil
     {
       $segundos = time(); // Devuelve el momento actual medido como el número de segundos desde la época unix (1 de Enero de 1970 00:00:00 GMT).
       $nombreArchivo = $_FILES['rutaFotoPerfilRegistro']['name']; //Extraemos el nombre completo del archivo subido
@@ -49,7 +56,7 @@
         echo json_encode(array('mensaje' => "Error, no se pudo subir imagen, intente de nuevo", 'pagina' => "registro",'alerta' => "error"));
       }
     }
-    else
+    else // Si no quiere subir foto de perfil.
     {
       $query = mysqli_query($conexion,"INSERT INTO Usuarios (nombreUsuario, apPaternoUsuario, apMaternoUsuario, escolaridad, direccion, nacimiento, correo, password, tipoUsuario) VALUES('$nombreRegistro', '$apPaternoRegistro', '$apMaternoRegistro', '$escolaridadRegistro', '$direccionRegistro', '$fechaNacimientoRegistro', '$correoRegistro', '$passwordRegistro', $tipoUsuarioRegistro)");
     }
@@ -62,5 +69,6 @@
       echo json_encode(array('mensaje' => "Error, no se pudo procesar su información, intente de nuevo.", 'pagina' => "registro",'alerta' => "error"));
     }
   }
+  mysqli_free_result($query);
   Desconectar($conexion);
 ?>

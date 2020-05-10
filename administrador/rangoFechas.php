@@ -1,8 +1,8 @@
 <?php
   include_once "../config.php";
   $conexion = Conectar();
-  $fecha1 = $_POST['fecha1'];
-  $fecha2 = $_POST['fecha2'];
+  $fecha1 = $_POST['fecha1']; // Obtiene fecha 1 por método POST
+  $fecha2 = $_POST['fecha2']; // Obtiene fecha 2 por método POST
 
   $consultaAlbumes = mysqli_query($conexion, "SELECT idAlbum,titulo,nombretema, u.idUsuario AS 'idPropietario', nombreUsuario, fechaAlbum, AVG(puntuacion) AS 'promedioPuntuacion' FROM Albumes a LEFT JOIN Usuarios u USING(idUsuario) LEFT JOIN Fotos USING(idAlbum) LEFT JOIN Temas t ON a.idTema = t.idTema LEFT JOIN PuntuacionesComentarios USING(idFoto) WHERE fechaAlbum BETWEEN '$fecha1' AND '$fecha2' GROUP BY idAlbum"); //Query que busca los álbumes mejor puntuados
   $numeroFilasEncontradas = mysqli_num_rows($consultaAlbumes);
@@ -19,7 +19,7 @@
      <th>Información</th>
     </thead>
     <tbody>";
-    while ($row = mysqli_fetch_assoc($consultaAlbumes))
+    while ($row = mysqli_fetch_assoc($consultaAlbumes)) // Rellena tabla en dado caso que hayan resultados
     {
       if($row['promedioPuntuacion'] == NULL)
       {

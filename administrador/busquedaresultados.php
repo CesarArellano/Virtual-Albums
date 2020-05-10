@@ -5,12 +5,12 @@
   $query = "SELECT idUsuario, nombreUsuario, apPaternoUsuario, apMaternoUsuario, escolaridad, direccion, nacimiento, correo, tipoUsuario, COUNT(idAlbum) AS 'CuantosAlbumes' FROM Usuarios LEFT JOIN Albumes USING(idUsuario) GROUP BY idUsuario";
   if (isset($_POST['Consulta']))
   {
-    $texto = mysqli_real_escape_string($conexion, $_POST['Consulta']);
-    $query = "SELECT idUsuario, nombreUsuario, apPaternoUsuario, apMaternoUsuario, escolaridad, direccion, nacimiento, correo, tipoUsuario, COUNT(idAlbum) AS 'CuantosAlbumes' FROM Usuarios LEFT JOIN Albumes USING(idUsuario) WHERE NombreUsuario LIKE '%".$texto."%' OR tipoUsuario LIKE '%".$texto."%' GROUP BY idUsuario";
+    $texto = mysqli_real_escape_string($conexion, $_POST['Consulta']); // Sanitiza variable del input
+    $query = "SELECT idUsuario, nombreUsuario, apPaternoUsuario, apMaternoUsuario, escolaridad, direccion, nacimiento, correo, tipoUsuario, COUNT(idAlbum) AS 'CuantosAlbumes' FROM Usuarios LEFT JOIN Albumes USING(idUsuario) WHERE nombreUsuario LIKE '%".$texto."%' OR apPaternoUsuario LIKE '%".$texto."%' OR apMaternoUsuario LIKE '%".$texto."%' OR tipoUsuario LIKE '%".$texto."%' GROUP BY idUsuario";
   }
   $consulta = mysqli_query($conexion,$query);
   $numerofilas = mysqli_num_rows($consulta);
-  if ($numerofilas > 0)
+  if ($numerofilas > 0) // Si hay resultados los muestra como tabla
   {
     $Salida.= "<table class='responsive-table highlight centered'>
                     <thead>
@@ -44,7 +44,7 @@
                     }
                     $Salida.= "</tbody></table>";
  }
- else
+ else // Si no hay usuarios muestra mensaje
    $Salida.= "<h5>No se encontraron resultados</h5>";
  echo $Salida;
  mysqli_free_result($consulta);

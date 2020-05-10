@@ -1,26 +1,26 @@
 <?php
   include_once "config.php";
   header('Content-type: application/json; charset=utf-8'); // Se especifica el tipo de contenido a regresar, codificado en utf-8
+  // Se obtienen datos de una forma por método POST
   $correo = $_POST["correo"];
   $password = $_POST["pass"];
 
-	if(count(explode("'",$correo))>1 || count(explode('"',$correo))>1) // Se sanitiza las variable correo
-  {
-    //Se manda json de error.
-		echo json_encode(array('mensaje' => "Error con los datos proporcionados", 'tipoUsuario' => "index",'alerta' => "error"));
-	}
-	if(count(explode("'",$password))>1 || count(explode('"',$password))>1) // Se sanitiza las variable password
-  {
-    //Se manda json de error.
+	if(count(explode("'",$correo))>1 || count(explode('"',$correo))>1) // Se sanitiza la variable correo
+  {    //Se manda json de error.
 		echo json_encode(array('mensaje' => "Error con los datos proporcionados", 'tipoUsuario' => "index",'alerta' => "error"));
 	}
 
-	$conexion = Conectar();
+	if(count(explode("'",$password))>1 || count(explode('"',$password))>1) // Se sanitiza la variable password
+  {
+    //Se manda json de error.
+		echo json_encode(array('mensaje' => "Error con los datos proporcionados", 'tipoUsuario' => "index",'alerta' => "error"));
+	}
+	$conexion = Conectar(); //Función que conecta a la BD y abre la sesión.
 	$strQuery = "SELECT idUsuario, tipoUsuario FROM Usuarios WHERE correo = '$correo' AND password = '$password'";
-	$query = mysqli_query($conexion,$strQuery);
+	$consulta = mysqli_query($conexion,$strQuery); // Se ejecuta el query
 
   // La contraseña está mal o el usuario no existe
-	if(($row = mysqli_fetch_assoc($query)) == NULL)
+	if(($row = mysqli_fetch_assoc($consulta)) == NULL)
   {
 		Desconectar($conexion); // Desconectamos de la BD.
     //Se manda json de error.
@@ -28,20 +28,12 @@
 	}
 	else // El usuario si existe
   {
-    $idUsuario = $row['idUsuario'];
-    $idTipoUsuario = $row['tipoUsuario'];
-    mysqli_query($conexion, "DELETE FROM Sesiones WHERE idUsuario = $idUsuario");
-    do
-    {
-			$token = sha1(microtime(true));
-			$query = "SELECT token FROM Sesiones WHERE token = '$token'";
-		}while((mysqli_num_rows(mysqli_query($conexion,$query))) > 0);
-
-		$query = "INSERT INTO Sesiones (idUsuario,token,timestamp) VALUES ($idUsuario,'$token',now())";
-		mysqli_query($conexion,$query);
-    $_SESSION['tipoUsuario'] = $idTipoUsuario;
-    $_SESSION['idUsuario'] = $idUsuario;
-		Desconectar($conexion);
+    $idUsuario = $row['idUsuario']; // Se obtiene el id del usuario
+    $idTipoUsuario = $row['tipoUsuario']; // Se obtiene el tipo de usuario
+    $_SESSION['tipoUsuario'] = $idTipoUsuario; // Se guarda el tipo de usuario en un variable de sesión esto para poder utilizarla durante la utilización del sistema.
+    $_SESSION['idUsuario'] = $idUsuario; // Se guarda el id del usuario.
+    mysqli_free_result($consulta); // Libera memoria de la consulta
+		Desconectar($conexion); // Desconecta de la BD.
 		switch($idTipoUsuario)
     {
 			case 1: // Administrador, se manda json para redigir y mostrar alerta determinada.

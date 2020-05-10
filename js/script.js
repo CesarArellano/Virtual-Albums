@@ -115,6 +115,7 @@ $(document).ready(function(e)
       });
     }
   });
+  // Verifica inicio de sesión.
   $("#form-login").on('submit', function(e)
   {
     let pagina, titulo; // Declaramos variables

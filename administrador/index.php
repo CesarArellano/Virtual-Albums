@@ -3,17 +3,17 @@
   require_once "HTML/Template/ITX.php";
   $conexion = Conectar();
 
-  if (!isset($_SESSION['tipoUsuario']))
+  if (!isset($_SESSION['tipoUsuario'])) // Si no está logueado lo manda al login.
 		header('location: ../index.php');
 
   $idUsuario = $_SESSION['idUsuario'];
 
   $query = mysqli_query($conexion,"SELECT * FROM Usuarios WHERE idUsuario = $idUsuario");
   $rowPerfil = mysqli_fetch_assoc($query);
-  if($rowPerfil['foto'] == NULL)
+  if($rowPerfil['foto'] == NULL) // Si no tiene foto de perfil el admin le pone una por default
     $rutaImagen = "../images/avatar.png";
   else
-    $rutaImagen = "images/perfil/".$rowPerfil['foto'];
+    $rutaImagen = "images/perfil/".$rowPerfil['foto']; // Directorio de su foto de perfil
 
   $contenidoAnalisis = "<div class ='container'>"; //Preparamos un contenedor para el módulo de análisis de información
 

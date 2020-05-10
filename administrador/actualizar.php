@@ -35,7 +35,7 @@
     {
       $query = mysqli_query($conexion,"UPDATE Usuarios SET nombreUsuario = '$nombreRegistro', apPaternoUsuario = '$apPaternoRegistro', apMaternoUsuario = '$apMaternoRegistro', escolaridad = '$escolaridadRegistro', direccion = '$direccionRegistro', nacimiento = '$fechaNacimientoRegistro',foto = '$nombreArchivo', password = '$passwordRegistro' WHERE idUsuario = $idUsuario");
     }
-    else
+    else // Si no se sube correctamente se manda mensaje de error
     {
       echo json_encode(array('mensaje' => "Error, no se pudo subir imagen, intente de nuevo", 'pagina' => "modificar",'alerta' => "error"));
     }

@@ -15,16 +15,17 @@
   $directoriocompleto = $directorio.$nombreArchivo;
   if (move_uploaded_file($_FILES['rutaSubirFoto']["tmp_name"], $directoriocompleto)) //Sube la imágen, si se sube correctamente ejecuta el query con foto de perfil, si no, lo ejecuta sin foto de perfil
   {
-    if($tipoUsuario == 1)
+    if($tipoUsuario == 1) // si es administrador se autoriza en automático su foto
       $subirFoto = mysqli_query($conexion,"INSERT INTO Fotos (idAlbum,fechaFoto,rutaFoto,autorizada) VALUES($idAlbum,CURDATE(),'$nombreArchivo',1)");
-    else
+    else // Se pide autorizar foto
       $subirFoto = mysqli_query($conexion,"INSERT INTO Fotos (idAlbum,fechaFoto,rutaFoto,autorizada) VALUES($idAlbum,CURDATE(),'$nombreArchivo',0)");
+    mysqli_free_result($subirFoto);
   }
-  else
+  else // Si no pudo subir la foto, manda mensaje de error.
   {
     echo json_encode(array('mensaje' => "Error, no se pudo subir imagen, intente de nuevo", 'pagina' => "fotos",'alerta' => "error"));
   }
-  if ($subirFoto)
+  if ($subirFoto) // Mensaje éxitoso si todo sale bien
   {
     echo json_encode(array('mensaje' => "¡Se ha subido la foto al álbum con éxito!", 'pagina' => "albumes",'alerta' => "success"));
   }

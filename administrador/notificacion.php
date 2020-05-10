@@ -4,9 +4,11 @@
   $conexion = Conectar();
   if (!isset($_SESSION['tipoUsuario']))
 		header('location: ../index.php');
+  //Obtiene valores de respuesta del autorizar.php para mostrar notificacionón
   $mensaje = htmlentities($_GET['mensaje']);
   $p = htmlentities($_GET['p']);
   $alerta = htmlentities($_GET['a']);
+  //Se verifica a que página se irá dependiendo del parámetro p
   switch ($p)
     {
       case 'index':
