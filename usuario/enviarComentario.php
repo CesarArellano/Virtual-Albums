@@ -46,11 +46,13 @@
       {
         $row = mysqli_fetch_assoc($consultaPuntuacion);
         $idPuntuacionComentario = $row['idPuntuacionComentario'];
+        //Actualización de la puntuación
         $actualizarPuntuacion = mysqli_query($conexion, "UPDATE PuntuacionesComentarios SET puntuacion = $puntuacion WHERE idPuntuacionComentario = $idPuntuacionComentario");
         mysqli_free_result($actualizarPuntuacion);
       }
-      else // Si no inserta la puntuación en la BD.
+      else // Si no, inserta la puntuación en la BD.
       {
+        //Inserta los datos en la base
         $insertarPuntuacion = mysqli_query($conexion, "INSERT INTO PuntuacionesComentarios(idUsuario,idFoto,puntuacion) VALUES($idUsuario,$idFoto,$puntuacion)");
         mysqli_free_result($insertarPuntuacion);
         $mensaje = "El usuario ".$nombreUsuario." calificó con ".$puntuacion." la foto ".$nombreFoto." del álbum ".$nombreAlbum;
@@ -60,6 +62,7 @@
         while($row = mysqli_fetch_assoc($obtener_usuarios)) // Obtiene y envía notificaciones a usuarios
         {
           $idUsuarios = $row['idUsuario'];
+          //Por defecto las notificaciones se envían como no leídas
   				$notificacion_suscritos = mysqli_query($conexion,"INSERT INTO NotificacionesLeidas (idNotificacion,idUsuario,estado) VALUES($idNotificacionPuntuacion,$idUsuarios,'No Leída')");
   			}
       }
@@ -76,6 +79,7 @@
       while($row = mysqli_fetch_assoc($obtener_usuarios)) // Se envía al usuario
       {
         $idUsuarios = $row['idUsuario'];
+        //Notificación de todos los usuarios que estén suscritos
         $notificacion_suscritos = mysqli_query($conexion,"INSERT INTO NotificacionesLeidas (idNotificacion,idUsuario,estado) VALUES($idNotificacionComentario,$idUsuarios,'No Leída')");
       }
     }
@@ -85,6 +89,7 @@
       {
         $row = mysqli_fetch_assoc($consultaPuntuacion);
         $idPuntuacionComentario = $row['idPuntuacionComentario'];
+        //Actualización de una puntuación anterior
         $actualizarPuntuacion = mysqli_query($conexion, "UPDATE PuntuacionesComentarios SET puntuacion = $puntuacion WHERE idPuntuacionComentario = $idPuntuacionComentario");
         mysqli_free_result($actualizarPuntuacion);
       }

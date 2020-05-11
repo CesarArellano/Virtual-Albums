@@ -3,7 +3,7 @@
   $conexion = Conectar();
   $mes = $_POST['mesAlbum'];
   $anio = $_POST['anioAlbum'];
-  //INICIO LÓGICA ÁLBUMES MÁS VISTOS EN UN MÉS
+  //INICIO LÓGICA ÁLBUMES MÁS VISTOS EN UN MES
   $consultaAlbumesMejorPuntuados = mysqli_query($conexion, "SELECT idAlbum, titulo, tipoAlbum, fechaAlbum, COUNT(idVisita) FROM Albumes LEFT JOIN Visitas USING (idAlbum) WHERE MONTHNAME(fechaVisita) = '$mes' AND YEAR(fechaVisita) = $anio GROUP BY idAlbum ORDER BY COUNT(idVisita) DESC"); //Query que busca los álbumes mejor puntuados
   $numeroFilasAlbumesMejorPuntuados = mysqli_num_rows($consultaAlbumesMejorPuntuados);
   //Creamos la tabla y le ponemos el encabezado

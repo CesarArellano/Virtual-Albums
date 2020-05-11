@@ -117,7 +117,7 @@
   //FIN DE ÁLBUMES CON MÁS FOTOS
 
   //INICIO DE FOTOS CON MÁS COMENTARIOS
-  $consultaFotosMasComentarios = mysqli_query($conexion, "SELECT nombreUsuario, apPaternoUsuario, apMaternoUsuario, rutaFoto, titulo, fechaFoto, COUNT(comentario) as 'Cuantos' FROM Usuarios LEFT JOIN Albumes USING (idUsuario) LEFT JOIN Fotos USING (idAlbum) LEFT JOIN PuntuacionesComentarios USING (idFoto) WHERE comentario IS NOT NULL GROUP BY (idFoto) ORDER BY COUNT(comentario) DESC"); //Query que búsca las fotos con más comentarios
+  $consultaFotosMasComentarios = mysqli_query($conexion, "SELECT idAlbum, nombreUsuario, apPaternoUsuario, apMaternoUsuario, rutaFoto, titulo, fechaFoto, COUNT(comentario) as 'Cuantos' FROM Usuarios LEFT JOIN Albumes USING (idUsuario) LEFT JOIN Fotos USING (idAlbum) LEFT JOIN PuntuacionesComentarios USING (idFoto) WHERE comentario IS NOT NULL GROUP BY (idFoto) ORDER BY COUNT(comentario) DESC"); //Query que búsca las fotos con más comentarios
   $numeroFilasFotosMasComentarios = mysqli_num_rows($consultaFotosMasComentarios);
   //Creamos la tabla y le ponemos el encabezado
   $contenidoAnalisis.=
@@ -154,7 +154,7 @@
   //FIN DE FOTOS CON MÁS COMENTARIOS
 
   //INICIO DE ÁLBUMES MEJOR PUNTUADOS
-  $consultaAlbumesMejorPuntuados = mysqli_query($conexion, "SELECT titulo, fechaAlbum, tipoAlbum, AVG(puntuacion) AS 'Promedio de estrellas' FROM Albumes LEFT JOIN Fotos USING(idAlbum) LEFT JOIN PuntuacionesComentarios USING (idFoto) WHERE puntuacion IS NOT NULL GROUP BY idAlbum ORDER BY AVG(puntuacion) DESC"); //Query que busca los álbumes mejor puntuados
+  $consultaAlbumesMejorPuntuados = mysqli_query($conexion, "SELECT idAlbum, titulo, fechaAlbum, tipoAlbum, AVG(puntuacion) AS 'Promedio de estrellas' FROM Albumes LEFT JOIN Fotos USING(idAlbum) LEFT JOIN PuntuacionesComentarios USING (idFoto) WHERE puntuacion IS NOT NULL GROUP BY idAlbum ORDER BY AVG(puntuacion) DESC"); //Query que busca los álbumes mejor puntuados
   $numeroFilasAlbumesMejorPuntuados = mysqli_num_rows($consultaAlbumesMejorPuntuados);
   //Creamos la tabla y le ponemos el encabezado
   $contenidoAnalisis.=

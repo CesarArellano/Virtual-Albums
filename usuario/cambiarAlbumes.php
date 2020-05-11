@@ -11,7 +11,7 @@
   $consulta = mysqli_query($conexion,"SELECT idTema FROM Temas WHERE nombreTema = '$temaAlbum'"); // Se obtiene el id del tema del álbum
   $row = mysqli_fetch_assoc($consulta);
   $idTemaAlbum = $row['idTema'];
-  //Actualizar información
+  //Actualiza la información del álbum
   $consulta2 = mysqli_query($conexion,"UPDATE Albumes SET titulo = '$nombreAlbum',tipoAlbum= '$tipoAlbum',idTema = $idTemaAlbum WHERE idAlbum = $idAlbum");
   echo json_encode(array('mensaje' => "Se creó el álbum con éxito",'alerta' => "success"));
 

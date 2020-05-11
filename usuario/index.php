@@ -14,13 +14,13 @@
     {
       $boton = "<button class='btn waves-effect waves-light indigo darken-1 right' id='regresarAdmin'>Regresar admin<i class='material-icons left'>arrow_back</i></button>";
       $queryBusqueda = "SELECT idAlbum,titulo FROM Albumes";
-      $queryFeed = "SELECT idFoto, idAlbum, titulo, nombreTema, rutaFoto,nombreUsuario,apPaternoUsuario,apMaternoUsuario,foto FROM Albumes INNER JOIN Temas USING(idTema) INNER JOIN Fotos USING(idAlbum) INNER JOIN Usuarios USING(idUsuario) WHERE idUsuario != $idUsuario AND autorizada = 1 ORDER BY idFoto DESC";
+      $queryFeed = "SELECT idFoto, idAlbum, titulo, nombreTema, rutaFoto,nombreUsuario,apPaternoUsuario,apMaternoUsuario,tipoUsuario,foto FROM Albumes INNER JOIN Temas USING(idTema) INNER JOIN Fotos USING(idAlbum) INNER JOIN Usuarios USING(idUsuario) WHERE idUsuario != $idUsuario AND autorizada = 1 ORDER BY idFoto DESC";
       $queryPuntuacion = "SELECT idFoto FROM Albumes INNER JOIN Temas USING(idTema) INNER JOIN Fotos USING(idAlbum) INNER JOIN Usuarios USING(idUsuario) WHERE idUsuario != $idUsuario AND autorizada = 1 ORDER BY idFoto DESC";
     }
     else // Si es usuario le presenta sólo los álbumes públicos y a los que esté suscritos cuando estos sean privados
     {
       $queryBusqueda = "SELECT DISTINCT idAlbum,titulo FROM Albumes LEFT JOIN Usuarios USING(idUsuario) LEFT JOIN Suscripciones USING(idAlbum) WHERE tipoAlbum = 'Publico' OR (tipoAlbum = 'Privado' AND Suscripciones.idUsuario = $idUsuario)";
-      $queryFeed = "SELECT idFoto, Albumes.idAlbum AS 'idAlbum', titulo, nombreTema, rutaFoto, nombreUsuario, apPaternoUsuario, apMaternoUsuario, foto FROM Albumes INNER JOIN Temas USING(idTema) LEFT JOIN Fotos USING(idAlbum) LEFT JOIN Usuarios USING(idUsuario) LEFT JOIN Suscripciones USING(idAlbum) WHERE ((tipoAlbum = 'Publico') OR (tipoAlbum = 'Privado' AND Suscripciones.idUsuario = $idUsuario)) AND (Albumes.idUsuario != $idUsuario AND autorizada = 1) GROUP BY idFoto ORDER BY idFoto DESC";
+      $queryFeed = "SELECT idFoto, Albumes.idAlbum AS 'idAlbum', titulo, nombreTema, rutaFoto, nombreUsuario, apPaternoUsuario, apMaternoUsuario,tipoUsuario, foto FROM Albumes INNER JOIN Temas USING(idTema) LEFT JOIN Fotos USING(idAlbum) LEFT JOIN Usuarios USING(idUsuario) LEFT JOIN Suscripciones USING(idAlbum) WHERE ((tipoAlbum = 'Publico') OR (tipoAlbum = 'Privado' AND Suscripciones.idUsuario = $idUsuario)) AND (Albumes.idUsuario != $idUsuario AND autorizada = 1) GROUP BY idFoto ORDER BY idFoto DESC";
       $queryPuntuacion = "SELECT idFoto FROM Albumes INNER JOIN Temas USING(idTema) LEFT JOIN Fotos USING(idAlbum) LEFT JOIN Usuarios USING(idUsuario) LEFT JOIN Suscripciones USING(idAlbum) WHERE ((tipoAlbum = 'Publico') OR (tipoAlbum = 'Privado' AND Suscripciones.idUsuario = $idUsuario)) AND (Albumes.idUsuario != $idUsuario AND autorizada = 1) GROUP BY idFoto ORDER BY idFoto DESC";
     }
     //Sección búsqueda de álbumes
@@ -63,10 +63,14 @@
           {
             $fotoPerfil = "../images/avatar.png";
           }
-          else // si tiene foto la busca.
+          else
           {
-            $fotoPerfil = "images/perfil/".$row['foto'];
+            if($row['tipoUsuario'] == 1)
+              $fotoPerfil = "../administrador/images/perfil/".$row['foto'];
+            else
+              $fotoPerfil = "images/perfil/".$row['foto'];
           }
+
           if($row2['puntuacionPromedio'] == NULL)
           {
             $rating = 0; // Si no hya rating la deja en 0

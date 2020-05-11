@@ -12,7 +12,10 @@
   $escolaridadRegistro = $_POST['escolaridadRegistro'];
   $direccionRegistro = $_POST['direccionRegistro'];
   $fechaNacimientoRegistro = $_POST['fechaNacimientoRegistro'];
-  $directorio = "images/perfil/"; //Definimos el directorio para el usuario donde se van a guardar las imágenes
+  if($_SESSION['tipoUsuario'] == 1) // Si es admin
+    $directorio = "../administrador/images/perfil/";
+  else
+    $directorio = "images/perfil/"; //Definimos el directorio para el usuario donde se van a guardar las imágenes
 
   if ($rutaFotoPerfilRegistro != '') // Si quiere subir foto de perfil
   {
@@ -25,7 +28,8 @@
     $directoriocompleto = $directorio.$nombreArchivo; // Directorio a guardar las fotos de perfil.
     if (move_uploaded_file($_FILES['rutaFotoPerfilRegistro']["tmp_name"], $directoriocompleto)) //Sube la imágen, si se sube correctamente ejecuta el query con foto de perfil, si no, lo ejecuta sin foto de perfil
     {
-        $query = mysqli_query($conexion,"UPDATE Usuarios SET nombreUsuario = '$nombreRegistro', apPaternoUsuario = '$apPaternoRegistro', apMaternoUsuario = '$apMaternoRegistro', escolaridad = '$escolaridadRegistro', direccion = '$direccionRegistro', nacimiento = '$fechaNacimientoRegistro',foto = '$nombreArchivo', password = '$passwordRegistro' WHERE idUsuario = $idUsuario");
+      //Actualiza el registro en la base de datos (con foto)
+      $query = mysqli_query($conexion,"UPDATE Usuarios SET nombreUsuario = '$nombreRegistro', apPaternoUsuario = '$apPaternoRegistro', apMaternoUsuario = '$apMaternoRegistro', escolaridad = '$escolaridadRegistro', direccion = '$direccionRegistro', nacimiento = '$fechaNacimientoRegistro',foto = '$nombreArchivo', password = '$passwordRegistro' WHERE idUsuario = $idUsuario");
     }
     else
     {
@@ -34,7 +38,8 @@
   }
   else // Si no quiere subir foto de perfil
   {
-      $query = mysqli_query($conexion,"UPDATE Usuarios SET nombreUsuario = '$nombreRegistro', apPaternoUsuario = '$apPaternoRegistro', apMaternoUsuario = '$apMaternoRegistro', escolaridad = '$escolaridadRegistro', direccion = '$direccionRegistro', nacimiento = '$fechaNacimientoRegistro', password = '$passwordRegistro' WHERE idUsuario = $idUsuario");
+    //Actualiza el registro en la base de datos (sin foto)
+    $query = mysqli_query($conexion,"UPDATE Usuarios SET nombreUsuario = '$nombreRegistro', apPaternoUsuario = '$apPaternoRegistro', apMaternoUsuario = '$apMaternoRegistro', escolaridad = '$escolaridadRegistro', direccion = '$direccionRegistro', nacimiento = '$fechaNacimientoRegistro', password = '$passwordRegistro' WHERE idUsuario = $idUsuario");
   }
   if ($query)
   {

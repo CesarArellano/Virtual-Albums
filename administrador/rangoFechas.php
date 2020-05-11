@@ -3,8 +3,8 @@
   $conexion = Conectar();
   $fecha1 = $_POST['fecha1']; // Obtiene fecha 1 por método POST
   $fecha2 = $_POST['fecha2']; // Obtiene fecha 2 por método POST
-
-  $consultaAlbumes = mysqli_query($conexion, "SELECT idAlbum,titulo,nombretema, u.idUsuario AS 'idPropietario', nombreUsuario, fechaAlbum, AVG(puntuacion) AS 'promedioPuntuacion' FROM Albumes a LEFT JOIN Usuarios u USING(idUsuario) LEFT JOIN Fotos USING(idAlbum) LEFT JOIN Temas t ON a.idTema = t.idTema LEFT JOIN PuntuacionesComentarios USING(idFoto) WHERE fechaAlbum BETWEEN '$fecha1' AND '$fecha2' GROUP BY idAlbum"); //Query que busca los álbumes mejor puntuados
+  //Query que busca los álbumes mejor puntuados
+  $consultaAlbumes = mysqli_query($conexion, "SELECT idAlbum,titulo,nombretema, u.idUsuario AS 'idPropietario', nombreUsuario, fechaAlbum, AVG(puntuacion) AS 'promedioPuntuacion' FROM Albumes a LEFT JOIN Usuarios u USING(idUsuario) LEFT JOIN Fotos USING(idAlbum) LEFT JOIN Temas t ON a.idTema = t.idTema LEFT JOIN PuntuacionesComentarios USING(idFoto) WHERE fechaAlbum BETWEEN '$fecha1' AND '$fecha2' GROUP BY idAlbum");
   $numeroFilasEncontradas = mysqli_num_rows($consultaAlbumes);
   //Creamos la tabla y le ponemos el encabezado
   $contenidoBusqueda.=
@@ -29,6 +29,7 @@
       {
         $puntuacion = $row['promedioPuntuacion'];
       }
+        //Rellenamos la tabla con cada entrada, le agregamos un botón que permite ver la información del álbum específico
         $contenidoBusqueda.= "<tr>
           <td>".$row['titulo']."</td>
           <td>".$row['nombretema']."</td>

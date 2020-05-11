@@ -4,11 +4,11 @@
   $conexion = Conectar();
   if (!isset($_SESSION['tipoUsuario']))
 		header('location: ../index.php');
-  //Obtiene valores de respuesta del autorizar.php para mostrar notificacionón
+  //Obtiene valores de respuesta de autorizar.php para mostrar notificacionón
   $mensaje = htmlentities($_GET['mensaje']);
   $p = htmlentities($_GET['p']);
   $alerta = htmlentities($_GET['a']);
-  //Se verifica a que página se irá dependiendo del parámetro p
+  //Se verifica a que página se irá dependiendo del parámetro p (página)
   switch ($p)
     {
       case 'index':
@@ -17,10 +17,11 @@
     }
 
     if ($alerta == "error")
-        $titulo = "Oppss..";
+      $titulo = "Oppss..";
     else
-        $titulo = "Bien hecho!";
+      $titulo = "Bien hecho!";
 
+  //Rellenamos el templatecon la información que obtuvimos
   $template = new HTML_Template_ITX('./templates');
   $template->loadTemplatefile("alerta.html", true, true);
   $template->setVariable("TITULO", $titulo);
